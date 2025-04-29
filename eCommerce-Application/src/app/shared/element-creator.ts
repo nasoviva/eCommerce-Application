@@ -1,0 +1,71 @@
+import type ElementParameters from "./element-parameters";
+import type View from "./view";
+
+export default class ElementCreator {
+  public element: HTMLElement;
+  constructor(parameter: ElementParameters) {
+    this.element = this.createElement(parameter);
+    this.setCssClasses(parameter.className);
+    this.setTextContent(parameter.textContent);
+    if (parameter.callback) {
+      this.setCallBack(parameter.callback);
+    }
+    if (parameter.attributes) {
+      this.setAttributes(parameter.attributes);
+    }
+  }
+
+  public setContent(view: View): void {
+    const element = view.getHtmlElement();
+    const currentElement = this.getElement();
+    while (currentElement.firstElementChild) {
+      currentElement.firstElementChild.remove();
+    }
+    this.addInnerElement(element);
+  }
+
+  public createElement(parameter: ElementParameters): HTMLElement {
+    this.element = document.createElement(parameter.tag);
+    return this.element;
+  }
+
+  public getElement(): HTMLElement {
+    return this.element;
+  }
+
+  public addInnerElement(element: HTMLElement | ElementCreator): void {
+    if (element instanceof ElementCreator) {
+      this.element.append(element.getElement());
+    } else {
+      this.element.append(element);
+    }
+  }
+
+  public setCssClasses(cssClasses: string[]): void {
+    if (this.element) {
+      for (const className of cssClasses) {
+        this.element.classList.add(className);
+      }
+    }
+  }
+
+  public setTextContent(text: string): void {
+    if (this.element) {
+      this.element.textContent = text;
+    }
+  }
+
+  public setCallBack(callback: () => void): void {
+    if (this.element && typeof callback === "function") {
+      this.element.addEventListener("click", () => callback());
+    }
+  }
+
+  public setAttributes(attributes?: Record<string, string>): void {
+    if (attributes) {
+      Object.entries(attributes).forEach(([key, value]) => {
+        this.element.setAttribute(key, value);
+      });
+    }
+  }
+}
