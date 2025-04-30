@@ -30,11 +30,14 @@
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1"
   },
+  "name": "e_commerce-application",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "prepare": "husky",
-    "start": "prettier --write . && webpack serve --mode development --open",
-    "build": "prettier --write . && npm run lint:fix && npm run stylelint:fix && npm run format:check && webpack --mode production",
-    "dev": "webpack serve --mode development --hot",
+    "start": "prettier --write . && webpack serve --config webpack/webpack.dev.mjs",
+    "build": "prettier --write . && npm run lint:fix && npm run stylelint:fix && npm run format:check && webpack --config webpack/webpack.prod.mjs",
+    "dev": "webpack serve --config webpack/webpack.dev.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint src",

@@ -1,8 +1,8 @@
 import { cssClasses, Routes } from "../../constants/constants";
+import HomeView from "../../pages/home/home";
+import LoginView from "../../pages/login/login";
 import ElementCreator from "../../shared/element-creator";
 import View from "../../shared/view";
-import HomeView from "../home/home";
-import LoginView from "../login/login";
 
 export default class MainView extends View {
   private readonly contentContainer: ElementCreator;

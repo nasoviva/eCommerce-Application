@@ -4,12 +4,10 @@ import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import CopyPlugin from "copy-webpack-plugin";
 
 export default {
-  mode: "development",
   entry: "./src/index.ts",
   output: {
-    filename: "bundle.js",
+    filename: "bundle.[contenthash].js",
     path: path.resolve(process.cwd(), "dist"),
-    clean: true,
   },
   resolve: {
     extensions: [".ts", ".js"],
@@ -27,15 +25,6 @@ export default {
       },
     ],
   },
-  devServer: {
-    static: {
-      directory: path.resolve(process.cwd(), "dist"),
-    },
-    open: true,
-    port: 8081,
-    historyApiFallback: true,
-  },
-  watch: true,
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({

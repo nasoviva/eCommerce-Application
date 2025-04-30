@@ -1,7 +1,7 @@
 import "../style.css";
 import FooterView from "./layout/footer/footer";
 import HeaderView from "./layout/header/header";
-import MainView from "./pages/main/main";
+import MainView from "./layout/main/main";
 
 export default class App {
   private readonly mainView: MainView;

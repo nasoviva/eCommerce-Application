@@ -12,4 +12,9 @@ const Routes = {
   HOME: "#home",
 };
 
-export { Routes, cssClasses };
+const Buttons = {
+  LOGIN: "Login",
+  GO_HOME: "Go Home",
+};
+
+export { Routes, cssClasses, Buttons };

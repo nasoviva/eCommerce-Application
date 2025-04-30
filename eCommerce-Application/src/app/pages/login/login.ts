@@ -1,18 +1,28 @@
-import { cssClasses } from "../../constants/constants";
+import { Buttons, cssClasses, Routes } from "../../constants/constants";
 import ElementCreator from "../../shared/element-creator";
 
 export default class LoginView {
-  private readonly mainElement: ElementCreator;
+  private readonly loginContainer: ElementCreator;
 
   constructor() {
-    this.mainElement = new ElementCreator({
+    this.loginContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_COLUMN],
-      textContent: "Login",
+      textContent: "Login Container",
     });
+
+    const homeButton = new ElementCreator({
+      tag: "button",
+      className: [cssClasses.BUTTON],
+      textContent: Buttons.GO_HOME,
+      callback: (): void => {
+        globalThis.location.hash = Routes.HOME;
+      },
+    });
+    this.loginContainer.addInnerElement(homeButton.getElement());
   }
 
   public getElement(): HTMLElement {
-    return this.mainElement.getElement();
+    return this.loginContainer.getElement();
   }
 }

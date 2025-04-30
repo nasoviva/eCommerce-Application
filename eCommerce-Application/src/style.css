@@ -49,7 +49,6 @@ body {
   padding: 10px;
   width: 100%;
   gap: 10px;
-  border: 1px dashed white;
 }
 
 .container-column {
@@ -63,12 +62,10 @@ body {
 }
 
 .button {
-  font-family: "Press Start 2P", sans-serif;
-  font-size: 10px;
   text-transform: uppercase;
   border-radius: 0.3rem;
-  background-color: #f8f8f8;
-  color: #333;
+  background-color: white;
+  color: #000;
   transition: 0.3s;
   padding: 6px;
   display: flex;
