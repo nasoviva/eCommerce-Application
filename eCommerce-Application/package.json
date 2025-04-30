@@ -34,7 +34,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky install",
     "start": "prettier --write . && webpack serve --config webpack/webpack.dev.mjs",
     "build": "prettier --write . && npm run lint:fix && npm run stylelint:fix && npm run format:check && webpack --config webpack/webpack.prod.mjs",
     "dev": "webpack serve --config webpack/webpack.dev.mjs",
@@ -45,12 +45,7 @@
     "stylelint": "stylelint '**/*.{css,scss}'",
     "stylelint:fix": "stylelint '**/*.{css,scss}' --fix"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
+
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
