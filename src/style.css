@@ -63,7 +63,6 @@ body {
 }
 
 .button {
-  text-transform: uppercase;
   border-radius: 0.3rem;
   background-color: white;
   color: #000;

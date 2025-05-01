@@ -20,7 +20,24 @@ export default {
         exclude: /node_modules/,
       },
       {
+        test: /\.module\.css$/,
+        use: [
+          "style-loader",
+          { loader: "css-modules-typescript-loader" },
+          {
+            loader: "css-loader",
+            options: {
+              modules: {
+                localIdentName: "[local]___[hash:base64:5]",
+                namedExport: false,
+              },
+            },
+          },
+        ],
+      },
+      {
         test: /\.css$/,
+        exclude: /\.module\.css$/,
         use: ["style-loader", "css-loader"],
       },
     ],
