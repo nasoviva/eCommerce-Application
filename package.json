@@ -59,5 +59,8 @@
       "stylelint --fix",
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "modern-normalize": "^3.0.1"
   }
 }
