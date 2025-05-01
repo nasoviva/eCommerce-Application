@@ -1,4 +1,4 @@
-import { cssClasses } from "../../constants/constants";
+import { cssClasses } from "../../global-types/constants";
 import View from "../../shared/view";
 
 export default class FooterView extends View {

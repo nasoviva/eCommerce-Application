@@ -1,4 +1,4 @@
-import { Buttons, cssClasses, Routes } from "../../constants/constants";
+import { Buttons, cssClasses, Routes } from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
 
 export default class LoginView {

@@ -1,4 +1,4 @@
-import { cssClasses, Routes } from "../../constants/constants";
+import { cssClasses, Routes } from "../../global-types/constants";
 import HomeView from "../../pages/home/home";
 import LoginView from "../../pages/login/login";
 import ElementCreator from "../../shared/element-creator";
