@@ -22,6 +22,7 @@ This is an educational project developed as part of the RS School course. It is 
 
 	•	Architecture - Single Page Application (SPA)
 	•	Programming Language - TypeScript
+	•	Setting styles - CSS
 	•	Linting - ESLint
 	•	Code Formatting - Prettier
 	•	CSS linting - Stylelint
