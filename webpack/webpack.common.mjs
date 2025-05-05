@@ -2,6 +2,7 @@ import path from "node:path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import CopyPlugin from "copy-webpack-plugin";
+import Dotenv from "dotenv-webpack";
 
 export default {
   entry: "./src/index.ts",
@@ -55,6 +56,10 @@ export default {
           to: path.resolve(process.cwd(), "dist"),
         },
       ],
+    }),
+    new Dotenv({
+      path: "./.env",
+      systemvars: true,
     }),
   ],
 };
