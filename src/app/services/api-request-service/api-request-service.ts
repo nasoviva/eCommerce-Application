@@ -2,10 +2,10 @@ import ApiClientBuilder from "./build-client";
 import type {
   ByProjectKeyRequestBuilder,
   MyCustomerDraft,
+  MyCustomerSignin,
 } from "@commercetools/platform-sdk";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
-import type { LoginData } from "./types";
 import type StateManager from "../state-manager/state-manager";
 import type { Client } from "@commercetools/ts-client";
 
@@ -22,7 +22,7 @@ export default class ApiRequestService {
   }
 
   public authUser(
-    loginData: LoginData,
+    loginData: MyCustomerSignin,
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
   ): void {
@@ -32,7 +32,7 @@ export default class ApiRequestService {
       .me()
       .login()
       .post({
-        body: { email: loginData.email, password: loginData.password },
+        body: loginData,
       })
       .execute()
       .then((result) => {
@@ -69,7 +69,7 @@ export default class ApiRequestService {
 
   private switchRequestBuilder(
     type: RequestBuilder,
-    loginData?: LoginData,
+    loginData?: MyCustomerSignin,
   ): void {
     let client: Client;
     if (type === "password" && loginData) {
