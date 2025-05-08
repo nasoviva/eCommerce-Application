@@ -1,5 +1,8 @@
 import ApiClientBuilder from "./build-client";
-import type { ByProjectKeyRequestBuilder } from "@commercetools/platform-sdk";
+import type {
+  ByProjectKeyRequestBuilder,
+  MyCustomerDraft,
+} from "@commercetools/platform-sdk";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
 import type { LoginData } from "./types";
@@ -7,8 +10,6 @@ import type StateManager from "../state-manager/state-manager";
 import type { Client } from "@commercetools/ts-client";
 
 type RequestBuilder = "anon" | "password";
-
-interface RegistrationData {}
 
 export default class ApiRequestService {
   private apiRoot!: ByProjectKeyRequestBuilder;
@@ -47,10 +48,24 @@ export default class ApiRequestService {
   }
 
   public registerUser(
-    registrationData: RegistrationData,
+    registrationData: MyCustomerDraft,
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
-  ): void {}
+  ): void {
+    this.apiRoot
+      .me()
+      .signup()
+      .post({
+        body: registrationData,
+      })
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
 
   private switchRequestBuilder(
     type: RequestBuilder,

@@ -55,11 +55,33 @@ export default class App {
     );
   }
 
-  /* метод для тестирования API позже можно будет удалить */
+  /* метод для тестирования функций позже можно будет удалить */
   public testMethod(): void {
-    this.apiRequestService.authUser({
+    /* Тест регистрации юзера */
+    /* const myButton = document.createElement("button");
+    myButton.textContent = "TEST BUTTON";
+    document.body.append(myButton);
+    myButton.addEventListener("click", () => {
+      this.apiRequestService.registerUser({
+        email: "newCustomer2@testemail.com",
+        password: "Test123!",
+        firstName: "Newton2",
+        lastName: "Newson2",
+        middleName: "Nooby2",
+        title: "New guy",
+        salutation: "Hey!",
+        dateOfBirth: "1993-01-01",
+        companyName: "New company",
+        vatId: "2",
+        addresses: [{ country: "RU" }],
+        defaultShippingAddress: 0,
+        defaultBillingAddress: 0,
+      });
+    }); */
+    /* Тест логина юзера */
+    /* this.apiRequestService.authUser({
       email: "testemail@testemail.com",
       password: "Test123!",
-    });
+    }); */
   }
 }
