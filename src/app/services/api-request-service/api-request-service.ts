@@ -1,17 +1,22 @@
-import { ctpClient } from "./build-client";
-import {
-  ApiRoot,
-  createApiBuilderFromCtpClient,
-} from "@commercetools/platform-sdk";
+import ApiClientBuilder from "./build-client";
+import type { ByProjectKeyRequestBuilder } from "@commercetools/platform-sdk";
+import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
 import type { LoginData } from "./types";
+import type StateManager from "../state-manager/state-manager";
+import type { Client } from "@commercetools/ts-client";
+
+type RequestBuilder = "anon" | "password";
+
+interface RegistrationData {}
 
 export default class ApiRequestService {
-  private apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-    projectKey: projectKey,
-  });
+  private apiRoot!: ByProjectKeyRequestBuilder;
+  private stateManager: StateManager;
+  private currentClientType!: RequestBuilder;
 
-  constructor() {
+  constructor(stateManager: StateManager) {
+    this.stateManager = stateManager;
     this.configureService();
   }
 
@@ -20,6 +25,8 @@ export default class ApiRequestService {
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
   ): void {
+    if (this.currentClientType !== "password")
+      this.switchRequestBuilder("password", loginData);
     this.apiRoot
       .me()
       .login()
@@ -28,12 +35,51 @@ export default class ApiRequestService {
       })
       .execute()
       .then((result) => {
+        this.stateManager.userId = result.body.customer.id;
+        this.stateManager.setState();
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
+        if (this.currentClientType !== "anon")
+          this.switchRequestBuilder("anon");
         if (onReject) onReject(reason);
       });
   }
 
-  private configureService(): void {}
+  public registerUser(
+    registrationData: RegistrationData,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {}
+
+  private switchRequestBuilder(
+    type: RequestBuilder,
+    loginData?: LoginData,
+  ): void {
+    let client: Client;
+    if (type === "password" && loginData) {
+      client = ApiClientBuilder.getPasswordClient(
+        loginData.email,
+        loginData.password,
+      );
+      this.currentClientType = "password";
+    } else {
+      client = ApiClientBuilder.getAnonClient();
+      this.currentClientType = "anon";
+    }
+
+    this.apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({
+      projectKey: projectKey,
+    });
+  }
+
+  private configureService(): void {
+    if (!this.stateManager.isLoggedIn) this.switchRequestBuilder("anon");
+    else if (this.stateManager.login && this.stateManager.password)
+      this.switchRequestBuilder("password", {
+        email: this.stateManager.login,
+        password: this.stateManager.password,
+      });
+    else console.error("Fail to build apiRoot");
+  }
 }
