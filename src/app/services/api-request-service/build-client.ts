@@ -1,6 +1,7 @@
 import type {
   Client,
   PasswordAuthMiddlewareOptions,
+  TokenCache,
 } from "@commercetools/ts-client";
 import {
   ClientBuilder,
@@ -21,7 +22,7 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 };
 
 export default class ApiClientBuilder {
-  public static getAnonClient(): Client {
+  public static getAnonClient(tokenCache: TokenCache): Client {
     const authMiddlewareOptions: AuthMiddlewareOptions = {
       host: `https://auth.${region}.commercetools.com`,
       projectKey: projectKey,
@@ -31,6 +32,7 @@ export default class ApiClientBuilder {
       },
       scopes,
       httpClient: fetch,
+      tokenCache,
     };
 
     return new ClientBuilder()
@@ -39,7 +41,11 @@ export default class ApiClientBuilder {
       .build();
   }
 
-  public static getPasswordClient(login: string, password: string): Client {
+  public static getPasswordClient(
+    tokenCache: TokenCache,
+    login: string,
+    password: string,
+  ): Client {
     const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
       host: `https://auth.${region}.commercetools.com`,
       projectKey: projectKey,
@@ -53,6 +59,7 @@ export default class ApiClientBuilder {
       },
       scopes,
       httpClient: fetch,
+      tokenCache: tokenCache,
     };
 
     return new ClientBuilder()

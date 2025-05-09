@@ -7,7 +7,8 @@ import type {
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
 import type StateManager from "../state-manager/state-manager";
-import type { Client } from "@commercetools/ts-client";
+import type { Client, TokenStore } from "@commercetools/ts-client";
+import VSATokenCache from "./token-cache";
 
 type RequestBuilder = "anon" | "password";
 
@@ -15,10 +16,16 @@ export default class ApiRequestService {
   private apiRoot!: ByProjectKeyRequestBuilder;
   private stateManager: StateManager;
   private currentClientType!: RequestBuilder;
+  private tokenCache: VSATokenCache;
 
   constructor(stateManager: StateManager) {
     this.stateManager = stateManager;
+    this.tokenCache = new VSATokenCache();
     this.configureService();
+  }
+
+  public getToken(): TokenStore {
+    return this.tokenCache.get();
   }
 
   public authUser(
@@ -36,7 +43,7 @@ export default class ApiRequestService {
       })
       .execute()
       .then((result) => {
-        this.stateManager.userId = result.body.customer.id;
+        /* TODO: сделать сохранение токена здесь */
         this.stateManager.setState();
         if (onSuccess) onSuccess(result);
       })
@@ -74,12 +81,13 @@ export default class ApiRequestService {
     let client: Client;
     if (type === "password" && loginData) {
       client = ApiClientBuilder.getPasswordClient(
+        this.tokenCache,
         loginData.email,
         loginData.password,
       );
       this.currentClientType = "password";
     } else {
-      client = ApiClientBuilder.getAnonClient();
+      client = ApiClientBuilder.getAnonClient(this.tokenCache);
       this.currentClientType = "anon";
     }
 
