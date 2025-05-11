@@ -27,13 +27,13 @@ export default class LoginView {
     this.loginInput = new InputCreator({
       type: "text",
       className: [],
-      placeholder: "Enter login",
+      placeholder: "Enter Email",
     });
 
     this.passwordInput = new InputCreator({
       type: "password",
       className: [],
-      placeholder: "Enter password",
+      placeholder: "Enter Password",
     });
 
     this.eyeIcon = new ElementCreator({
@@ -87,7 +87,7 @@ export default class LoginView {
     const password = this.passwordInput.getElement().value.trim();
 
     if (!login || !password) {
-      this.showMessage("Please enter both login and password.", true);
+      this.showMessage("Please enter both email and password.", true);
       return;
     }
 

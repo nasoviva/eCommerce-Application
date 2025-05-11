@@ -46,14 +46,37 @@ export default class MainView extends View {
   private async handleRouting(): Promise<void> {
     const path = globalThis.location.hash;
 
+    const sessionData = globalThis.sessionStorage.getItem("loginData");
+    let isLoggedIn = false;
+
+    if (sessionData) {
+      try {
+        const parsedData = JSON.parse(sessionData);
+        isLoggedIn = parsedData?.isLoggedIn === true;
+      } catch (error) {
+        console.error("Error sessionStorage:", error);
+      }
+    }
+
     if (path === Routes.LOGIN) {
-      this.setContent(this.loginView.getElement());
+      if (isLoggedIn) {
+        globalThis.location.hash = Routes.HOME;
+        this.setContent(this.homeView.getElement());
+      } else {
+        this.setContent(this.loginView.getElement());
+      }
     } else if (path === Routes.REGISTRATION) {
       this.setContent(this.registrationView.getElement());
     } else if (path === Routes.HOME) {
-      this.setContent(this.homeView.getElement());
+      if (isLoggedIn) {
+        this.setContent(this.homeView.getElement());
+      } else {
+        globalThis.location.hash = Routes.LOGIN;
+        this.setContent(this.loginView.getElement());
+      }
     } else {
       globalThis.location.hash = Routes.LOGIN;
+      this.setContent(this.loginView.getElement());
     }
   }
 
