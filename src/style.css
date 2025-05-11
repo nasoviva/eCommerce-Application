@@ -84,3 +84,7 @@ body {
   cursor: pointer;
   color: #000;
 }
+
+.title {
+  font-weight: bold;
+}

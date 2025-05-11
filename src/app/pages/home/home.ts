@@ -8,16 +8,25 @@ export default class HomeView {
     this.homeContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_COLUMN],
-      textContent: "Home Container",
+      textContent: "",
     });
+
+    const title = new ElementCreator({
+      tag: "h2",
+      className: [cssClasses.TITLE],
+      textContent: "Welcome Home",
+    });
+
     const loginButton = new ElementCreator({
       tag: "button",
       className: [cssClasses.BUTTON],
-      textContent: Buttons.LOGIN,
+      textContent: Buttons.LOGOUT,
       callback: (): void => {
         globalThis.location.hash = Routes.LOGIN;
       },
     });
+
+    this.homeContainer.addInnerElement(title.getElement());
     this.homeContainer.addInnerElement(loginButton.getElement());
   }
 

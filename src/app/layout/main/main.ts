@@ -1,12 +1,14 @@
 import { cssClasses, Routes } from "../../global-types/constants";
 import HomeView from "../../pages/home/home";
 import LoginView from "../../pages/login/login";
+import RegistrationView from "../../pages/registration/registration";
 import ElementCreator from "../../shared/element-creator";
 import View from "../../shared/view";
 
 export default class MainView extends View {
   private readonly contentContainer: ElementCreator;
   private readonly loginView: LoginView;
+  private readonly registrationView: RegistrationView;
   private readonly homeView: HomeView;
 
   constructor() {
@@ -17,10 +19,11 @@ export default class MainView extends View {
       callback: undefined,
     });
     this.loginView = new LoginView();
+    this.registrationView = new RegistrationView();
     this.homeView = new HomeView();
     this.contentContainer = new ElementCreator({
-      tag: "div",
-      className: [cssClasses.CONTAINER_COLUMN],
+      tag: "main",
+      className: [cssClasses.MAIN],
       textContent: "",
       callback: undefined,
     });
@@ -45,10 +48,12 @@ export default class MainView extends View {
 
     if (path === Routes.LOGIN) {
       this.setContent(this.loginView.getElement());
+    } else if (path === Routes.REGISTRATION) {
+      this.setContent(this.registrationView.getElement());
     } else if (path === Routes.HOME) {
       this.setContent(this.homeView.getElement());
     } else {
-      globalThis.location.hash = Routes.HOME;
+      globalThis.location.hash = Routes.LOGIN;
     }
   }
 
