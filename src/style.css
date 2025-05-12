@@ -92,3 +92,8 @@ body {
 .error {
   height: 20px;
 }
+
+.disable {
+  pointer-events: none;
+  opacity: 0.5;
+}

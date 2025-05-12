@@ -67,16 +67,9 @@ export default class MainView extends View {
       }
     } else if (path === Routes.REGISTRATION) {
       this.setContent(this.registrationView.getElement());
-    } else if (path === Routes.HOME) {
-      if (isLoggedIn) {
-        this.setContent(this.homeView.getElement());
-      } else {
-        globalThis.location.hash = Routes.LOGIN;
-        this.setContent(this.loginView.getElement());
-      }
     } else {
-      globalThis.location.hash = Routes.LOGIN;
-      this.setContent(this.loginView.getElement());
+      globalThis.location.hash = Routes.HOME;
+      this.setContent(this.homeView.getElement());
     }
   }
 

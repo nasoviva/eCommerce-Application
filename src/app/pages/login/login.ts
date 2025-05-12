@@ -10,6 +10,7 @@ export default class LoginView {
   private readonly passwordInput: InputCreator;
   private readonly eyeIcon: HTMLElement;
   private readonly messageBox: ElementCreator;
+  private readonly stateManager = new StateManager();
 
   constructor() {
     this.loginContainer = new ElementCreator({
@@ -76,6 +77,16 @@ export default class LoginView {
     this.loginContainer.addInnerElement(loginButton.getElement());
     this.loginContainer.addInnerElement(registerButton.getElement());
     this.loginContainer.addInnerElement(this.messageBox);
+
+    [this.loginInput.getElement(), this.passwordInput.getElement()].forEach(
+      (input) => {
+        input.addEventListener("keydown", (event: KeyboardEvent) => {
+          if (event.key === "Enter") {
+            void this.handleLogin();
+          }
+        });
+      },
+    );
   }
 
   public getElement(): HTMLElement {
@@ -103,6 +114,8 @@ export default class LoginView {
         { email: login, password },
         () => {
           this.showMessage("Login successful!", false);
+          this.stateManager.login = login;
+          this.stateManager.setState(true);
           this.clearInputs();
           globalThis.location.hash = Routes.HOME;
           resolve();

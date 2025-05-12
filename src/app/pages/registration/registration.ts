@@ -16,6 +16,7 @@ export default class RegistrationView {
   private readonly zipInput: InputCreator;
   private readonly countryInput: InputCreator;
   private readonly messageBox: ElementCreator;
+  private readonly stateManager = new StateManager();
 
   constructor() {
     this.registrationContainer = new ElementCreator({
@@ -126,6 +127,15 @@ export default class RegistrationView {
     this.registrationContainer.addInnerElement(registrationButton.getElement());
     this.registrationContainer.addInnerElement(goBackButton.getElement());
     this.registrationContainer.addInnerElement(this.messageBox);
+
+    this.registrationContainer
+      .getElement()
+      .addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          void this.handleRegistration();
+        }
+      });
   }
 
   public getElement(): HTMLElement {
@@ -186,6 +196,8 @@ export default class RegistrationView {
         userData,
         () => {
           this.showMessage("Registration successful!", false);
+          this.stateManager.login = email;
+          this.stateManager.setState(true);
           this.clearInputs();
           globalThis.location.hash = Routes.LOGIN;
           resolve();

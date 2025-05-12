@@ -7,6 +7,7 @@ const cssClasses = {
   BUTTON: "button",
   TITLE: "title",
   ERROR: "error",
+  DISABLE: "disable",
 };
 
 const Routes = {
