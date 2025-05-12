@@ -9,7 +9,7 @@ export default class LoginView {
   private readonly loginInput: InputCreator;
   private readonly passwordInput: InputCreator;
   private readonly eyeIcon: HTMLElement;
-  private readonly messageBox: HTMLElement;
+  private readonly messageBox: ElementCreator;
 
   constructor() {
     this.loginContainer = new ElementCreator({
@@ -58,11 +58,16 @@ export default class LoginView {
       className: [cssClasses.BUTTON],
       textContent: Buttons.REGISTRATION,
       callback: (): void => {
+        this.clearInputs();
         globalThis.location.hash = Routes.REGISTRATION;
       },
     });
 
-    this.messageBox = document.createElement("div");
+    this.messageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
 
     this.loginContainer.addInnerElement(title.getElement());
     this.loginContainer.addInnerElement(this.loginInput.getElement());
@@ -98,6 +103,7 @@ export default class LoginView {
         { email: login, password },
         () => {
           this.showMessage("Login successful!", false);
+          this.clearInputs();
           globalThis.location.hash = Routes.HOME;
           resolve();
         },
@@ -114,7 +120,14 @@ export default class LoginView {
   }
 
   private showMessage(message: string, isError: boolean): void {
-    this.messageBox.textContent = message;
-    this.messageBox.style.color = isError ? "red" : "green";
+    this.messageBox.getElement().textContent = message;
+    this.messageBox.getElement().style.color = isError ? "red" : "green";
+  }
+
+  private clearInputs(): void {
+    this.messageBox.getElement().textContent = "";
+    this.loginInput.getElement().value = "";
+    this.passwordInput.getElement().value = "";
+    this.passwordInput.getElement().type = "password";
   }
 }

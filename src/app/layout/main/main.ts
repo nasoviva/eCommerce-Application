@@ -22,8 +22,8 @@ export default class MainView extends View {
     this.registrationView = new RegistrationView();
     this.homeView = new HomeView();
     this.contentContainer = new ElementCreator({
-      tag: "main",
-      className: [cssClasses.MAIN],
+      tag: "div",
+      className: [cssClasses.CONTAINER_COLUMN],
       textContent: "",
       callback: undefined,
     });

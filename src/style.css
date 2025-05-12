@@ -88,3 +88,7 @@ body {
 .title {
   font-weight: bold;
 }
+
+.error {
+  height: 20px;
+}

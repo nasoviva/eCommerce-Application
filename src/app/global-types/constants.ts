@@ -6,6 +6,7 @@ const cssClasses = {
   CONTAINER_ROW: "container-row",
   BUTTON: "button",
   TITLE: "title",
+  ERROR: "error",
 };
 
 const Routes = {

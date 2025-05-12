@@ -1,4 +1,5 @@
 import { Buttons, cssClasses, Routes } from "../../global-types/constants";
+import StateManager from "../../services/state-manager/state-manager";
 import ElementCreator from "../../shared/element-creator";
 
 export default class HomeView {
@@ -22,6 +23,9 @@ export default class HomeView {
       className: [cssClasses.BUTTON],
       textContent: Buttons.LOGOUT,
       callback: (): void => {
+        const stateManager = new StateManager();
+        stateManager.isLoggedIn = false;
+        stateManager.setState(false);
         globalThis.location.hash = Routes.LOGIN;
       },
     });

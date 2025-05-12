@@ -15,7 +15,7 @@ export default class RegistrationView {
   private readonly cityInput: InputCreator;
   private readonly zipInput: InputCreator;
   private readonly countryInput: InputCreator;
-  private readonly messageBox: HTMLElement;
+  private readonly messageBox: ElementCreator;
 
   constructor() {
     this.registrationContainer = new ElementCreator({
@@ -98,11 +98,16 @@ export default class RegistrationView {
       className: [cssClasses.BUTTON],
       textContent: Buttons.GO_LOGIN,
       callback: (): void => {
+        this.clearInputs();
         globalThis.location.hash = Routes.LOGIN;
       },
     });
 
-    this.messageBox = document.createElement("div");
+    this.messageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
 
     this.registrationContainer.addInnerElement(title.getElement());
     this.registrationContainer.addInnerElement(this.emailInput.getElement());
@@ -169,6 +174,10 @@ export default class RegistrationView {
       ],
       defaultShippingAddress: 0,
     };
+    console.log(
+      "Sending registration data:",
+      JSON.stringify(userData, null, 2),
+    );
 
     const apiService = new ApiRequestService(new StateManager());
 
@@ -177,6 +186,7 @@ export default class RegistrationView {
         userData,
         () => {
           this.showMessage("Registration successful!", false);
+          this.clearInputs();
           globalThis.location.hash = Routes.LOGIN;
           resolve();
         },
@@ -190,7 +200,20 @@ export default class RegistrationView {
   }
 
   private showMessage(message: string, isError: boolean): void {
-    this.messageBox.textContent = message;
-    this.messageBox.style.color = isError ? "red" : "green";
+    this.messageBox.getElement().textContent = message;
+    this.messageBox.getElement().style.color = isError ? "red" : "green";
+  }
+
+  private clearInputs(): void {
+    this.emailInput.getElement().value = "";
+    this.passwordInput.getElement().value = "";
+    this.firstNameInput.getElement().value = "";
+    this.lastNameInput.getElement().value = "";
+    this.dateOfBirthInput.getElement().value = "";
+    this.streetInput.getElement().value = "";
+    this.cityInput.getElement().value = "";
+    this.zipInput.getElement().value = "";
+    this.countryInput.getElement().value = "";
+    this.messageBox.getElement().textContent = "";
   }
 }
