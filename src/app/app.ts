@@ -13,13 +13,21 @@ export default class App {
   private readonly stateManager: StateManager;
 
   constructor() {
-    this.mainView = new MainView();
-    this.headerView = new HeaderView();
-    this.footerView = new FooterView();
     this.stateManager = new StateManager();
     this.apiRequestService = new ApiRequestService(this.stateManager);
+
+    this.headerView = new HeaderView(this.stateManager, this.apiRequestService);
+    this.footerView = new FooterView();
+
+    this.mainView = new MainView(
+      this.headerView,
+      this.stateManager,
+      this.apiRequestService,
+    );
+
     App.setFavicon("./favicon.ico");
     this.createView();
+
     this.testMethod();
   }
 
