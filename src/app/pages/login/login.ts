@@ -1,10 +1,10 @@
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
-import { cssClasses, Routes, Buttons } from "../../global-types/constants";
+import { cssClasses, Routes, Buttons, Titles } from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
 import InputCreator from "../../shared/input-creator";
 import type { MyCustomerSignin } from "@commercetools/platform-sdk";
-import Validator from "../../services/validator";
+import Validator from "../../services/validator/validator";
 
 interface AuthResponse {
   userId?: string;
@@ -36,7 +36,7 @@ export default class LoginView {
     const title = new ElementCreator({
       tag: "h2",
       className: [cssClasses.TITLE],
-      textContent: "Login",
+      textContent: Titles.LOGIN,
     });
 
     this.loginInput = new InputCreator({
@@ -121,7 +121,7 @@ export default class LoginView {
 
     this.eyeIcon.src = !isPasswordVisible
       ? "https://img.icons8.com/?size=100&id=e6GkJcP46Dip&format=png&color=000000"
-      : "https://img.icons8.com/ios-filled/24/000000/closed-eye.png";
+      : "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
   }
 
   private handleLogin(): void {

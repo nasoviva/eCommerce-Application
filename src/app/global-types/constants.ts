@@ -7,6 +7,8 @@ const cssClasses = {
   CONTAINER_ROW: "container-row",
   CONTAINER_BUTTONS: "container-buttons",
   BUTTON: "button",
+  HEADER_BUTTON: "header-button",
+  HEADER_BUTTON_ACTIVE: "header-button-active",
   LOGO: "logo",
   TITLE: "title",
   ERROR: "error",
@@ -25,9 +27,15 @@ const Routes = {
 const Buttons = {
   LOGIN: "LogIn",
   LOGOUT: "LogOut",
-  GO_HOME: "Go Home",
+  GO_HOME: "Home",
   REGISTRATION: " SignUp",
   GO_LOGIN: "Back to LogIn",
 };
 
-export { Routes, cssClasses, Buttons };
+const Titles = {
+  LOGIN: "Ready to laugh? Log in with your details and start exploring our sticky notes collection!",
+  MAIN: "Log in to start shopping the funniest goods at Joke Store on Sticky Notes!",
+  REGISTRATION: "Sign up now and let the laughter begin! Create your account and join the joke revolution",
+};
+
+export { Routes, cssClasses, Buttons, Titles };

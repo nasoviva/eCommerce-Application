@@ -74,9 +74,7 @@ export default class MainView extends View {
       this.setContent(this.loginView.getElement());
     } else if (path === Routes.REGISTRATION) {
       const registrationElement = this.registrationView.getElement();
-      if (registrationElement) {
-        this.setContent(registrationElement);
-      }
+      this.setContent(registrationElement);
     } else if (path === Routes.HOME) {
       this.setContent(this.homeView.getElement());
     } else {

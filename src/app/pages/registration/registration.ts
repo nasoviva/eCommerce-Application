@@ -1,12 +1,12 @@
-import { cssClasses, Buttons, Routes } from "../../global-types/constants";
+import { cssClasses, Buttons, Routes, Titles } from "../../global-types/constants";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
-import Validator from "../../services/validator";
+import Validator from "../../services/validator/validator";
 import ElementCreator from "../../shared/element-creator";
 import InputCreator from "../../shared/input-creator";
 
 export default class RegistrationView {
-  private readonly registrationContainer: ElementCreator | undefined;
+  private readonly registrationContainer: ElementCreator;
   private readonly stateManager: StateManager;
   private readonly apiRequestService: ApiRequestService;
   private readonly emailInput: InputCreator | undefined;
@@ -27,21 +27,21 @@ export default class RegistrationView {
     this.stateManager = stateManager;
     this.apiRequestService = apiRequestService;
 
-    if (this.stateManager.isLoggedIn) {
-      globalThis.location.hash = Routes.HOME;
-      return;
-    }
-
     this.registrationContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_COLUMN],
       textContent: "",
     });
 
+    if (this.stateManager.isLoggedIn) {
+      globalThis.location.hash = Routes.HOME;
+      return;
+    }
+
     const title = new ElementCreator({
       tag: "h2",
       className: [cssClasses.TITLE],
-      textContent: "Registration",
+      textContent: Titles.REGISTRATION,
     });
 
     this.emailInput = new InputCreator({
@@ -162,10 +162,8 @@ export default class RegistrationView {
     });
   }
 
-  public getElement(): HTMLElement | undefined {
-    if (this.registrationContainer) {
-      return this.registrationContainer.getElement();
-    }
+  public getElement(): HTMLElement {
+    return this.registrationContainer.getElement();
   }
 
   private async handleRegistration(): Promise<void> {

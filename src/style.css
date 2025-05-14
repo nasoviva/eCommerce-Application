@@ -1,6 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Allura&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Press+Start+2P&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @import url("modern-normalize/modern-normalize.css");
 
+:root {
+  --primary-color: #0074be;
+  --secondary-color: #004177;
+  --highlight-color: #004177;
+  --button-text-color: white;
+  --button-hover-color: #004177;
+  --button-active-color: #0074be;
+  --background-color: white;
+  --text-color: #004177;
+  --input-border-color: #ccc;
+  --input-focus-border-color: #004177;
+  --input-focus-shadow-color: #0074be;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -16,8 +30,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: white;
-  color: #004177;
+  background-color:  var(--background-color);
+  color: var(--text-color);
   font-size: 16px;
   font-family: "Open Sans", sans-serif;
 }
@@ -90,18 +104,19 @@ body {
 
 .button {
   border-radius: 0.3rem;
-  background-color: #0074be;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
   transition: 0.3s;
   padding: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 140px;
+  border: none;
 }
 
 .button:hover {
-  background-color: #004177;
+  background-color: var(--button-hover-color);
   cursor: pointer;
   box-shadow: 1px 2px 2px #0074be;
 }
@@ -110,22 +125,48 @@ body {
   cursor: pointer;
 }
 
+.header-button {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--primary-color);
+  transition: 0.3s;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  font-weight: bold;
+}
+
+.header-button-active {
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.header-button:hover {
+  color: var(--highlight-color);
+  cursor: pointer;
+  border-bottom: 2px solid var(--highlight-color);
+}
+
 .logo {
   cursor: pointer;
   text-wrap: nowrap;
   font-size: 20px;
   font-weight: bold;
   padding: 4px 16px;
-  border: 3px solid #0074be;
+  border: 3px solid var(--primary-color);
   border-radius: 20px;
-  color: #0074be;
+  color: var(--primary-color);
   height: fit-content;
 }
 
 .title {
+  font-size: 16px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
+  color :var(--primary-color);
 }
 
 .error {
@@ -142,10 +183,10 @@ body {
 .input {
   width: 250px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--input-border-color);
   border-radius: 4px;
-  background-color: white;
-  color: #004177;
+  background-color: transparent;
+  color: var(--text-color);
   transition:
     border 0.3s,
     box-shadow 0.3s;
@@ -153,8 +194,8 @@ body {
 
 .input:focus {
   outline: none;
-  border-color: #004177;
-  box-shadow: 0 0 5px #0074be;
+  border-color: var(--input-focus-border-color);
+  box-shadow: 0 0 5px var(--input-focus-shadow-color);
 }
 
 .container-inputs {

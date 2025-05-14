@@ -1,4 +1,4 @@
-import { cssClasses } from "../../global-types/constants";
+import { cssClasses, Titles } from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
 import type StateManager from "../../services/state-manager/state-manager";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
@@ -37,8 +37,8 @@ export default class HomeView {
 
     const welcomeMessage =
       isLoggedIn && userName
-        ? `Welcome, ${userName}!`
-        : "Welcome to our application. Please log in to access more features.";
+        ? `Hey ${userName}, ready for some laughs?`
+        : Titles.MAIN;
 
     const welcomeElement = new ElementCreator({
       tag: "h2",
