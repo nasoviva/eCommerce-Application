@@ -57,12 +57,16 @@ export default class LoginView {
       placeholder: "Enter Password",
     });
 
- this.eyeIcon = document.createElement("img");
-this.eyeIcon.src = "https://img.icons8.com/ios-filled/24/000000/closed-eye.png";
-this.eyeIcon.alt = "eye icon";
-this.eyeIcon.classList.add(cssClasses.EYE);
-this.eyeIcon.style.cursor = "pointer";
-this.eyeIcon.addEventListener("click", this.togglePasswordVisibility.bind(this));
+    this.eyeIcon = document.createElement("img");
+    this.eyeIcon.src =
+      "https://img.icons8.com/ios-filled/24/000000/closed-eye.png";
+    this.eyeIcon.alt = "eye icon";
+    this.eyeIcon.classList.add(cssClasses.EYE);
+    this.eyeIcon.style.cursor = "pointer";
+    this.eyeIcon.addEventListener(
+      "click",
+      this.togglePasswordVisibility.bind(this),
+    );
 
     const loginButton = new ElementCreator({
       tag: "button",
@@ -111,13 +115,13 @@ this.eyeIcon.addEventListener("click", this.togglePasswordVisibility.bind(this))
 
   private togglePasswordVisibility(): void {
     const inputEl = this.passwordInput.getElement();
-  const isPasswordVisible = inputEl.type === "text";
+    const isPasswordVisible = inputEl.type === "text";
 
-  inputEl.type = isPasswordVisible ? "password" : "text";
+    inputEl.type = isPasswordVisible ? "password" : "text";
 
-  (this.eyeIcon as HTMLImageElement).src = !isPasswordVisible
-    ? "https://img.icons8.com/?size=100&id=e6GkJcP46Dip&format=png&color=000000"
-    : "https://img.icons8.com/ios-filled/24/000000/closed-eye.png";
+    this.eyeIcon.src = !isPasswordVisible
+      ? "https://img.icons8.com/?size=100&id=e6GkJcP46Dip&format=png&color=000000"
+      : "https://img.icons8.com/ios-filled/24/000000/closed-eye.png";
   }
 
   private handleLogin(): void {

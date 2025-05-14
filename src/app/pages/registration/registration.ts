@@ -51,7 +51,7 @@ export default class RegistrationView {
     });
 
     this.passwordInput = new InputCreator({
-      type: "password",
+      type: "text",
       className: [cssClasses.INPUT],
       placeholder: "Enter Password",
     });
@@ -152,11 +152,13 @@ export default class RegistrationView {
       this.zipInput,
       this.countryInput,
     ].forEach((input) => {
-      input?.getElement().addEventListener("keydown", (event: KeyboardEvent) => {
-        if (event.key === "Enter") {
-          void this.handleRegistration();
-        }
-      });
+      input
+        ?.getElement()
+        .addEventListener("keydown", (event: KeyboardEvent) => {
+          if (event.key === "Enter") {
+            void this.handleRegistration();
+          }
+        });
     });
   }
 
@@ -233,8 +235,10 @@ export default class RegistrationView {
       userData,
       () => {
         this.showMessage("Registration successful!", false);
+        this.stateManager.login = email;
+        this.stateManager.setState(true);
         this.clearInputs();
-        globalThis.location.hash = Routes.LOGIN;
+        globalThis.location.hash = Routes.HOME;
       },
       (error: Error) => {
         const message = error instanceof Error ? error.message : String(error);
@@ -246,7 +250,9 @@ export default class RegistrationView {
   private showMessage(message: string, isError: boolean): void {
     if (this.messageBox) {
       this.messageBox.getElement().textContent = message;
-      this.messageBox.getElement().style.color = isError ? "#e7291f" : "#004177";
+      this.messageBox.getElement().style.color = isError
+        ? "#e7291f"
+        : "#004177";
     }
   }
 

@@ -129,9 +129,9 @@ body {
 }
 
 .error {
-    min-height: 20px;
-    text-align: center;
-    padding: 10px;
+  min-height: 20px;
+  text-align: center;
+  padding: 10px;
 }
 
 .disable {
