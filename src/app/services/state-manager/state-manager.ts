@@ -37,13 +37,13 @@ export default class StateManager {
     this.configureStateStorage();
   }
 
-  public setState(loginStatus: boolean = true): void {
+  public setState(loginStatus?: boolean): void {
     if (loginStatus) this.isLoggedIn = loginStatus;
     if (this.isLoggedIn) {
       const loginData = {
         login: this.login,
         password: this.password,
-        isLoggedIn: loginStatus,
+        isLoggedIn: this.isLoggedIn,
         userId: this.userId,
       };
       globalThis.sessionStorage.setItem(
