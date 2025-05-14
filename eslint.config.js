@@ -21,6 +21,8 @@ export default defineConfig([
         ...globals.builtin,
         ...globals.browser,
         ...globals.node,
+        test: "readonly",
+        expect: "readonly",
       },
     },
     plugins: {
