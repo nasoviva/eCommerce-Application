@@ -54,6 +54,11 @@ export default class ApiRequestService {
       });
   }
 
+  public logOutUser(): void {
+    this.switchRequestBuilder("anon");
+    this.stateManager.isLoggedIn = false;
+  }
+
   public registerUser(
     registrationData: MyCustomerDraft,
     onSuccess?: CallableFunction,
