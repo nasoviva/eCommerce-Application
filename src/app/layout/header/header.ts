@@ -41,7 +41,7 @@ export default class HeaderView extends View {
     const logoContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.LOGO],
-      textContent: "Logo",
+      textContent: "Joke Store",
     });
 
     logoContainer.getElement().addEventListener("click", () => {
@@ -59,6 +59,15 @@ export default class HeaderView extends View {
       tag: "div",
       className: [cssClasses.CONTAINER_BUTTONS],
       textContent: "",
+    });
+
+    const homeButton = new ElementCreator({
+      tag: "button",
+      className: [cssClasses.BUTTON],
+      textContent: Buttons.GO_HOME,
+      callback: (): void => {
+        globalThis.location.hash = Routes.HOME;
+      },
     });
 
     const loginButton = new ElementCreator({
@@ -94,6 +103,7 @@ export default class HeaderView extends View {
       },
     });
     this.headerContainer.addInnerElement(buttonsContainer.getElement());
+    buttonsContainer.addInnerElement(homeButton.getElement());
     buttonsContainer.addInnerElement(registerButton.getElement());
     buttonsContainer.addInnerElement(loginButton.getElement());
     buttonsContainer.addInnerElement(logoutButton.getElement());

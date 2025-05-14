@@ -1,6 +1,7 @@
 import { cssClasses, Buttons, Routes } from "../../global-types/constants";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
+import Validator from "../../services/validator";
 import ElementCreator from "../../shared/element-creator";
 import InputCreator from "../../shared/input-creator";
 
@@ -139,6 +140,24 @@ export default class RegistrationView {
     this.registrationContainer.addInnerElement(registrationButton.getElement());
     this.registrationContainer.addInnerElement(goBackButton.getElement());
     this.registrationContainer.addInnerElement(this.messageBox.getElement());
+
+    [
+      this.emailInput,
+      this.passwordInput,
+      this.firstNameInput,
+      this.lastNameInput,
+      this.dateOfBirthInput,
+      this.streetInput,
+      this.cityInput,
+      this.zipInput,
+      this.countryInput,
+    ].forEach((input) => {
+      input?.getElement().addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Enter") {
+          void this.handleRegistration();
+        }
+      });
+    });
   }
 
   public getElement(): HTMLElement | undefined {
@@ -148,34 +167,78 @@ export default class RegistrationView {
   }
 
   private async handleRegistration(): Promise<void> {
-    let email = "";
-    let password = "";
-    if (this.emailInput && this.passwordInput) {
-      email = this.emailInput.getElement().value.trim();
-      password = this.passwordInput.getElement().value.trim();
+    const errors: string[] = [];
 
-      if (!email || !password) {
-        this.showMessage("Please fill in both fields.", true);
-        return;
-      }
+    const email = this.emailInput?.getElement().value.trim() ?? "";
+    const password = this.passwordInput?.getElement().value.trim() ?? "";
+    const firstName = this.firstNameInput?.getElement().value.trim() ?? "";
+    const lastName = this.lastNameInput?.getElement().value.trim() ?? "";
+    const dateOfBirth = this.dateOfBirthInput?.getElement().value ?? "";
+    const street = this.streetInput?.getElement().value.trim() ?? "";
+    const city = this.cityInput?.getElement().value.trim() ?? "";
+    const zip = this.zipInput?.getElement().value.trim() ?? "";
+    const country = this.countryInput?.getElement().value.trim() ?? "";
+
+    const emailError = Validator.checkEmail(email);
+    if (emailError) errors.push(emailError);
+
+    const passwordError = Validator.checkPassword(password);
+    if (passwordError) errors.push(passwordError);
+
+    const firstNameError = Validator.checkNameOrLastName(firstName);
+    if (firstNameError) errors.push(`First Name: ${firstNameError}`);
+
+    const lastNameError = Validator.checkNameOrLastName(lastName);
+    if (lastNameError) errors.push(`Last Name: ${lastNameError}`);
+
+    const birthDateError = Validator.checkBirthDate(dateOfBirth);
+    if (birthDateError) errors.push(birthDateError);
+
+    const streetError = Validator.checkStreet(street);
+    if (streetError) errors.push(streetError);
+
+    const cityError = Validator.checkCity(city);
+    if (cityError) errors.push(cityError);
+
+    const countryError = Validator.checkCountry(country);
+    if (countryError) errors.push(countryError);
+
+    const zipError =
+      country === "Russia"
+        ? Validator.checkIndexRussia(zip)
+        : country === "USA"
+          ? Validator.checkIndexUSA(zip)
+          : "";
+
+    if (zipError) errors.push(zipError);
+
+    if (errors.length > 0) {
+      this.showMessage(errors.join("\n"), true);
+      return;
     }
 
     const userData = {
       email,
       password,
+      firstName,
+      lastName,
+      dateOfBirth,
+      street,
+      city,
+      zip,
+      country,
     };
+
     this.apiRequestService.registerUser(
       userData,
       () => {
         this.showMessage("Registration successful!", false);
-        this.stateManager.login = email;
-        this.stateManager.setState(true);
         this.clearInputs();
-        globalThis.location.hash = Routes.HOME;
+        globalThis.location.hash = Routes.LOGIN;
       },
       (error: Error) => {
-        console.error("Registration error:", error);
-        this.showMessage("Registration failed. Try again.", true);
+        const message = error instanceof Error ? error.message : String(error);
+        this.showMessage(message, true);
       },
     );
   }
@@ -183,7 +246,7 @@ export default class RegistrationView {
   private showMessage(message: string, isError: boolean): void {
     if (this.messageBox) {
       this.messageBox.getElement().textContent = message;
-      this.messageBox.getElement().style.color = isError ? "red" : "green";
+      this.messageBox.getElement().style.color = isError ? "#e7291f" : "#004177";
     }
   }
 

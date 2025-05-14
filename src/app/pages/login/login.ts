@@ -4,6 +4,7 @@ import { cssClasses, Routes, Buttons } from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
 import InputCreator from "../../shared/input-creator";
 import type { MyCustomerSignin } from "@commercetools/platform-sdk";
+import Validator from "../../services/validator";
 
 interface AuthResponse {
   userId?: string;
@@ -16,7 +17,7 @@ export default class LoginView {
   private readonly passwordContainer: ElementCreator;
   private readonly loginInput: InputCreator;
   private readonly passwordInput: InputCreator;
-  private readonly eyeIcon: HTMLElement;
+  private readonly eyeIcon: HTMLImageElement;
   private readonly messageBox: ElementCreator;
 
   constructor(
@@ -56,13 +57,12 @@ export default class LoginView {
       placeholder: "Enter Password",
     });
 
-    this.eyeIcon = new ElementCreator({
-      tag: "span",
-      className: [cssClasses.EYE],
-      textContent: "👁️",
-      callback: this.togglePasswordVisibility.bind(this),
-    }).getElement();
-    this.eyeIcon.style.cursor = "pointer";
+ this.eyeIcon = document.createElement("img");
+this.eyeIcon.src = "https://img.icons8.com/ios-filled/24/000000/closed-eye.png";
+this.eyeIcon.alt = "eye icon";
+this.eyeIcon.classList.add(cssClasses.EYE);
+this.eyeIcon.style.cursor = "pointer";
+this.eyeIcon.addEventListener("click", this.togglePasswordVisibility.bind(this));
 
     const loginButton = new ElementCreator({
       tag: "button",
@@ -110,14 +110,31 @@ export default class LoginView {
   }
 
   private togglePasswordVisibility(): void {
-    const inputType = this.passwordInput.getElement().type;
-    this.passwordInput.getElement().type =
-      inputType === "password" ? "text" : "password";
+    const inputEl = this.passwordInput.getElement();
+  const isPasswordVisible = inputEl.type === "text";
+
+  inputEl.type = isPasswordVisible ? "password" : "text";
+
+  (this.eyeIcon as HTMLImageElement).src = !isPasswordVisible
+    ? "https://img.icons8.com/?size=100&id=e6GkJcP46Dip&format=png&color=000000"
+    : "https://img.icons8.com/ios-filled/24/000000/closed-eye.png";
   }
 
   private handleLogin(): void {
     const email = this.loginInput.getElement().value.trim();
     const password = this.passwordInput.getElement().value.trim();
+
+    const emailError = Validator.checkEmail(email);
+    if (emailError) {
+      this.displayMessage(emailError, true);
+      return;
+    }
+
+    const passwordError = Validator.checkPassword(password);
+    if (passwordError) {
+      this.displayMessage(passwordError, true);
+      return;
+    }
 
     if (!email || !password) {
       this.displayMessage("Please enter both email and password.", true);
@@ -156,7 +173,7 @@ export default class LoginView {
 
   private displayMessage(message: string, isError: boolean): void {
     this.messageBox.getElement().textContent = message;
-    this.messageBox.getElement().style.color = isError ? "red" : "green";
+    this.messageBox.getElement().style.color = isError ? "#e7291f" : "#004177";
   }
 
   private clearInputs(): void {

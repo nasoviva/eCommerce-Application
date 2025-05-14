@@ -16,12 +16,10 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #000;
-  color: white;
+  background-color: white;
+  color: #004177;
   font-size: 16px;
   font-family: "Open Sans", sans-serif;
-  line-height: 16px;
-  letter-spacing: 1.2px;
 }
 
 .main {
@@ -92,8 +90,8 @@ body {
 
 .button {
   border-radius: 0.3rem;
-  background-color: white;
-  color: #000;
+  background-color: #0074be;
+  color: white;
   transition: 0.3s;
   padding: 6px;
   display: flex;
@@ -103,18 +101,25 @@ body {
 }
 
 .button:hover {
-  background-color: lawngreen;
+  background-color: #004177;
   cursor: pointer;
-  box-shadow: 1px 2px 2px white;
+  box-shadow: 1px 2px 2px #0074be;
 }
 
 .button:active {
   cursor: pointer;
-  color: #000;
 }
 
 .logo {
   cursor: pointer;
+  text-wrap: nowrap;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 4px 16px;
+  border: 3px solid #0074be;
+  border-radius: 20px;
+  color: #0074be;
+  height: fit-content;
 }
 
 .title {
@@ -124,8 +129,9 @@ body {
 }
 
 .error {
-  height: 20px;
-  text-align: center;
+    min-height: 20px;
+    text-align: center;
+    padding: 10px;
 }
 
 .disable {
@@ -139,7 +145,7 @@ body {
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: white;
-  color: #000;
+  color: #004177;
   transition:
     border 0.3s,
     box-shadow 0.3s;
@@ -147,8 +153,8 @@ body {
 
 .input:focus {
   outline: none;
-  border-color: lawngreen;
-  box-shadow: 0 0 5px lawngreen;
+  border-color: #004177;
+  box-shadow: 0 0 5px #0074be;
 }
 
 .container-inputs {
@@ -166,6 +172,6 @@ body {
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  font-size: 18px;
-  color: #888;
+  width: 20px;
+  height: 20px;
 }
