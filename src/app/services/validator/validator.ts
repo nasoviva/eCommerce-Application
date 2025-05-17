@@ -105,7 +105,7 @@ export default class Validator {
   public static checkIndexRussia(indexForCheck: string): string {
     // Проверка формата индекса для России
     if (!/^\d{6}$/.test(indexForCheck)) {
-      return "The postal code does not match the format for Russia";
+      return "The postal code does not match the format for Russia!";
     }
     // возвращаем пустую строку, если с индексом всё в порядке
     return "";
@@ -114,7 +114,7 @@ export default class Validator {
   public static checkIndexUSA(indexForCheck: string): string {
     // Проверка формата индекса для США
     if (!/^\d{5}(-\d{4})?$/.test(indexForCheck)) {
-      return "The postal code does not match the format for USA";
+      return "The postal code does not match the format for USA!";
     }
     // возвращаем пустую строку, если с индексом всё в порядке
     return "";

@@ -31,6 +31,7 @@ export default class ApiRequestService {
   }
 
   public getToken(): TokenStore {
+    console.log(this.tokenCache.get());
     return this.tokenCache.get();
   }
 
