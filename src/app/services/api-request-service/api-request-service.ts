@@ -24,6 +24,12 @@ export default class ApiRequestService {
     this.configureService();
   }
 
+  public static errorParser(reason: Response): string[] {
+    if ("error" in reason && Array.isArray(reason.error)) {
+      return reason.error.map((x) => x.message);
+    } else return [];
+  }
+
   public getToken(): TokenStore {
     return this.tokenCache.get();
   }
@@ -75,7 +81,9 @@ export default class ApiRequestService {
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
-        if (onReject) onReject(reason);
+        if (onReject) {
+          onReject(reason);
+        }
       });
   }
 
