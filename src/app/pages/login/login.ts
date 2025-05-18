@@ -1,6 +1,11 @@
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
-import { cssClasses, Routes, Buttons, Titles } from "../../global-types/constants";
+import {
+  cssClasses,
+  Routes,
+  Buttons,
+  Titles,
+} from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
 import InputCreator from "../../shared/input-creator";
 import type { MyCustomerSignin } from "@commercetools/platform-sdk";
@@ -14,11 +19,18 @@ export default class LoginView {
   private readonly stateManager: StateManager;
   private readonly apiRequestService: ApiRequestService;
   private readonly loginContainer: ElementCreator;
-  private readonly passwordContainer: ElementCreator;
-  private readonly loginInput: InputCreator;
+  // private readonly passwordContainer: ElementCreator;
+  // private readonly loginInput: InputCreator;
+  // private readonly passwordInput: InputCreator;
+  private readonly emailInput: InputCreator;
   private readonly passwordInput: InputCreator;
-  private readonly eyeIcon: HTMLImageElement;
+  // private readonly emailErrorBox: ElementCreator;
+  // private readonly passwordErrorBox: ElementCreator;
+   private readonly emailMessageBox: ElementCreator;
+  private readonly passwordMessageBox: ElementCreator;
   private readonly messageBox: ElementCreator;
+
+  private readonly eyeIcon: HTMLImageElement;
 
   constructor(
     stateManager: StateManager,
@@ -39,16 +51,36 @@ export default class LoginView {
       textContent: Titles.LOGIN,
     });
 
-    this.loginInput = new InputCreator({
+    const emailLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.LABEL],
+      textContent: "Email:",
+    });
+
+    this.emailInput = new InputCreator({
       type: "text",
       className: [cssClasses.INPUT],
       placeholder: "Enter Email",
     });
 
-    this.passwordContainer = new ElementCreator({
+    this.emailMessageBox = new ElementCreator({
       tag: "div",
-      className: [cssClasses.CONTAINER_INPUTS],
+      className: [cssClasses.ERROR],
       textContent: "",
+    });
+
+    const emailContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_CENTER],
+      textContent: "",
+    });
+    emailContainer.addInnerElement(emailLabel.getElement());
+    emailContainer.addInnerElement(this.emailInput.getElement());
+
+    const passwordLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.LABEL],
+      textContent: "Password:",
     });
 
     this.passwordInput = new InputCreator({
@@ -58,15 +90,39 @@ export default class LoginView {
     });
 
     this.eyeIcon = document.createElement("img");
-    this.eyeIcon.src =
-      "https://img.icons8.com/ios-filled/24/000000/closed-eye.png";
+    this.eyeIcon.src = "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
     this.eyeIcon.alt = "eye icon";
     this.eyeIcon.classList.add(cssClasses.EYE);
     this.eyeIcon.style.cursor = "pointer";
-    this.eyeIcon.addEventListener(
-      "click",
-      this.togglePasswordVisibility.bind(this),
-    );
+    this.eyeIcon.addEventListener("click", this.togglePasswordVisibility.bind(this));
+
+    const passwordInputWrapper = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_INPUTS],
+      textContent: "",
+    });
+    passwordInputWrapper.addInnerElement(this.passwordInput.getElement());
+    passwordInputWrapper.addInnerElement(this.eyeIcon);
+
+this.passwordMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    const passwordContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_CENTER],
+      textContent: "",
+    });
+    passwordContainer.addInnerElement(passwordLabel.getElement());
+    passwordContainer.addInnerElement(passwordInputWrapper.getElement());
+
+
+    const formLoginContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_FORM],
+      textContent: "",
+    });
 
     const loginButton = new ElementCreator({
       tag: "button",
@@ -91,16 +147,23 @@ export default class LoginView {
       textContent: "",
     });
 
+       formLoginContainer.addInnerElement(emailContainer.getElement());
+          formLoginContainer.addInnerElement(this.emailMessageBox.getElement());
+    formLoginContainer.addInnerElement(passwordContainer.getElement());
+     formLoginContainer.addInnerElement(this.passwordMessageBox.getElement());
+
     this.loginContainer.addInnerElement(title.getElement());
-    this.loginContainer.addInnerElement(this.loginInput.getElement());
-    this.loginContainer.addInnerElement(this.passwordContainer.getElement());
-    this.passwordContainer.addInnerElement(this.passwordInput.getElement());
-    this.passwordContainer.addInnerElement(this.eyeIcon);
+    // this.loginContainer.addInnerElement(emailContainer.getElement());
+    // this.loginContainer.addInnerElement(this.emailMessageBox.getElement());
+this.loginContainer.addInnerElement(formLoginContainer);
+    // this.loginContainer.addInnerElement(passwordContainer.getElement());
+    //  this.loginContainer.addInnersElement(this.passwordMessageBox.getElement());
+
     this.loginContainer.addInnerElement(loginButton.getElement());
     this.loginContainer.addInnerElement(registerButton.getElement());
     this.loginContainer.addInnerElement(this.messageBox.getElement());
 
-    [this.loginInput.getElement(), this.passwordInput.getElement()].forEach(
+    [this.emailInput.getElement(), this.passwordInput.getElement()].forEach(
       (input) => {
         input.addEventListener("keydown", (event: KeyboardEvent) => {
           if (event.key === "Enter") this.handleLogin();
@@ -125,26 +188,31 @@ export default class LoginView {
   }
 
   private handleLogin(): void {
-    const email = this.loginInput.getElement().value.trim();
-    const password = this.passwordInput.getElement().value.trim();
+
+    const email = this.emailInput.getElement().value;
+    const password = this.passwordInput.getElement().value;
+
+    this.clearErrorMessages();
+
+    let hasError = false;
 
     const emailError = Validator.checkEmail(email);
     if (emailError) {
-      this.displayMessage(emailError, true);
-      return;
+            this.emailMessageBox.getElement().textContent = emailError;
+
+      // this.emailErrorBox.getElement().textContent = emailError;
+      hasError = true;
     }
 
     const passwordError = Validator.checkPassword(password);
     if (passwordError) {
-      this.displayMessage(passwordError, true);
-      return;
+            this.passwordMessageBox.getElement().textContent = passwordError;
+
+      // this.passwordErrorBox.getElement().textContent = passwordError;
+      hasError = true;
     }
 
-    if (!email || !password) {
-      this.displayMessage("Please enter both email and password.", true);
-      return;
-    }
-
+    if (hasError) return;
     const loginData: MyCustomerSignin = { email, password };
 
     this.apiRequestService.authUser(
@@ -181,9 +249,16 @@ export default class LoginView {
   }
 
   private clearInputs(): void {
-    this.loginInput.getElement().value = "";
+    this.emailInput.getElement().value = "";
     this.passwordInput.getElement().value = "";
     this.passwordInput.getElement().type = "password";
     this.messageBox.getElement().textContent = "";
+    this.clearErrorMessages();
+  }
+  private clearErrorMessages(): void {
+    this.emailMessageBox.getElement().textContent = "";
+    this.passwordMessageBox.getElement().textContent = "";
+    // this.emailErrorBox.getElement().textContent = "";
+    // this.passwordErrorBox.getElement().textContent = "";
   }
 }

@@ -65,9 +65,11 @@ export default class HeaderView extends View {
     const homeButton = new ElementCreator({
       tag: "button",
       className: [
-      cssClasses.HEADER_BUTTON,
-      currentRoute === Routes.HOME ? cssClasses.HEADER_BUTTON_ACTIVE : cssClasses.HEADER_BUTTON,
-    ],
+        cssClasses.HEADER_BUTTON,
+        currentRoute === Routes.HOME
+          ? cssClasses.HEADER_BUTTON_ACTIVE
+          : cssClasses.HEADER_BUTTON,
+      ],
       textContent: Buttons.GO_HOME,
       callback: (): void => {
         globalThis.location.hash = Routes.HOME;
@@ -77,10 +79,12 @@ export default class HeaderView extends View {
     const loginButton = new ElementCreator({
       tag: "button",
       className: [
-      cssClasses.HEADER_BUTTON,
-      ...(isLoggedIn ? [cssClasses.DISABLE] : []),
-      currentRoute === Routes.LOGIN ? cssClasses.HEADER_BUTTON_ACTIVE : cssClasses.HEADER_BUTTON,
-    ],
+        cssClasses.HEADER_BUTTON,
+        ...(isLoggedIn ? [cssClasses.DISABLE] : []),
+        currentRoute === Routes.LOGIN
+          ? cssClasses.HEADER_BUTTON_ACTIVE
+          : cssClasses.HEADER_BUTTON,
+      ],
       textContent: Buttons.LOGIN,
       callback: (): void => {
         globalThis.location.hash = Routes.LOGIN;
@@ -90,9 +94,11 @@ export default class HeaderView extends View {
     const registerButton = new ElementCreator({
       tag: "button",
       className: [
-      cssClasses.HEADER_BUTTON,
-      currentRoute === Routes.REGISTRATION ? cssClasses.HEADER_BUTTON_ACTIVE : cssClasses.HEADER_BUTTON,
-    ],
+        cssClasses.HEADER_BUTTON,
+        currentRoute === Routes.REGISTRATION
+          ? cssClasses.HEADER_BUTTON_ACTIVE
+          : cssClasses.HEADER_BUTTON,
+      ],
       textContent: Buttons.REGISTRATION,
       callback: (): void => {
         globalThis.location.hash = Routes.REGISTRATION;
@@ -102,8 +108,8 @@ export default class HeaderView extends View {
     const logoutButton = new ElementCreator({
       tag: "button",
       className: isLoggedIn
-        ? [ cssClasses.HEADER_BUTTON]
-        : [ cssClasses.DISABLE, cssClasses.HEADER_BUTTON],
+        ? [cssClasses.HEADER_BUTTON]
+        : [cssClasses.DISABLE, cssClasses.HEADER_BUTTON],
       textContent: Buttons.LOGOUT,
       callback: (): void => {
         this.apiRequestService.logOutUser();

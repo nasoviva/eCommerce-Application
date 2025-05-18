@@ -1,4 +1,9 @@
-import { cssClasses, Buttons, Routes, Titles } from "../../global-types/constants";
+import {
+  cssClasses,
+  Buttons,
+  Routes,
+  Titles,
+} from "../../global-types/constants";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
 import Validator from "../../services/validator/validator";

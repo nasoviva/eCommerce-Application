@@ -30,15 +30,16 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color:  var(--background-color);
+  background-color: var(--background-color);
   color: var(--text-color);
   font-size: 16px;
   font-family: "Open Sans", sans-serif;
 }
 
 .main {
+  width: 100%;
   flex-grow: 1;
-  padding: 20px;
+  padding: 10px;
 }
 
 .header {
@@ -53,10 +54,11 @@ body {
 .footer {
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  padding: 10px;
-  width: 100%;
-  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10px;
+  padding: 20px;
+  gap: 80px;
+  border-top: 1px solid var(--primary-color);
 }
 
 .container-main {
@@ -77,6 +79,14 @@ body {
   gap: 10px;
 }
 
+.container-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
 .container-column {
   display: flex;
   flex-direction: column;
@@ -87,6 +97,16 @@ body {
   gap: 10px;
 }
 
+.container-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 25px 10px;
+  border-radius: 10px;
+  background-color: hsl(203, 100%, 37%, 0.05);
+}
+
 .container-buttons {
   display: flex;
   align-items: center;
@@ -95,7 +115,7 @@ body {
   gap: 10px;
 }
 
-@media (width <=768px) {
+@media (width <=680px) {
   .container-buttons {
     flex-direction: column;
     align-items: flex-end;
@@ -141,6 +161,7 @@ body {
 
 .header-button-active {
   border-bottom: 2px solid var(--primary-color);
+  pointer-events: none;
 }
 
 .header-button:hover {
@@ -162,17 +183,30 @@ body {
 }
 
 .title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
-  color :var(--primary-color);
+  color: var(--primary-color);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: bold;
+  flex-grow: 1;
+  color: var(--primary-color);
+  text-wrap: nowrap;
+
 }
 
 .error {
-  min-height: 20px;
-  text-align: center;
-  padding: 10px;
+  min-height: 14px;
+  text-align: end;
+  width: 100%;
+  margin: 2px auto;
+  height: 20px;
+  font-size: 12px;
+  color: red;
 }
 
 .disable {
@@ -215,4 +249,23 @@ body {
   cursor: pointer;
   width: 20px;
   height: 20px;
+}
+
+.link {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  text-wrap: nowrap;
+  transition: 0.3s;
+}
+
+.link:hover {
+  color: var(--highlight-color);
+}
+
+.footer .title {
+  text-wrap: nowrap;
+  margin-bottom: 0;
 }
