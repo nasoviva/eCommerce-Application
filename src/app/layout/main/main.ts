@@ -78,10 +78,10 @@ export default class MainView extends View {
     } else if (path === Routes.REGISTRATION) {
       const registrationElement = this.registrationView.getElement();
       this.setContent(registrationElement);
-    } else if (path === Routes.HOME) {
+    } else if (path === Routes.HOME || path === "") {
       this.setContent(this.homeView.getElement());
     } else {
-      /* globalThis.location.hash = Routes.NOT_FOUND; */
+      globalThis.location.hash = Routes.NOT_FOUND;
       this.setContent(this.notFoundView.getElement());
     }
   }
