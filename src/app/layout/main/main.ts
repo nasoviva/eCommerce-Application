@@ -1,6 +1,7 @@
 import { cssClasses, Routes } from "../../global-types/constants";
 import HomeView from "../../pages/home/home";
 import LoginView from "../../pages/login/login";
+import NotFoundView from "../../pages/not-found/not-found";
 import RegistrationView from "../../pages/registration/registration";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
@@ -13,6 +14,7 @@ export default class MainView extends View {
   private readonly loginView: LoginView;
   private readonly homeView: HomeView;
   private readonly registrationView: RegistrationView;
+  private readonly notFoundView: NotFoundView;
   private readonly headerView: HeaderView;
   private readonly stateManager: StateManager;
   private readonly apiRequestService: ApiRequestService;
@@ -37,6 +39,7 @@ export default class MainView extends View {
       this.apiRequestService,
     );
     this.homeView = new HomeView(this.stateManager, this.apiRequestService);
+    this.notFoundView = new NotFoundView();
 
     this.contentContainer = new ElementCreator({
       tag: "div",
@@ -78,7 +81,8 @@ export default class MainView extends View {
     } else if (path === Routes.HOME) {
       this.setContent(this.homeView.getElement());
     } else {
-      globalThis.location.hash = Routes.HOME;
+      /* globalThis.location.hash = Routes.NOT_FOUND; */
+      this.setContent(this.notFoundView.getElement());
     }
   }
 

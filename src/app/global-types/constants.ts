@@ -26,6 +26,7 @@ const Routes = {
   LOGIN: "#login",
   HOME: "#home",
   REGISTRATION: "#registration",
+  NOT_FOUND: "#not-found",
 };
 
 const Buttons = {
