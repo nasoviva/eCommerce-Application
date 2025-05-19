@@ -1,4 +1,4 @@
-.mainContainer {
+.main-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,10 +9,10 @@
   border: 2px solid black;
   padding: 20px;
   background: white;
-  animation: myAnimation 6s linear;
+  animation: my-animation 6s linear;
 }
 
-@keyframes myAnimation {
+@keyframes my-animation {
   0% {
     transform: translateX(200%);
   }
