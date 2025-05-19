@@ -1,27 +1,59 @@
-import { Buttons, cssClasses, Routes } from "../../global-types/constants";
+import { cssClasses, Titles } from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
+import type StateManager from "../../services/state-manager/state-manager";
+import type ApiRequestService from "../../services/api-request-service/api-request-service";
 
 export default class HomeView {
   private readonly homeContainer: ElementCreator;
+  private readonly stateManager: StateManager;
+  private readonly apiRequestService: ApiRequestService;
 
-  constructor() {
+  constructor(
+    stateManager: StateManager,
+    apiRequestService: ApiRequestService,
+  ) {
+    this.stateManager = stateManager;
+    this.apiRequestService = apiRequestService;
+
     this.homeContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_COLUMN],
-      textContent: "Home Container",
+      textContent: "",
     });
-    const loginButton = new ElementCreator({
-      tag: "button",
-      className: [cssClasses.BUTTON],
-      textContent: Buttons.LOGIN,
-      callback: (): void => {
-        globalThis.location.hash = Routes.LOGIN;
-      },
-    });
-    this.homeContainer.addInnerElement(loginButton.getElement());
+
+    this.configureView();
   }
 
   public getElement(): HTMLElement {
+    this.configureView();
     return this.homeContainer.getElement();
+  }
+
+  public configureView(): void {
+    this.homeContainer.getElement().innerHTML = "";
+
+    const isLoggedIn = this.getAuthStatus();
+    const userName = this.getUserName();
+
+    const welcomeMessage =
+      isLoggedIn && userName
+        ? `Hey ${userName}, ready for some laughs?`
+        : Titles.MAIN;
+
+    const welcomeElement = new ElementCreator({
+      tag: "h2",
+      className: [cssClasses.TITLE],
+      textContent: welcomeMessage,
+    });
+
+    this.homeContainer.addInnerElement(welcomeElement.getElement());
+  }
+
+  private getAuthStatus(): boolean {
+    return this.stateManager.isLoggedIn;
+  }
+
+  private getUserName(): string {
+    return this.stateManager.login || "";
   }
 }

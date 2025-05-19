@@ -1,0 +1,31 @@
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  border: 2px solid black;
+  padding: 20px;
+  background: white;
+  animation: my-animation 6s linear;
+}
+
+@keyframes my-animation {
+  0% {
+    transform: translateX(200%);
+  }
+
+  10% {
+    transform: translateX(0);
+  }
+
+  80% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(200%);
+  }
+}

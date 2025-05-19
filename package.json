@@ -27,6 +27,7 @@
     "style-loader": "^4.0.0",
     "stylelint": "^16.19.1",
     "stylelint-config-clean-order": "^7.0.0",
+    "stylelint-config-css-modules": "^4.4.0",
     "stylelint-config-standard": "^38.0.0",
     "stylelint-config-standard-scss": "^14.0.0",
     "ts-jest": "^29.3.2",
@@ -51,8 +52,8 @@
     "format:check": "prettier --check .",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "stylelint": "stylelint '**/*.{css,scss}'",
-    "stylelint:fix": "stylelint '**/*.{css,scss}' --fix"
+    "stylelint": "stylelint 'src/**/*.{css,scss}'",
+    "stylelint:fix": "stylelint 'src/**/*.{css,scss}' --fix"
   },
   "commitlint": {
     "extends": [
@@ -70,6 +71,9 @@
     ]
   },
   "dependencies": {
-    "modern-normalize": "^3.0.1"
+    "@commercetools/platform-sdk": "^8.9.0",
+    "@commercetools/ts-client": "^3.3.0",
+    "modern-normalize": "^3.0.1",
+    "node-fetch": "^3.3.2"
   }
 }

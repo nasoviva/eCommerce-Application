@@ -33,11 +33,13 @@ export default class ElementCreator {
     return this.element;
   }
 
-  public addInnerElement(element: HTMLElement | ElementCreator): void {
-    if (element instanceof ElementCreator) {
-      this.element.append(element.getElement());
-    } else {
-      this.element.append(element);
+  public addInnerElement(...elements: (HTMLElement | ElementCreator)[]): void {
+    for (const item of elements) {
+      if (item instanceof ElementCreator) {
+        this.element.append(item.getElement());
+      } else {
+        this.element.append(item);
+      }
     }
   }
 
