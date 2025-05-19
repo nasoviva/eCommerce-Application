@@ -67,7 +67,6 @@ export default class MainView extends View {
     const path = globalThis.location.hash;
 
     const isLoggedIn = this.stateManager.isLoggedIn;
-    console.log(isLoggedIn, path);
     this.headerView.updateHeader();
     if (path === Routes.LOGIN) {
       if (isLoggedIn) {

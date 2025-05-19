@@ -19,17 +19,11 @@ export default class LoginView {
   private readonly stateManager: StateManager;
   private readonly apiRequestService: ApiRequestService;
   private readonly loginContainer: ElementCreator;
-  // private readonly passwordContainer: ElementCreator;
-  // private readonly loginInput: InputCreator;
-  // private readonly passwordInput: InputCreator;
   private readonly emailInput: InputCreator;
   private readonly passwordInput: InputCreator;
-  // private readonly emailErrorBox: ElementCreator;
-  // private readonly passwordErrorBox: ElementCreator;
-   private readonly emailMessageBox: ElementCreator;
+  private readonly emailMessageBox: ElementCreator;
   private readonly passwordMessageBox: ElementCreator;
   private readonly messageBox: ElementCreator;
-
   private readonly eyeIcon: HTMLImageElement;
 
   constructor(
@@ -45,42 +39,10 @@ export default class LoginView {
       textContent: "",
     });
 
-    const title = new ElementCreator({
-      tag: "h2",
-      className: [cssClasses.TITLE],
-      textContent: Titles.LOGIN,
-    });
-
-    const emailLabel = new ElementCreator({
-      tag: "label",
-      className: [cssClasses.LABEL],
-      textContent: "Email:",
-    });
-
     this.emailInput = new InputCreator({
       type: "text",
       className: [cssClasses.INPUT],
       placeholder: "Enter Email",
-    });
-
-    this.emailMessageBox = new ElementCreator({
-      tag: "div",
-      className: [cssClasses.ERROR],
-      textContent: "",
-    });
-
-    const emailContainer = new ElementCreator({
-      tag: "div",
-      className: [cssClasses.CONTAINER_CENTER],
-      textContent: "",
-    });
-    emailContainer.addInnerElement(emailLabel.getElement());
-    emailContainer.addInnerElement(this.emailInput.getElement());
-
-    const passwordLabel = new ElementCreator({
-      tag: "label",
-      className: [cssClasses.LABEL],
-      textContent: "Password:",
     });
 
     this.passwordInput = new InputCreator({
@@ -89,40 +51,36 @@ export default class LoginView {
       placeholder: "Enter Password",
     });
 
-    this.eyeIcon = document.createElement("img");
-    this.eyeIcon.src = "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
-    this.eyeIcon.alt = "eye icon";
-    this.eyeIcon.classList.add(cssClasses.EYE);
-    this.eyeIcon.style.cursor = "pointer";
-    this.eyeIcon.addEventListener("click", this.togglePasswordVisibility.bind(this));
+    this.emailMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
+    this.passwordMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
+    this.messageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
 
-    const passwordInputWrapper = new ElementCreator({
-      tag: "div",
-      className: [cssClasses.CONTAINER_INPUTS],
-      textContent: "",
-    });
+    this.eyeIcon = this.createEyeIcon();
+    this.buildLoginForm();
+    this.attachInputValidationHandlers();
+    this.attachKeyboardHandlers();
+  }
+
+  public getElement(): HTMLElement {
+    this.clearInputs();
+    return this.loginContainer.getElement();
+  }
+
+  private buildLoginForm(): void {
+    const title = new ElementCreator({ tag: "h2", className: [cssClasses.TITLE], textContent: Titles.LOGIN });
+
+    const emailLabel = new ElementCreator({ tag: "label", className: [cssClasses.LABEL], textContent: "Email:" });
+    const emailContainer = new ElementCreator({ tag: "div", className: [cssClasses.CONTAINER_CENTER], textContent: "" });
+    emailContainer.addInnerElement(emailLabel.getElement());
+    emailContainer.addInnerElement(this.emailInput.getElement());
+
+    const passwordLabel = new ElementCreator({ tag: "label", className: [cssClasses.LABEL], textContent: "Password:" });
+    const passwordInputWrapper = new ElementCreator({ tag: "div", className: [cssClasses.CONTAINER_INPUTS], textContent: "" });
     passwordInputWrapper.addInnerElement(this.passwordInput.getElement());
     passwordInputWrapper.addInnerElement(this.eyeIcon);
-
-this.passwordMessageBox = new ElementCreator({
-      tag: "div",
-      className: [cssClasses.ERROR],
-      textContent: "",
-    });
-    const passwordContainer = new ElementCreator({
-      tag: "div",
-      className: [cssClasses.CONTAINER_CENTER],
-      textContent: "",
-    });
+    const passwordContainer = new ElementCreator({ tag: "div", className: [cssClasses.CONTAINER_CENTER], textContent: "" });
     passwordContainer.addInnerElement(passwordLabel.getElement());
     passwordContainer.addInnerElement(passwordInputWrapper.getElement());
-
-
-    const formLoginContainer = new ElementCreator({
-      tag: "div",
-      className: [cssClasses.CONTAINER_FORM],
-      textContent: "",
-    });
 
     const loginButton = new ElementCreator({
       tag: "button",
@@ -141,39 +99,53 @@ this.passwordMessageBox = new ElementCreator({
       },
     });
 
-    this.messageBox = new ElementCreator({
+    const formLoginContainer = new ElementCreator({
       tag: "div",
-      className: [cssClasses.ERROR],
+      className: [cssClasses.CONTAINER_FORM],
       textContent: "",
     });
-
-       formLoginContainer.addInnerElement(emailContainer.getElement());
-          formLoginContainer.addInnerElement(this.emailMessageBox.getElement());
+    formLoginContainer.addInnerElement(emailContainer.getElement());
+    formLoginContainer.addInnerElement(this.emailMessageBox.getElement());
     formLoginContainer.addInnerElement(passwordContainer.getElement());
-     formLoginContainer.addInnerElement(this.passwordMessageBox.getElement());
+    formLoginContainer.addInnerElement(this.passwordMessageBox.getElement());
 
     this.loginContainer.addInnerElement(title.getElement());
-    // this.loginContainer.addInnerElement(emailContainer.getElement());
-    // this.loginContainer.addInnerElement(this.emailMessageBox.getElement());
-this.loginContainer.addInnerElement(formLoginContainer);
-    // this.loginContainer.addInnerElement(passwordContainer.getElement());
-    //  this.loginContainer.addInnersElement(this.passwordMessageBox.getElement());
-
+    this.loginContainer.addInnerElement(formLoginContainer);
     this.loginContainer.addInnerElement(loginButton.getElement());
     this.loginContainer.addInnerElement(registerButton.getElement());
     this.loginContainer.addInnerElement(this.messageBox.getElement());
-
-    [this.emailInput.getElement(), this.passwordInput.getElement()].forEach(
-      (input) => {
-        input.addEventListener("keydown", (event: KeyboardEvent) => {
-          if (event.key === "Enter") this.handleLogin();
-        });
-      },
-    );
   }
 
-  public getElement(): HTMLElement {
-    return this.loginContainer.getElement();
+  private attachInputValidationHandlers(): void {
+    this.emailInput.getElement().addEventListener("input", () => {
+      const email = this.emailInput.getElement().value;
+      const emailError = Validator.checkEmail(email);
+      this.emailMessageBox.getElement().textContent = emailError || "";
+    });
+
+    this.passwordInput.getElement().addEventListener("input", () => {
+      const password = this.passwordInput.getElement().value;
+      const passwordError = Validator.checkPassword(password);
+      this.passwordMessageBox.getElement().textContent = passwordError || "";
+    });
+  }
+
+  private attachKeyboardHandlers(): void {
+    [this.emailInput.getElement(), this.passwordInput.getElement()].forEach((input) => {
+      input.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Enter") this.handleLogin();
+      });
+    });
+  }
+
+  private createEyeIcon(): HTMLImageElement {
+    const icon = document.createElement("img");
+    icon.src = "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
+    icon.alt = "eye icon";
+    icon.classList.add(cssClasses.EYE);
+    icon.style.cursor = "pointer";
+    icon.addEventListener("click", this.togglePasswordVisibility.bind(this));
+    return icon;
   }
 
   private togglePasswordVisibility(): void {
@@ -198,17 +170,15 @@ this.loginContainer.addInnerElement(formLoginContainer);
 
     const emailError = Validator.checkEmail(email);
     if (emailError) {
-            this.emailMessageBox.getElement().textContent = emailError;
+      this.emailMessageBox.getElement().textContent = emailError;
 
-      // this.emailErrorBox.getElement().textContent = emailError;
       hasError = true;
     }
 
     const passwordError = Validator.checkPassword(password);
     if (passwordError) {
-            this.passwordMessageBox.getElement().textContent = passwordError;
+      this.passwordMessageBox.getElement().textContent = passwordError;
 
-      // this.passwordErrorBox.getElement().textContent = passwordError;
       hasError = true;
     }
 
@@ -252,13 +222,13 @@ this.loginContainer.addInnerElement(formLoginContainer);
     this.emailInput.getElement().value = "";
     this.passwordInput.getElement().value = "";
     this.passwordInput.getElement().type = "password";
+    this.eyeIcon.src = "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
+
     this.messageBox.getElement().textContent = "";
     this.clearErrorMessages();
   }
   private clearErrorMessages(): void {
     this.emailMessageBox.getElement().textContent = "";
     this.passwordMessageBox.getElement().textContent = "";
-    // this.emailErrorBox.getElement().textContent = "";
-    // this.passwordErrorBox.getElement().textContent = "";
   }
 }
