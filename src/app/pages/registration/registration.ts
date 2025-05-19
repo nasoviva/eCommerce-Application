@@ -111,8 +111,8 @@ export default class RegistrationView {
 
     const options = [
       { value: "", text: "Select Country" },
-      { value: "Russia", text: "Russia" },
-      { value: "USA", text: "USA" },
+      { value: "RU", text: "Russia" },
+      { value: "US", text: "USA" },
     ];
 
     options.forEach(({ value, text }) => {
@@ -483,9 +483,9 @@ export default class RegistrationView {
       const zip = this.zipInput.getElement().value;
       let error = "";
       const selectedCountry = this.countryInput.value;
-      if (selectedCountry === "Russia") {
+      if (selectedCountry === "RU") {
         error = Validator.checkIndexRussia(zip);
-      } else if (selectedCountry === "USA") {
+      } else if (selectedCountry === "US") {
         error = Validator.checkIndexUSA(zip);
       } else if (selectedCountry === "") {
         const errorRU = Validator.checkIndexRussia(zip);
@@ -633,10 +633,9 @@ export default class RegistrationView {
       firstName,
       lastName,
       dateOfBirth,
-      street,
-      city,
-      zip,
-      country,
+      addresses: [{ country: country, postalCode: zip, city: city }],
+      defaultShippingAddress: 0,
+      defaultBillingAddress: 0,
     };
 
     this.apiRequestService.registerUser(
