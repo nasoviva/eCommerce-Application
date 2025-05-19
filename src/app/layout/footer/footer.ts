@@ -34,10 +34,8 @@ export default class FooterView extends View {
       },
     });
 
-
     this.getHtmlElement().append(appName.getElement());
     this.getHtmlElement().append(year.getElement());
     this.getHtmlElement().append(school.getElement());
-
   }
 }

@@ -9,7 +9,6 @@ import type StateManager from "../../services/state-manager/state-manager";
 import Validator from "../../services/validator/validator";
 import ElementCreator from "../../shared/element-creator";
 import InputCreator from "../../shared/input-creator";
-import InputParameters from "../../shared/input-parameters";
 
 export default class RegistrationView {
   private readonly registrationContainer: ElementCreator;
@@ -123,18 +122,56 @@ export default class RegistrationView {
       this.countryInput.appendChild(option);
     });
 
-
-
-    this.emailMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
-    this.passwordMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
-    this.repeatPasswordMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
-    this.firstNameMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
-    this.lastNameMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
-    this.dateOfBirthMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
-    this.streetMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
-    this.cityMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
-    this.zipMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
-    this.countryMessageBox = new ElementCreator({ tag: "div", className: [cssClasses.ERROR], textContent: "" });
+    this.emailMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.passwordMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.repeatPasswordMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.firstNameMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.lastNameMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.dateOfBirthMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.streetMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.cityMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.zipMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.countryMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
 
     this.messageBox = new ElementCreator({
       tag: "div",
@@ -205,21 +242,48 @@ export default class RegistrationView {
     emailContainer.addInnerElement(emailLabel.getElement());
     emailContainer.addInnerElement(this.emailInput.getElement());
 
-    const passwordLabel = new ElementCreator({ tag: "label", className: [cssClasses.LABEL], textContent: "Password:" });
-    const passwordInputWrapper = new ElementCreator({ tag: "div", className: [cssClasses.CONTAINER_INPUTS], textContent: "" });
+    const passwordLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.LABEL],
+      textContent: "Password:",
+    });
+    const passwordInputWrapper = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_INPUTS],
+      textContent: "",
+    });
     passwordInputWrapper.addInnerElement(this.passwordInput.getElement());
     passwordInputWrapper.addInnerElement(this.eyeIcon1);
-    const passwordContainer = new ElementCreator({ tag: "div", className: [cssClasses.CONTAINER_CENTER], textContent: "" });
+    const passwordContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_CENTER],
+      textContent: "",
+    });
     passwordContainer.addInnerElement(passwordLabel.getElement());
     passwordContainer.addInnerElement(passwordInputWrapper.getElement());
-    const repeatPasswordLabel = new ElementCreator({ tag: "label", className: [cssClasses.LABEL], textContent: "Repeat Password:" });
-    const repeatPasswordInputWrapper = new ElementCreator({ tag: "div", className: [cssClasses.CONTAINER_INPUTS], textContent: "" });
-    repeatPasswordInputWrapper.addInnerElement(this.repeatPasswordInput.getElement());
+    const repeatPasswordLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.LABEL],
+      textContent: "Repeat Password:",
+    });
+    const repeatPasswordInputWrapper = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_INPUTS],
+      textContent: "",
+    });
+    repeatPasswordInputWrapper.addInnerElement(
+      this.repeatPasswordInput.getElement(),
+    );
     repeatPasswordInputWrapper.addInnerElement(this.eyeIcon2);
-    const repeatPasswordContainer = new ElementCreator({ tag: "div", className: [cssClasses.CONTAINER_CENTER], textContent: "" });
+    const repeatPasswordContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_CENTER],
+      textContent: "",
+    });
     repeatPasswordContainer.addInnerElement(repeatPasswordLabel.getElement());
-    repeatPasswordContainer.addInnerElement(repeatPasswordInputWrapper.getElement());
-
+    repeatPasswordContainer.addInnerElement(
+      repeatPasswordInputWrapper.getElement(),
+    );
 
     const firstNameLabel = new ElementCreator({
       tag: "label",
@@ -260,7 +324,6 @@ export default class RegistrationView {
     dateOfBirthContainer.addInnerElement(dateOfBirthLabel.getElement());
     dateOfBirthContainer.addInnerElement(this.dateOfBirthInput.getElement());
 
-
     const streetLabel = new ElementCreator({
       tag: "label",
       className: [cssClasses.LABEL],
@@ -273,7 +336,6 @@ export default class RegistrationView {
     });
     streetContainer.addInnerElement(streetLabel.getElement());
     streetContainer.addInnerElement(this.streetInput.getElement());
-
 
     const cityLabel = new ElementCreator({
       tag: "label",
@@ -288,7 +350,6 @@ export default class RegistrationView {
     cityContainer.addInnerElement(cityLabel.getElement());
     cityContainer.addInnerElement(this.cityInput.getElement());
 
-
     const zipLabel = new ElementCreator({
       tag: "label",
       className: [cssClasses.LABEL],
@@ -302,7 +363,6 @@ export default class RegistrationView {
     zipContainer.addInnerElement(zipLabel.getElement());
     zipContainer.addInnerElement(this.zipInput.getElement());
 
-
     const countryLabel = new ElementCreator({
       tag: "label",
       className: [cssClasses.LABEL],
@@ -315,8 +375,6 @@ export default class RegistrationView {
     });
     countryContainer.addInnerElement(countryLabel.getElement());
     countryContainer.addInnerElement(this.countryInput);
-
-
 
     const formContainer = new ElementCreator({
       tag: "div",
@@ -384,7 +442,10 @@ export default class RegistrationView {
 
     this.repeatPasswordInput.getElement().addEventListener("input", () => {
       const repeatPassword = this.repeatPasswordInput.getElement().value;
-      const error = this.passwordInput.getElement().value !== repeatPassword ? "Passwords do not match" : "";
+      const error =
+        this.passwordInput.getElement().value !== repeatPassword
+          ? "Passwords do not match"
+          : "";
       this.repeatPasswordMessageBox.getElement().textContent = error || "";
     });
 
@@ -433,7 +494,6 @@ export default class RegistrationView {
           error = `${errorRU} / ${errorUS}`;
         }
       }
-
       this.zipMessageBox.getElement().textContent = error;
     });
 
@@ -471,18 +531,17 @@ export default class RegistrationView {
     });
   }
 
-  private async handleRegistration(): Promise<void> {
-    const email = this.emailInput?.getElement().value;
-    const password = this.passwordInput?.getElement().value;
-    const firstName = this.firstNameInput?.getElement().value;
-    const lastName = this.lastNameInput?.getElement().value;
-    const dateOfBirth = this.dateOfBirthInput?.getElement().value;
-    const street = this.streetInput?.getElement().value;
-    const city = this.cityInput?.getElement().value;
-    const zip = this.zipInput?.getElement().value;
-    const country = this.countryInput?.value;
-    this.clearErrorMessages();
-
+  private handleError(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    dateOfBirth: string,
+    street: string,
+    city: string,
+    zip: string,
+    country: string,
+  ): Boolean {
     let hasError = false;
     const emailError = Validator.checkEmail(email);
     if (emailError) {
@@ -526,20 +585,46 @@ export default class RegistrationView {
     }
     let zipError = "";
     if (country === "Russia") {
-        zipError = Validator.checkIndexRussia(zip);
-      } else if (country === "USA") {
-        zipError = Validator.checkIndexUSA(zip);
-      } else if (country === "") {
-        const errorRU = Validator.checkIndexRussia(zip);
-        const errorUS = Validator.checkIndexUSA(zip);
-        if (errorRU && errorUS) {
-          zipError = `${errorRU} / ${errorUS}`;
-        }
+      zipError = Validator.checkIndexRussia(zip);
+    } else if (country === "USA") {
+      zipError = Validator.checkIndexUSA(zip);
+    } else if (country === "") {
+      const errorRU = Validator.checkIndexRussia(zip);
+      const errorUS = Validator.checkIndexUSA(zip);
+      if (errorRU && errorUS) {
+        zipError = `${errorRU} / ${errorUS}`;
       }
+    }
     if (zipError) {
       this.zipMessageBox.getElement().textContent = zipError;
       hasError = true;
     }
+    return hasError;
+  }
+
+  private async handleRegistration(): Promise<void> {
+    const email = this.emailInput?.getElement().value;
+    const password = this.passwordInput?.getElement().value;
+    const firstName = this.firstNameInput?.getElement().value;
+    const lastName = this.lastNameInput?.getElement().value;
+    const dateOfBirth = this.dateOfBirthInput?.getElement().value;
+    const street = this.streetInput?.getElement().value;
+    const city = this.cityInput?.getElement().value;
+    const zip = this.zipInput?.getElement().value;
+    const country = this.countryInput?.value;
+    this.clearErrorMessages();
+    let hasError = this.handleError(
+      email,
+      password,
+      firstName,
+      lastName,
+      dateOfBirth,
+      street,
+      city,
+      zip,
+      country,
+    );
+
     if (hasError) return;
 
     const userData = {
@@ -586,7 +671,10 @@ export default class RegistrationView {
     icon.alt = "eye icon";
     icon.classList.add(cssClasses.EYE);
     icon.style.cursor = "pointer";
-    icon.addEventListener("click", this.toggleRepeatPasswordVisibility.bind(this));
+    icon.addEventListener(
+      "click",
+      this.toggleRepeatPasswordVisibility.bind(this),
+    );
     return icon;
   }
 
@@ -633,10 +721,12 @@ export default class RegistrationView {
       this.emailInput.getElement().value = "";
       this.passwordInput.getElement().value = "";
       this.passwordInput.getElement().type = "password";
-      this.eyeIcon1.src = "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
+      this.eyeIcon1.src =
+        "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
       this.repeatPasswordInput.getElement().value = "";
       this.repeatPasswordInput.getElement().type = "password";
-      this.eyeIcon2.src = "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
+      this.eyeIcon2.src =
+        "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
       this.firstNameInput.getElement().value = "";
       this.lastNameInput.getElement().value = "";
       this.dateOfBirthInput.getElement().value = "";
@@ -660,4 +750,3 @@ export default class RegistrationView {
     this.countryMessageBox.getElement().textContent = "";
   }
 }
-
