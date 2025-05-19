@@ -52,8 +52,8 @@
     "format:check": "prettier --check .",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "stylelint": "stylelint '**/*.{css,scss}'",
-    "stylelint:fix": "stylelint '**/*.{css,scss}' --fix"
+    "stylelint": "stylelint 'src/**/*.{css,scss}'",
+    "stylelint:fix": "stylelint 'src/**/*.{css,scss}' --fix"
   },
   "commitlint": {
     "extends": [
