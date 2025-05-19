@@ -2,7 +2,6 @@ import { cssClasses, Routes } from "../../global-types/constants";
 import HomeView from "../../pages/home/home";
 import LoginView from "../../pages/login/login";
 import NotFoundView from "../../pages/not-found/not-found";
-import NotFoundView from "../../pages/not-found/not-found";
 import RegistrationView from "../../pages/registration/registration";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
