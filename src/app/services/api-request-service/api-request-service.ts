@@ -9,6 +9,7 @@ import { projectKey } from "./constants";
 import type StateManager from "../state-manager/state-manager";
 import type { Client, TokenStore } from "@commercetools/ts-client";
 import VSATokenCache from "./token-cache";
+import ErrorMsg from "../error-msg/error-msg";
 
 type RequestBuilder = "anon" | "password";
 
@@ -17,10 +18,12 @@ export default class ApiRequestService {
   private stateManager: StateManager;
   private currentClientType!: RequestBuilder;
   private tokenCache: VSATokenCache;
+  private errorMsg: ErrorMsg;
 
   constructor(stateManager: StateManager) {
     this.stateManager = stateManager;
     this.tokenCache = new VSATokenCache();
+    this.errorMsg = new ErrorMsg();
     this.configureService();
   }
 
@@ -55,6 +58,8 @@ export default class ApiRequestService {
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
+        const error = ApiRequestService.errorParser(reason);
+        this.errorMsg.displayErrorMsg(error);
         if (this.currentClientType !== "anon")
           this.switchRequestBuilder("anon");
         if (onReject) onReject(reason);
@@ -82,6 +87,8 @@ export default class ApiRequestService {
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
+        const error = ApiRequestService.errorParser(reason);
+        this.errorMsg.displayErrorMsg(error);
         if (onReject) {
           onReject(reason);
         }
