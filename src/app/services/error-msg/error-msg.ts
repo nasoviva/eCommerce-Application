@@ -1,6 +1,5 @@
 import ElementCreator from "../../shared/element-creator";
 import { ELEM_PARAMS } from "./constants";
-import css from "./error-msg.module.css";
 
 export default class ErrorMsg {
   private readonly msg: ElementCreator;
