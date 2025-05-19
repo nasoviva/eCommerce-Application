@@ -1,23 +1,43 @@
 import { cssClasses, Routes } from "../../global-types/constants";
 import HomeView from "../../pages/home/home";
 import LoginView from "../../pages/login/login";
+import RegistrationView from "../../pages/registration/registration";
+import type ApiRequestService from "../../services/api-request-service/api-request-service";
+import type StateManager from "../../services/state-manager/state-manager";
 import ElementCreator from "../../shared/element-creator";
 import View from "../../shared/view";
+import type HeaderView from "../header/header";
 
 export default class MainView extends View {
   private readonly contentContainer: ElementCreator;
   private readonly loginView: LoginView;
   private readonly homeView: HomeView;
+  private readonly registrationView: RegistrationView;
+  private readonly headerView: HeaderView;
+  private readonly stateManager: StateManager;
+  private readonly apiRequestService: ApiRequestService;
 
-  constructor() {
+  constructor(
+    headerView: HeaderView,
+    stateManager: StateManager,
+    apiRequestService: ApiRequestService,
+  ) {
     super({
       tag: "main",
       className: [cssClasses.MAIN],
       textContent: "",
-      callback: undefined,
     });
-    this.loginView = new LoginView();
-    this.homeView = new HomeView();
+
+    this.headerView = headerView;
+    this.stateManager = stateManager;
+    this.apiRequestService = apiRequestService;
+    this.loginView = new LoginView(this.stateManager, this.apiRequestService);
+    this.registrationView = new RegistrationView(
+      this.stateManager,
+      this.apiRequestService,
+    );
+    this.homeView = new HomeView(this.stateManager, this.apiRequestService);
+
     this.contentContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_COLUMN],
@@ -43,8 +63,17 @@ export default class MainView extends View {
   private async handleRouting(): Promise<void> {
     const path = globalThis.location.hash;
 
+    const isLoggedIn = this.stateManager.isLoggedIn;
+    this.headerView.updateHeader();
     if (path === Routes.LOGIN) {
+      if (isLoggedIn) {
+        globalThis.location.hash = Routes.HOME;
+        return;
+      }
       this.setContent(this.loginView.getElement());
+    } else if (path === Routes.REGISTRATION) {
+      const registrationElement = this.registrationView.getElement();
+      this.setContent(registrationElement);
     } else if (path === Routes.HOME) {
       this.setContent(this.homeView.getElement());
     } else {
@@ -56,11 +85,11 @@ export default class MainView extends View {
     let previousHash = globalThis.location.hash;
 
     globalThis.addEventListener("hashchange", () => {
-      sessionStorage.setItem("previousRoute", previousHash);
+      localStorage.setItem("previousRoute", previousHash);
       previousHash = globalThis.location.hash;
       this.handleRouting();
     });
-    sessionStorage.setItem("previousRoute", previousHash);
+    localStorage.setItem("previousRoute", previousHash);
     this.handleRouting();
   }
 }
