@@ -58,8 +58,8 @@ export default class ApiRequestService {
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
-        const error = ApiRequestService.errorParser(reason);
-        this.errorMsg.displayErrorMsg(error);
+        // const error = ApiRequestService.errorParser(reason);
+        // this.errorMsg.displayErrorMsg(error);
         if (this.currentClientType !== "anon")
           this.switchRequestBuilder("anon");
         if (onReject) onReject(reason);
@@ -87,8 +87,8 @@ export default class ApiRequestService {
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
-        const error = ApiRequestService.errorParser(reason);
-        this.errorMsg.displayErrorMsg(error);
+        // const error = ApiRequestService.errorParser(reason);
+        // this.errorMsg.displayErrorMsg(error);
         if (onReject) {
           onReject(reason);
         }
