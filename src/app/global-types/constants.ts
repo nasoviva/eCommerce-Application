@@ -20,6 +20,9 @@ const cssClasses = {
   EYE: "eye",
   CONTAINER_INPUTS: "container-inputs",
   LINK: "link",
+  CHECKBOX_GROUP: "checkbox-group",
+  CHECKBOX_WRAPPER: "checkbox-wrapper",
+  CHECKBOX_LABEL: "checkbox-label",
 };
 
 const Routes = {

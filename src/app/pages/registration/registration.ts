@@ -28,14 +28,25 @@ export default class RegistrationView {
   private readonly lastNameMessageBox: ElementCreator;
   private readonly dateOfBirthInput: InputCreator;
   private readonly dateOfBirthMessageBox: ElementCreator;
-  private readonly streetInput: InputCreator;
-  private readonly streetMessageBox: ElementCreator;
-  private readonly cityInput: InputCreator;
-  private readonly cityMessageBox: ElementCreator;
-  private readonly zipInput: InputCreator;
-  private readonly zipMessageBox: ElementCreator;
-  private readonly countryInput: HTMLSelectElement;
-  private readonly countryMessageBox: ElementCreator;
+  private readonly shippingStreetInput: InputCreator;
+  private readonly shippingStreetMessageBox: ElementCreator;
+  private readonly shippingCityInput: InputCreator;
+  private readonly shippingCityMessageBox: ElementCreator;
+  private readonly shippingZipInput: InputCreator;
+  private readonly shippingZipMessageBox: ElementCreator;
+  private readonly shippingCountryInput: HTMLSelectElement;
+  private readonly shippingCountryMessageBox: ElementCreator;
+  private readonly billingStreetInput: InputCreator;
+  private readonly billingStreetMessageBox: ElementCreator;
+  private readonly billingCityInput: InputCreator;
+  private readonly billingCityMessageBox: ElementCreator;
+  private readonly billingZipInput: InputCreator;
+  private readonly billingZipMessageBox: ElementCreator;
+  private readonly billingCountryInput: HTMLSelectElement;
+  private readonly billingCountryMessageBox: ElementCreator;
+  private readonly fillFromShippingInput: InputCreator;
+  private readonly shippingDefaultInput: InputCreator;
+  private readonly billingDefaultInput: InputCreator;
   private readonly messageBox: ElementCreator;
 
   constructor(
@@ -87,39 +98,74 @@ export default class RegistrationView {
       placeholder: "Enter Date of Birth",
     });
 
-    this.streetInput = new InputCreator({
+    this.shippingStreetInput = new InputCreator({
       type: "text",
       className: [cssClasses.INPUT],
       placeholder: "Enter Street",
     });
 
-    this.cityInput = new InputCreator({
+    this.shippingCityInput = new InputCreator({
       type: "text",
       className: [cssClasses.INPUT],
       placeholder: "Enter City",
     });
 
-    this.zipInput = new InputCreator({
+    this.shippingZipInput = new InputCreator({
       type: "text",
       className: [cssClasses.INPUT],
       placeholder: "Enter Zip Code",
     });
 
-    this.countryInput = document.createElement("select");
+    this.shippingCountryInput = document.createElement("select");
 
-    this.countryInput.classList.add(cssClasses.INPUT);
+    this.shippingCountryInput.classList.add(cssClasses.INPUT);
 
-    const options = [
+    const shippingOptions = [
       { value: "", text: "Select Country" },
       { value: "RU", text: "Russia" },
       { value: "US", text: "USA" },
     ];
 
-    options.forEach(({ value, text }) => {
+    shippingOptions.forEach(({ value, text }) => {
       const option = document.createElement("option");
       option.value = value;
       option.textContent = text;
-      this.countryInput.appendChild(option);
+      this.shippingCountryInput.appendChild(option);
+    });
+
+    this.billingStreetInput = new InputCreator({
+      type: "text",
+      className: [cssClasses.INPUT],
+      placeholder: "Enter Street",
+    });
+
+    this.billingCityInput = new InputCreator({
+      type: "text",
+      className: [cssClasses.INPUT],
+      placeholder: "Enter City",
+    });
+
+    this.billingZipInput = new InputCreator({
+      type: "text",
+      className: [cssClasses.INPUT],
+      placeholder: "Enter Zip Code",
+    });
+
+    this.billingCountryInput = document.createElement("select");
+
+    this.billingCountryInput.classList.add(cssClasses.INPUT);
+
+    const billingOptions = [
+      { value: "", text: "Select Country" },
+      { value: "RU", text: "Russia" },
+      { value: "US", text: "USA" },
+    ];
+
+    billingOptions.forEach(({ value, text }) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = text;
+      this.billingCountryInput.appendChild(option);
     });
 
     this.emailMessageBox = new ElementCreator({
@@ -152,22 +198,42 @@ export default class RegistrationView {
       className: [cssClasses.ERROR],
       textContent: "",
     });
-    this.streetMessageBox = new ElementCreator({
+    this.shippingStreetMessageBox = new ElementCreator({
       tag: "div",
       className: [cssClasses.ERROR],
       textContent: "",
     });
-    this.cityMessageBox = new ElementCreator({
+    this.shippingCityMessageBox = new ElementCreator({
       tag: "div",
       className: [cssClasses.ERROR],
       textContent: "",
     });
-    this.zipMessageBox = new ElementCreator({
+    this.shippingZipMessageBox = new ElementCreator({
       tag: "div",
       className: [cssClasses.ERROR],
       textContent: "",
     });
-    this.countryMessageBox = new ElementCreator({
+    this.shippingCountryMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.billingStreetMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.billingCityMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.billingZipMessageBox = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.ERROR],
+      textContent: "",
+    });
+    this.billingCountryMessageBox = new ElementCreator({
       tag: "div",
       className: [cssClasses.ERROR],
       textContent: "",
@@ -177,6 +243,24 @@ export default class RegistrationView {
       tag: "div",
       className: [cssClasses.ERROR],
       textContent: "",
+    });
+
+    this.billingDefaultInput = new InputCreator({
+      type: "checkbox",
+      className: [cssClasses.CHECKBOX_WRAPPER],
+      placeholder: "",
+    });
+
+    this.shippingDefaultInput = new InputCreator({
+      type: "checkbox",
+      className: [cssClasses.CHECKBOX_WRAPPER],
+      placeholder: "",
+    });
+
+    this.fillFromShippingInput = new InputCreator({
+      type: "checkbox",
+      className: [cssClasses.CHECKBOX_WRAPPER],
+      placeholder: "",
     });
 
     this.eyeIcon1 = this.createEyeIcon1();
@@ -189,9 +273,12 @@ export default class RegistrationView {
       this.firstNameInput,
       this.lastNameInput,
       this.dateOfBirthInput,
-      this.streetInput,
-      this.cityInput,
-      this.zipInput,
+      this.shippingStreetInput,
+      this.shippingCityInput,
+      this.shippingZipInput,
+      this.billingStreetInput,
+      this.billingCityInput,
+      this.billingZipInput,
     ].forEach((input) => {
       input
         ?.getElement()
@@ -201,11 +288,22 @@ export default class RegistrationView {
           }
         });
     });
-    this.countryInput.addEventListener("keydown", (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-        void this.handleRegistration();
-      }
-    });
+    this.shippingCountryInput.addEventListener(
+      "keydown",
+      (event: KeyboardEvent) => {
+        if (event.key === "Enter") {
+          void this.handleRegistration();
+        }
+      },
+    );
+    this.billingCountryInput.addEventListener(
+      "keydown",
+      (event: KeyboardEvent) => {
+        if (event.key === "Enter") {
+          void this.handleRegistration();
+        }
+      },
+    );
 
     if (this.stateManager.isLoggedIn) {
       globalThis.location.hash = Routes.HOME;
@@ -323,64 +421,199 @@ export default class RegistrationView {
     });
     dateOfBirthContainer.addInnerElement(dateOfBirthLabel.getElement());
     dateOfBirthContainer.addInnerElement(this.dateOfBirthInput.getElement());
-
-    const streetLabel = new ElementCreator({
+    const shippingAddressLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.TITLE],
+      textContent: "Shipping Address:",
+    });
+    const shippingStreetLabel = new ElementCreator({
       tag: "label",
       className: [cssClasses.LABEL],
       textContent: "Street:",
     });
-    const streetContainer = new ElementCreator({
+    const shippingStreetContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_CENTER],
       textContent: "",
     });
-    streetContainer.addInnerElement(streetLabel.getElement());
-    streetContainer.addInnerElement(this.streetInput.getElement());
+    shippingStreetContainer.addInnerElement(shippingStreetLabel.getElement());
+    shippingStreetContainer.addInnerElement(
+      this.shippingStreetInput.getElement(),
+    );
 
-    const cityLabel = new ElementCreator({
+    const shippingCityLabel = new ElementCreator({
       tag: "label",
       className: [cssClasses.LABEL],
       textContent: "City:",
     });
-    const cityContainer = new ElementCreator({
+    const shippingCityContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_CENTER],
       textContent: "",
     });
-    cityContainer.addInnerElement(cityLabel.getElement());
-    cityContainer.addInnerElement(this.cityInput.getElement());
+    shippingCityContainer.addInnerElement(shippingCityLabel.getElement());
+    shippingCityContainer.addInnerElement(this.shippingCityInput.getElement());
 
-    const zipLabel = new ElementCreator({
+    const shippingZipLabel = new ElementCreator({
       tag: "label",
       className: [cssClasses.LABEL],
       textContent: "Zip:",
     });
-    const zipContainer = new ElementCreator({
+    const shippingZipContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_CENTER],
       textContent: "",
     });
-    zipContainer.addInnerElement(zipLabel.getElement());
-    zipContainer.addInnerElement(this.zipInput.getElement());
+    shippingZipContainer.addInnerElement(shippingZipLabel.getElement());
+    shippingZipContainer.addInnerElement(this.shippingZipInput.getElement());
 
-    const countryLabel = new ElementCreator({
+    const shippingCountryLabel = new ElementCreator({
       tag: "label",
       className: [cssClasses.LABEL],
       textContent: "Country:",
     });
-    const countryContainer = new ElementCreator({
+    const shippingCountryContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_CENTER],
       textContent: "",
     });
-    countryContainer.addInnerElement(countryLabel.getElement());
-    countryContainer.addInnerElement(this.countryInput);
+    shippingCountryContainer.addInnerElement(shippingCountryLabel.getElement());
+    shippingCountryContainer.addInnerElement(this.shippingCountryInput);
+
+    const billingAddressLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.TITLE],
+      textContent: "Billing Address:",
+    });
+    const billingStreetLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.LABEL],
+      textContent: "Street:",
+    });
+    const billingStreetContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_CENTER],
+      textContent: "",
+    });
+    billingStreetContainer.addInnerElement(billingStreetLabel.getElement());
+    billingStreetContainer.addInnerElement(
+      this.billingStreetInput.getElement(),
+    );
+
+    const billingCityLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.LABEL],
+      textContent: "City:",
+    });
+    const billingCityContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_CENTER],
+      textContent: "",
+    });
+    billingCityContainer.addInnerElement(billingCityLabel.getElement());
+    billingCityContainer.addInnerElement(this.billingCityInput.getElement());
+
+    const billingZipLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.LABEL],
+      textContent: "Zip:",
+    });
+    const billingZipContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_CENTER],
+      textContent: "",
+    });
+    billingZipContainer.addInnerElement(billingZipLabel.getElement());
+    billingZipContainer.addInnerElement(this.billingZipInput.getElement());
+
+    const billingCountryLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.LABEL],
+      textContent: "Country:",
+    });
+    const billingCountryContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_CENTER],
+      textContent: "",
+    });
+    billingCountryContainer.addInnerElement(billingCountryLabel.getElement());
+    billingCountryContainer.addInnerElement(this.billingCountryInput);
 
     const formContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_FORM],
       textContent: "",
     });
+
+    const shippingDefaultLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.CHECKBOX_GROUP],
+      textContent: "",
+    });
+
+    const shippingDefaultText = new ElementCreator({
+      tag: "span",
+      className: [cssClasses.CHECKBOX_LABEL],
+      textContent: "Set as default Shipping address",
+    });
+
+    shippingDefaultLabel
+      .getElement()
+      .append(
+        shippingDefaultText.getElement(),
+        this.shippingDefaultInput.getElement(),
+      );
+
+    const fillFromShippingLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.CHECKBOX_GROUP],
+      textContent: "",
+    });
+
+    const fillFromShippingText = new ElementCreator({
+      tag: "span",
+      className: [cssClasses.CHECKBOX_LABEL],
+      textContent: "Fill in data from Shipping to Billing Address",
+    });
+
+    this.fillFromShippingInput.getElement().addEventListener("change", () => {
+      const isChecked = this.fillFromShippingInput.getElement().checked;
+      if (isChecked) {
+        this.billingStreetInput.getElement().value =
+          this.shippingStreetInput.getElement().value;
+        this.billingCityInput.getElement().value =
+          this.shippingCityInput.getElement().value;
+        this.billingZipInput.getElement().value =
+          this.shippingZipInput.getElement().value;
+        this.billingCountryInput.value = this.shippingCountryInput.value;
+      }
+    });
+
+    fillFromShippingLabel
+      .getElement()
+      .append(
+        fillFromShippingText.getElement(),
+        this.fillFromShippingInput.getElement(),
+      );
+
+    const billingDefaultLabel = new ElementCreator({
+      tag: "label",
+      className: [cssClasses.CHECKBOX_GROUP],
+      textContent: "",
+    });
+
+    const billingDefaultText = new ElementCreator({
+      tag: "span",
+      className: [cssClasses.CHECKBOX_LABEL],
+      textContent: "Set as default Billing address",
+    });
+
+    billingDefaultLabel
+      .getElement()
+      .append(
+        billingDefaultText.getElement(),
+        this.billingDefaultInput.getElement(),
+      );
 
     formContainer.addInnerElement(emailContainer.getElement());
     formContainer.addInnerElement(this.emailMessageBox.getElement());
@@ -394,14 +627,27 @@ export default class RegistrationView {
     formContainer.addInnerElement(this.lastNameMessageBox.getElement());
     formContainer.addInnerElement(dateOfBirthContainer.getElement());
     formContainer.addInnerElement(this.dateOfBirthMessageBox.getElement());
-    formContainer.addInnerElement(streetContainer.getElement());
-    formContainer.addInnerElement(this.streetMessageBox.getElement());
-    formContainer.addInnerElement(cityContainer.getElement());
-    formContainer.addInnerElement(this.cityMessageBox.getElement());
-    formContainer.addInnerElement(zipContainer.getElement());
-    formContainer.addInnerElement(this.zipMessageBox.getElement());
-    formContainer.addInnerElement(countryContainer.getElement());
-    formContainer.addInnerElement(this.countryMessageBox.getElement());
+    formContainer.addInnerElement(shippingAddressLabel.getElement());
+    formContainer.addInnerElement(shippingStreetContainer.getElement());
+    formContainer.addInnerElement(this.shippingStreetMessageBox.getElement());
+    formContainer.addInnerElement(shippingCityContainer.getElement());
+    formContainer.addInnerElement(this.shippingCityMessageBox.getElement());
+    formContainer.addInnerElement(shippingZipContainer.getElement());
+    formContainer.addInnerElement(this.shippingZipMessageBox.getElement());
+    formContainer.addInnerElement(shippingCountryContainer.getElement());
+    formContainer.addInnerElement(this.shippingCountryMessageBox.getElement());
+    formContainer.addInnerElement(shippingDefaultLabel.getElement());
+    formContainer.addInnerElement(fillFromShippingLabel.getElement());
+    formContainer.addInnerElement(billingAddressLabel.getElement());
+    formContainer.addInnerElement(billingStreetContainer.getElement());
+    formContainer.addInnerElement(this.billingStreetMessageBox.getElement());
+    formContainer.addInnerElement(billingCityContainer.getElement());
+    formContainer.addInnerElement(this.billingCityMessageBox.getElement());
+    formContainer.addInnerElement(billingZipContainer.getElement());
+    formContainer.addInnerElement(this.billingZipMessageBox.getElement());
+    formContainer.addInnerElement(billingCountryContainer.getElement());
+    formContainer.addInnerElement(this.billingCountryMessageBox.getElement());
+    formContainer.addInnerElement(billingDefaultLabel.getElement());
 
     const registerButton = new ElementCreator({
       tag: "button",
@@ -467,22 +713,22 @@ export default class RegistrationView {
       this.dateOfBirthMessageBox.getElement().textContent = error || "";
     });
 
-    this.streetInput.getElement().addEventListener("input", () => {
-      const street = this.streetInput.getElement().value;
+    this.shippingStreetInput.getElement().addEventListener("input", () => {
+      const street = this.shippingStreetInput.getElement().value;
       const error = Validator.checkStreet(street);
-      this.streetMessageBox.getElement().textContent = error || "";
+      this.shippingStreetMessageBox.getElement().textContent = error || "";
     });
 
-    this.cityInput.getElement().addEventListener("input", () => {
-      const city = this.cityInput.getElement().value;
+    this.shippingCityInput.getElement().addEventListener("input", () => {
+      const city = this.shippingCityInput.getElement().value;
       const error = Validator.checkCity(city);
-      this.cityMessageBox.getElement().textContent = error || "";
+      this.shippingCityMessageBox.getElement().textContent = error || "";
     });
 
-    this.zipInput.getElement().addEventListener("input", () => {
-      const zip = this.zipInput.getElement().value;
+    this.shippingZipInput.getElement().addEventListener("input", () => {
+      const zip = this.shippingZipInput.getElement().value;
       let error = "";
-      const selectedCountry = this.countryInput.value;
+      const selectedCountry = this.shippingCountryInput.value;
       if (selectedCountry === "RU") {
         error = Validator.checkIndexRussia(zip);
       } else if (selectedCountry === "US") {
@@ -494,13 +740,49 @@ export default class RegistrationView {
           error = `${errorRU} / ${errorUS}`;
         }
       }
-      this.zipMessageBox.getElement().textContent = error;
+      this.shippingZipMessageBox.getElement().textContent = error;
     });
 
-    this.countryInput.addEventListener("change", () => {
-      const country = this.countryInput.value;
+    this.shippingCountryInput.addEventListener("change", () => {
+      const country = this.shippingCountryInput.value;
       const error = Validator.checkCountry(country);
-      this.countryMessageBox.getElement().textContent = error || "";
+      this.shippingCountryMessageBox.getElement().textContent = error || "";
+    });
+
+    this.billingStreetInput.getElement().addEventListener("input", () => {
+      const street = this.billingStreetInput.getElement().value;
+      const error = Validator.checkStreet(street);
+      this.billingStreetMessageBox.getElement().textContent = error || "";
+    });
+
+    this.billingCityInput.getElement().addEventListener("input", () => {
+      const city = this.billingCityInput.getElement().value;
+      const error = Validator.checkCity(city);
+      this.billingCityMessageBox.getElement().textContent = error || "";
+    });
+
+    this.billingZipInput.getElement().addEventListener("input", () => {
+      const zip = this.billingZipInput.getElement().value;
+      let error = "";
+      const selectedCountry = this.billingCountryInput.value;
+      if (selectedCountry === "RU") {
+        error = Validator.checkIndexRussia(zip);
+      } else if (selectedCountry === "US") {
+        error = Validator.checkIndexUSA(zip);
+      } else if (selectedCountry === "") {
+        const errorRU = Validator.checkIndexRussia(zip);
+        const errorUS = Validator.checkIndexUSA(zip);
+        if (errorRU && errorUS) {
+          error = `${errorRU} / ${errorUS}`;
+        }
+      }
+      this.billingZipMessageBox.getElement().textContent = error;
+    });
+
+    this.billingCountryInput.addEventListener("change", () => {
+      const country = this.billingCountryInput.value;
+      const error = Validator.checkCountry(country);
+      this.billingCountryMessageBox.getElement().textContent = error || "";
     });
   }
 
@@ -512,9 +794,12 @@ export default class RegistrationView {
       this.firstNameInput,
       this.lastNameInput,
       this.dateOfBirthInput,
-      this.streetInput,
-      this.cityInput,
-      this.zipInput,
+      this.shippingStreetInput,
+      this.shippingCityInput,
+      this.shippingZipInput,
+      this.billingStreetInput,
+      this.billingCityInput,
+      this.billingZipInput,
     ].forEach((input) => {
       input
         ?.getElement()
@@ -524,23 +809,39 @@ export default class RegistrationView {
           }
         });
     });
-    this.countryInput.addEventListener("keydown", (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-        void this.handleRegistration();
-      }
-    });
+    this.shippingCountryInput.addEventListener(
+      "keydown",
+      (event: KeyboardEvent) => {
+        if (event.key === "Enter") {
+          void this.handleRegistration();
+        }
+      },
+    );
+    this.billingCountryInput.addEventListener(
+      "keydown",
+      (event: KeyboardEvent) => {
+        if (event.key === "Enter") {
+          void this.handleRegistration();
+        }
+      },
+    );
   }
 
   private handleError(
     email: string,
     password: string,
+    repeatPassword: string,
     firstName: string,
     lastName: string,
     dateOfBirth: string,
-    street: string,
-    city: string,
-    zip: string,
-    country: string,
+    shippingStreet: string,
+    shippingCity: string,
+    shippingZip: string,
+    shippingCountry: string,
+    billingStreet: string,
+    billingCity: string,
+    billingZip: string,
+    billingCountry: string,
   ): Boolean {
     let hasError = false;
     const emailError = Validator.checkEmail(email);
@@ -553,6 +854,13 @@ export default class RegistrationView {
       this.passwordMessageBox.getElement().textContent = passwordError;
       hasError = true;
     }
+    const repeatPasswordError = password !== repeatPassword;
+    if (repeatPasswordError) {
+      this.repeatPasswordMessageBox.getElement().textContent =
+        "Passwords do not match";
+      hasError = true;
+    }
+
     const firstNameError = Validator.checkNameOrLastName(firstName);
     if (passwordError) {
       this.firstNameMessageBox.getElement().textContent = firstNameError;
@@ -568,35 +876,70 @@ export default class RegistrationView {
       this.dateOfBirthMessageBox.getElement().textContent = birthDateError;
       hasError = true;
     }
-    const streetError = Validator.checkStreet(street);
-    if (streetError) {
-      this.streetMessageBox.getElement().textContent = streetError;
+    const shippingStreetError = Validator.checkStreet(shippingStreet);
+    if (shippingStreetError) {
+      this.shippingStreetMessageBox.getElement().textContent =
+        shippingStreetError;
       hasError = true;
     }
-    const cityError = Validator.checkCity(city);
-    if (cityError) {
-      this.cityMessageBox.getElement().textContent = cityError;
+    const shippingCityError = Validator.checkCity(shippingCity);
+    if (shippingCityError) {
+      this.shippingCityMessageBox.getElement().textContent = shippingCityError;
       hasError = true;
     }
-    const countryError = Validator.checkCountry(country);
-    if (countryError) {
-      this.countryMessageBox.getElement().textContent = countryError;
+    const shippingCountryError = Validator.checkCountry(shippingCountry);
+    if (shippingCountryError) {
+      this.shippingCountryMessageBox.getElement().textContent =
+        shippingCountryError;
       hasError = true;
     }
-    let zipError = "";
-    if (country === "Russia") {
-      zipError = Validator.checkIndexRussia(zip);
-    } else if (country === "USA") {
-      zipError = Validator.checkIndexUSA(zip);
-    } else if (country === "") {
-      const errorRU = Validator.checkIndexRussia(zip);
-      const errorUS = Validator.checkIndexUSA(zip);
+    let shippingZipError = "";
+    if (shippingCountry === "Russia") {
+      shippingZipError = Validator.checkIndexRussia(shippingZip);
+    } else if (shippingCountry === "USA") {
+      shippingZipError = Validator.checkIndexUSA(shippingZip);
+    } else if (shippingCountry === "") {
+      const errorRU = Validator.checkIndexRussia(shippingZip);
+      const errorUS = Validator.checkIndexUSA(shippingZip);
       if (errorRU && errorUS) {
-        zipError = `${errorRU} / ${errorUS}`;
+        shippingZipError = `${errorRU} / ${errorUS}`;
       }
     }
-    if (zipError) {
-      this.zipMessageBox.getElement().textContent = zipError;
+    if (shippingZipError) {
+      this.shippingZipMessageBox.getElement().textContent = shippingZipError;
+      hasError = true;
+    }
+    const billingStreetError = Validator.checkStreet(billingStreet);
+    if (billingStreetError) {
+      this.billingStreetMessageBox.getElement().textContent =
+        billingStreetError;
+      hasError = true;
+    }
+    const billingCityError = Validator.checkCity(billingCity);
+    if (billingCityError) {
+      this.billingCityMessageBox.getElement().textContent = billingCityError;
+      hasError = true;
+    }
+    const billingCountryError = Validator.checkCountry(billingCountry);
+    if (billingCountryError) {
+      this.billingCountryMessageBox.getElement().textContent =
+        billingCountryError;
+      hasError = true;
+    }
+    let billingZipError = "";
+    if (billingCountry === "Russia") {
+      billingZipError = Validator.checkIndexRussia(billingZip);
+    } else if (billingCountry === "USA") {
+      billingZipError = Validator.checkIndexUSA(billingZip);
+    } else if (billingCountry === "") {
+      const errorRU = Validator.checkIndexRussia(billingZip);
+      const errorUS = Validator.checkIndexUSA(billingZip);
+      if (errorRU && errorUS) {
+        billingZipError = `${errorRU} / ${errorUS}`;
+      }
+    }
+    if (billingZipError) {
+      this.billingZipMessageBox.getElement().textContent = billingZipError;
       hasError = true;
     }
     return hasError;
@@ -605,24 +948,41 @@ export default class RegistrationView {
   private async handleRegistration(): Promise<void> {
     const email = this.emailInput?.getElement().value;
     const password = this.passwordInput?.getElement().value;
+    const repeatPassword = this.repeatPasswordInput?.getElement().value;
     const firstName = this.firstNameInput?.getElement().value;
     const lastName = this.lastNameInput?.getElement().value;
     const dateOfBirth = this.dateOfBirthInput?.getElement().value;
-    const street = this.streetInput?.getElement().value;
-    const city = this.cityInput?.getElement().value;
-    const zip = this.zipInput?.getElement().value;
-    const country = this.countryInput?.value;
+    const billingStreet = this.billingStreetInput?.getElement().value;
+    const billingCity = this.billingCityInput?.getElement().value;
+    const billingZip = this.billingZipInput?.getElement().value;
+    const billingCountry = this.billingCountryInput?.value;
+    const shippingStreet = this.shippingStreetInput?.getElement().value;
+    const shippingCity = this.shippingCityInput?.getElement().value;
+    const shippingZip = this.shippingZipInput?.getElement().value;
+    const shippingCountry = this.shippingCountryInput?.value;
+    const defaultShippingAddress = this.shippingDefaultInput.getElement()
+      .checked
+      ? 0
+      : 0;
+    const defaultBillingAddress = this.billingDefaultInput.getElement().checked
+      ? 1
+      : 0;
     this.clearErrorMessages();
     let hasError = this.handleError(
       email,
       password,
+      repeatPassword,
       firstName,
       lastName,
       dateOfBirth,
-      street,
-      city,
-      zip,
-      country,
+      shippingStreet,
+      shippingCity,
+      shippingZip,
+      shippingCountry,
+      billingStreet,
+      billingCity,
+      billingZip,
+      billingCountry,
     );
 
     if (hasError) return;
@@ -633,9 +993,22 @@ export default class RegistrationView {
       firstName,
       lastName,
       dateOfBirth,
-      addresses: [{ country: country, postalCode: zip, city: city }],
-      defaultShippingAddress: 0,
-      defaultBillingAddress: 0,
+      addresses: [
+        {
+          country: shippingCountry,
+          postalCode: shippingZip,
+          city: shippingCity,
+          street: shippingStreet,
+        },
+        {
+          country: billingCountry,
+          postalCode: billingZip,
+          city: billingCity,
+          street: billingStreet,
+        },
+      ],
+      defaultShippingAddress,
+      defaultBillingAddress,
     };
 
     this.apiRequestService.registerUser(
@@ -694,6 +1067,7 @@ export default class RegistrationView {
       ? "https://img.icons8.com/?size=100&id=e6GkJcP46Dip&format=png&color=000000"
       : "https://img.icons8.com/ios-filled/24/0074be/closed-eye.png";
   }
+
   private displayMessage(message: string, isError: boolean): void {
     if (this.messageBox) {
       this.messageBox.getElement().textContent = message;
@@ -711,10 +1085,14 @@ export default class RegistrationView {
       this.firstNameInput &&
       this.lastNameInput &&
       this.dateOfBirthInput &&
-      this.streetInput &&
-      this.cityInput &&
-      this.zipInput &&
-      this.countryInput &&
+      this.shippingStreetInput &&
+      this.shippingCityInput &&
+      this.shippingZipInput &&
+      this.shippingCountryInput &&
+      this.billingStreetInput &&
+      this.billingCityInput &&
+      this.billingZipInput &&
+      this.billingCountryInput &&
       this.messageBox
     ) {
       this.emailInput.getElement().value = "";
@@ -729,11 +1107,18 @@ export default class RegistrationView {
       this.firstNameInput.getElement().value = "";
       this.lastNameInput.getElement().value = "";
       this.dateOfBirthInput.getElement().value = "";
-      this.streetInput.getElement().value = "";
-      this.cityInput.getElement().value = "";
-      this.zipInput.getElement().value = "";
-      this.countryInput.value = "";
+      this.shippingStreetInput.getElement().value = "";
+      this.shippingCityInput.getElement().value = "";
+      this.shippingZipInput.getElement().value = "";
+      this.shippingCountryInput.value = "";
+      this.billingStreetInput.getElement().value = "";
+      this.billingCityInput.getElement().value = "";
+      this.billingZipInput.getElement().value = "";
+      this.billingCountryInput.value = "";
       this.messageBox.getElement().textContent = "";
+      this.fillFromShippingInput.getElement().checked = false;
+      this.shippingDefaultInput.getElement().checked = false;
+      this.billingDefaultInput.getElement().checked = false;
       this.clearErrorMessages();
     }
   }
@@ -743,9 +1128,13 @@ export default class RegistrationView {
     this.firstNameMessageBox.getElement().textContent = "";
     this.lastNameMessageBox.getElement().textContent = "";
     this.dateOfBirthMessageBox.getElement().textContent = "";
-    this.streetMessageBox.getElement().textContent = "";
-    this.cityMessageBox.getElement().textContent = "";
-    this.zipMessageBox.getElement().textContent = "";
-    this.countryMessageBox.getElement().textContent = "";
+    this.shippingStreetMessageBox.getElement().textContent = "";
+    this.shippingCityMessageBox.getElement().textContent = "";
+    this.shippingZipMessageBox.getElement().textContent = "";
+    this.shippingCountryMessageBox.getElement().textContent = "";
+    this.billingStreetMessageBox.getElement().textContent = "";
+    this.billingCityMessageBox.getElement().textContent = "";
+    this.billingZipMessageBox.getElement().textContent = "";
+    this.billingCountryMessageBox.getElement().textContent = "";
   }
 }

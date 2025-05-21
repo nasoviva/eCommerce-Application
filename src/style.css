@@ -190,6 +190,33 @@ body {
   color: var(--primary-color);
 }
 
+.container-form .title {
+  height: auto;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.checkbox-label {
+  margin-right: 8px;
+  color: var(--primary-color);
+}
+
+.checkbox-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+}
+
 .label {
   font-size: 14px;
   font-weight: bold;

@@ -15,9 +15,5 @@ export default class ErrorMsg {
     this.msg.getElement().addEventListener("animationend", () => {
       this.msg.getElement().remove();
     });
-    /* setTimeout(() => {
-      this.msg.getElement().classList.toggle(css.activeMsg);
-      this.msg.getElement().remove();
-    }, 4000); */
   }
 }

@@ -6,8 +6,6 @@
   position: fixed;
   right: 10px;
   bottom: 10px;
-
-  /* border: 2px solid black; */
   padding: 20px;
   background: white;
   animation: my-animation 6s linear;
