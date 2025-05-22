@@ -121,7 +121,7 @@ export default class Validator {
   }
 
   public static checkCountry(countryForCheck: string): string {
-    if (countryForCheck !== "Russia" && countryForCheck !== "USA") {
+    if (countryForCheck !== "RU" && countryForCheck !== "US") {
       return "Please enter a valid country!";
     }
     // возвращаем пустую строку, если со страной всё в порядке

@@ -225,16 +225,16 @@ export default class LoginView {
     this.apiRequestService.authUser(
       loginData,
       (result: AuthResponse) => {
-        this.displayMessage("Login successful!", false);
-
         const userId = result?.userId || "";
         this.updateSessionStorage(email, password, userId);
 
         this.clearInputs();
         globalThis.location.hash = Routes.HOME;
       },
-      () => {
-        this.displayMessage("Login failed. Check your credentials.", true);
+      (error: Error) => {
+        const message = error instanceof Error ? error.message : String(error);
+        this.displayMessage(message, true);
+        // },
       },
     );
   }
