@@ -29,13 +29,17 @@ const Routes = {
   LOGIN: "#login",
   HOME: "#home",
   REGISTRATION: "#registration",
+  CATALOG: "#catalog",
+  PROFILE: "#profile",
   NOT_FOUND: "#not-found",
 };
 
 const Buttons = {
   LOGIN: "LogIn",
   LOGOUT: "LogOut",
-  GO_HOME: "Home",
+  HOME: "Home",
+  CATALOG: "Catalog",
+  PROFILE: "Profile",
   REGISTRATION: " SignUp",
   GO_LOGIN: "Back to LogIn",
 };
