@@ -94,6 +94,7 @@ export default class HeaderView extends View {
       tag: "button",
       className: [
         cssClasses.HEADER_BUTTON,
+        ...(!isLoggedIn ? [cssClasses.DISABLE] : []),
         currentRoute === Routes.PROFILE
           ? cssClasses.HEADER_BUTTON_ACTIVE
           : cssClasses.HEADER_BUTTON,

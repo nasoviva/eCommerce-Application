@@ -3,6 +3,7 @@ import CatalogView from "../../pages/catalog/catalog";
 import HomeView from "../../pages/home/home";
 import LoginView from "../../pages/login/login";
 import NotFoundView from "../../pages/not-found/not-found";
+import ProductView from "../../pages/product/product";
 import ProfileView from "../../pages/profile/profile";
 import RegistrationView from "../../pages/registration/registration";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
@@ -15,6 +16,7 @@ export default class MainView extends View {
   private readonly contentContainer: ElementCreator;
   private readonly loginView: LoginView;
   private readonly catalogView: CatalogView;
+  private readonly productView: ProductView;
   private readonly profileView: ProfileView;
   private readonly homeView: HomeView;
   private readonly registrationView: RegistrationView;
@@ -42,6 +44,7 @@ export default class MainView extends View {
       this.stateManager,
       this.apiRequestService,
     );
+    this.productView = new ProductView("");
     this.profileView = new ProfileView(
       this.stateManager,
       this.apiRequestService,
@@ -93,6 +96,15 @@ export default class MainView extends View {
       } else {
         globalThis.location.hash = Routes.HOME;
         return;
+      }
+    } else if (path.startsWith(`${Routes.PRODUCT}=`)) {
+      const id = path.split("=")[1];
+      if (isLoggedIn && id) {
+        const productView = new ProductView(id);
+        this.setContent(productView.getElement(id));
+      } else {
+        globalThis.location.hash = Routes.NOT_FOUND;
+        this.setContent(this.notFoundView.getElement());
       }
     } else if (path === Routes.PROFILE) {
       if (isLoggedIn) {

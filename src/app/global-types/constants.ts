@@ -30,6 +30,7 @@ const Routes = {
   HOME: "#home",
   REGISTRATION: "#registration",
   CATALOG: "#catalog",
+  PRODUCT: "#product",
   PROFILE: "#profile",
   NOT_FOUND: "#not-found",
 };
@@ -39,6 +40,7 @@ const Buttons = {
   LOGOUT: "LogOut",
   HOME: "Home",
   CATALOG: "Catalog",
+  PRODUCT: "Product",
   PROFILE: "Profile",
   REGISTRATION: " SignUp",
   GO_LOGIN: "Back to LogIn",
