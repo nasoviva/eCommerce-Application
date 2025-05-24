@@ -90,16 +90,17 @@ export default class MainView extends View {
       }
       this.setContent(this.loginView.getElement());
     } else if (path === Routes.CATALOG) {
-      if (isLoggedIn) {
-        globalThis.location.hash = Routes.CATALOG;
-        this.setContent(this.catalogView.getElement());
-      } else {
-        globalThis.location.hash = Routes.HOME;
-        return;
-      }
+      // if (isLoggedIn) {
+      globalThis.location.hash = Routes.CATALOG;
+      this.setContent(this.catalogView.getElement());
+      // } else {
+      //   globalThis.location.hash = Routes.HOME;
+      //   return;
+      // }
     } else if (path.startsWith(`${Routes.PRODUCT}=`)) {
       const id = path.split("=")[1];
-      if (isLoggedIn && id) {
+      // if (isLoggedIn && id) {
+      if (id) {
         const productView = new ProductView(id);
         this.setContent(productView.getElement(id));
       } else {
