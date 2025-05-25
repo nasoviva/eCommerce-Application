@@ -70,9 +70,38 @@ export default class HeaderView extends View {
           ? cssClasses.HEADER_BUTTON_ACTIVE
           : cssClasses.HEADER_BUTTON,
       ],
-      textContent: Buttons.GO_HOME,
+      textContent: Buttons.HOME,
       callback: (): void => {
         globalThis.location.hash = Routes.HOME;
+      },
+    });
+
+    const catalogButton = new ElementCreator({
+      tag: "button",
+      className: [
+        cssClasses.HEADER_BUTTON,
+        currentRoute === Routes.CATALOG
+          ? cssClasses.HEADER_BUTTON_ACTIVE
+          : cssClasses.HEADER_BUTTON,
+      ],
+      textContent: Buttons.CATALOG,
+      callback: (): void => {
+        globalThis.location.hash = Routes.CATALOG;
+      },
+    });
+
+    const profileButton = new ElementCreator({
+      tag: "button",
+      className: [
+        cssClasses.HEADER_BUTTON,
+        ...(!isLoggedIn ? [cssClasses.DISABLE] : []),
+        currentRoute === Routes.PROFILE
+          ? cssClasses.HEADER_BUTTON_ACTIVE
+          : cssClasses.HEADER_BUTTON,
+      ],
+      textContent: Buttons.PROFILE,
+      callback: (): void => {
+        globalThis.location.hash = Routes.PROFILE;
       },
     });
 
@@ -119,8 +148,10 @@ export default class HeaderView extends View {
     });
     this.headerContainer.addInnerElement(buttonsContainer.getElement());
     buttonsContainer.addInnerElement(homeButton.getElement());
+    buttonsContainer.addInnerElement(catalogButton.getElement());
     buttonsContainer.addInnerElement(registerButton.getElement());
     buttonsContainer.addInnerElement(loginButton.getElement());
+    buttonsContainer.addInnerElement(profileButton.getElement());
     buttonsContainer.addInnerElement(logoutButton.getElement());
   }
 }
