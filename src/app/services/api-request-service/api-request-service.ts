@@ -170,8 +170,6 @@ export default class ApiRequestService {
       })
       .execute()
       .then((result) => {
-        console.log(result);
-        console.log(DataParser.parseForCatalog(result, "en-US"));
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {

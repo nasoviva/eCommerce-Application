@@ -1,4 +1,7 @@
-import type { ProductProjectionPagedSearchResponse } from "@commercetools/platform-sdk";
+import type {
+  CategoryPagedQueryResponse,
+  ProductProjectionPagedSearchResponse,
+} from "@commercetools/platform-sdk";
 import type { ClientResponse } from "@commercetools/ts-client";
 import type { Locale } from "../../global-types/types";
 
@@ -9,6 +12,13 @@ interface CatalogData {
   description: string;
   price: number;
   discount?: number;
+}
+
+interface CategoryData {
+  id: string;
+  description: string;
+  name: string;
+  ancestors?: string[];
 }
 
 export default class DataParser {
@@ -32,10 +42,37 @@ export default class DataParser {
             ?.value.centAmount || 0,
       };
       const discount = item.masterVariant.prices?.find(
-        (i) => i.country === country,
+        (i) => i.country === countryParse,
       )?.discounted?.value.centAmount;
       if (discount) productData.discount = discount;
       result.push(productData);
+    }
+    return result;
+  }
+
+  public static parseCategories(
+    response: ClientResponse<CategoryPagedQueryResponse>,
+    country: Locale,
+  ): CategoryData[] {
+    const result: CategoryData[] = [];
+    if (!response.body) return result;
+    for (const item of response.body.results) {
+      const categoryData: CategoryData = {
+        id: item.id,
+        name: item.name[country],
+        description: item.description ? item.description[country] : "",
+      };
+      if (item.ancestors) {
+        const path: string[] = [];
+        for (const ancestor of item.ancestors) {
+          const pathPart = response.body.results.find(
+            (x) => x.id === ancestor.id,
+          )?.name[country];
+          if (pathPart) path.push(pathPart);
+        }
+        categoryData.ancestors = path;
+      }
+      result.push(categoryData);
     }
     return result;
   }
