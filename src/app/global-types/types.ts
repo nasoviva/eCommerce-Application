@@ -1,4 +1,4 @@
-type Locale = "US" | "RU";
+export type Locale = "US" | "RU";
 type Material = "wood" | "paper";
 type Color = "red" | "green" | "blue";
 type AgeRestriction = 6 | 14;

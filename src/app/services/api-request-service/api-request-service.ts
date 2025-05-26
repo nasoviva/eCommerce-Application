@@ -11,6 +11,8 @@ import type { Client, QueryParam, TokenStore } from "@commercetools/ts-client";
 import VSATokenCache from "./token-cache";
 import ErrorMsg from "../error-msg/error-msg";
 import type { UseProductQuery } from "../../global-types/types";
+import DataParaser from "./data-parser";
+import DataParser from "./data-parser";
 
 type RequestBuilder = "anon" | "password";
 
@@ -154,6 +156,8 @@ export default class ApiRequestService {
       })
       .execute()
       .then((result) => {
+        console.log(result);
+        console.log(DataParser.parseForCatalog(result, "US"));
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
