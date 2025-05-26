@@ -73,7 +73,8 @@ export default class App {
   public testMethod(): void {
     const myButton = document.createElement("button");
     myButton.textContent = "TEST BUTTON";
-    /* document.body.append(myButton); */
+    /* КНОПКА ЗДЕСЬ */
+    document.body.append(myButton);
     myButton.addEventListener("click", () => {
       /* Тест регистрации юзера */
       /* this.apiRequestService.registerUser({
@@ -108,9 +109,7 @@ export default class App {
         {
           locale: "en-US",
           attributes: {
-            byKey: {
-              "card-color": "blue",
-            },
+            byKey: {},
             byName: {
               material: "paper",
             },
@@ -127,6 +126,16 @@ export default class App {
             "5494ada2-4552-4264-9d9f-59b836591845",
             "58d82ca1-34de-417b-b9ec-90a28bd0a043",
           ],
+        },
+        (result: ClientResponse<ProductProjectionPagedSearchResponse>) => {
+          console.log(DataParser.parseForCatalog(result, "en-US"));
+        },
+      );
+      /* Пример получения товаров по поиску */
+      this.apiRequestService.searchProducts(
+        {
+          locale: "en-US",
+          text: "coffee",
         },
         (result: ClientResponse<ProductProjectionPagedSearchResponse>) => {
           console.log(DataParser.parseForCatalog(result, "en-US"));

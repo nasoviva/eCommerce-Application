@@ -3,6 +3,7 @@ import type {
   ByProjectKeyRequestBuilder,
   MyCustomerDraft,
   MyCustomerSignin,
+  SearchQuery,
 } from "@commercetools/platform-sdk";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
@@ -10,7 +11,7 @@ import type StateManager from "../state-manager/state-manager";
 import type { Client, QueryParam, TokenStore } from "@commercetools/ts-client";
 import VSATokenCache from "./token-cache";
 import ErrorMsg from "../error-msg/error-msg";
-import type { UseProductQuery } from "../../global-types/types";
+import type { UseProductQuery, UseSearchQuery } from "../../global-types/types";
 
 type RequestBuilder = "anon" | "password";
 
@@ -55,6 +56,15 @@ export default class ApiRequestService {
     if ("error" in reason && Array.isArray(reason.error)) {
       return reason.error.map((x) => x.message);
     } else return [];
+  }
+
+  private static buildSearchQuery(userQuery: UseSearchQuery): ProductQuery {
+    const result: ProductQuery = {};
+    result.localeProjection = userQuery.locale;
+    result[`text.${userQuery.locale}`] = userQuery.text;
+    result.fuzzy = true;
+    result.fuzzyLevel = 0;
+    return result;
   }
 
   private static buildProductQuery(userQuery: UseProductQuery): ProductQuery {
@@ -182,6 +192,27 @@ export default class ApiRequestService {
     this.apiRoot
       .categories()
       .get()
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public searchProducts(
+    searchQuery: UseSearchQuery,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    const formatQuery = ApiRequestService.buildSearchQuery(searchQuery);
+    this.apiRoot
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: formatQuery,
+      })
       .execute()
       .then((result) => {
         if (onSuccess) onSuccess(result);

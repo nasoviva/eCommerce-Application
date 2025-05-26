@@ -3,7 +3,7 @@ import type {
   ProductProjectionPagedSearchResponse,
 } from "@commercetools/platform-sdk";
 import type { ClientResponse } from "@commercetools/ts-client";
-import type { Locale } from "../../global-types/types";
+import type { Localization } from "../../global-types/types";
 
 interface CatalogData {
   id: string;
@@ -26,7 +26,7 @@ export default class DataParser {
 
   public static parseForCatalog(
     response: ClientResponse<ProductProjectionPagedSearchResponse>,
-    country: Locale,
+    country: Localization,
   ): CatalogData[] {
     const countryParse = country.slice(-2);
     const result: CatalogData[] = [];
@@ -52,7 +52,7 @@ export default class DataParser {
 
   public static parseCategories(
     response: ClientResponse<CategoryPagedQueryResponse>,
-    country: Locale,
+    country: Localization,
   ): CategoryData[] {
     const result: CategoryData[] = [];
     if (!response.body) return result;
