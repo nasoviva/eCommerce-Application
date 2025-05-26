@@ -63,6 +63,7 @@ export default class ApiRequestService {
     const result: ProductQuery = {};
     result.localeProjection = userQuery.locale;
     result["filter.query"] = [];
+    result.sort = [];
     if (userQuery.attributes) {
       for (const item of Object.entries(userQuery.attributes.byKey)) {
         result["filter.query"].push(
@@ -80,6 +81,19 @@ export default class ApiRequestService {
         `variants.price.centAmount:range (${userQuery.price.from || "*"} to ${userQuery.price.to || "*"})`,
       );
     }
+
+    if (userQuery.categories) {
+      const idList = userQuery.categories
+        .map((x) => `subtree("${x}")`)
+        .join(", ");
+      result["filter.query"].push(`categories.id: ${idList}`);
+      console.log(`categories.id: ${idList}`);
+    }
+
+    if (userQuery.sort?.price)
+      result.sort.push(`price ${userQuery.sort.price}`);
+    if (userQuery.sort?.name)
+      result.sort.push(`name.${userQuery.locale} ${userQuery.sort.name}`);
 
     return result;
   }
@@ -157,13 +171,27 @@ export default class ApiRequestService {
       .execute()
       .then((result) => {
         console.log(result);
-        console.log(DataParser.parseForCatalog(result, "US"));
+        console.log(DataParser.parseForCatalog(result, "en-US"));
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
-        if (onReject) {
-          onReject(reason);
-        }
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public getCategories(
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .categories()
+      .get()
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
       });
   }
 

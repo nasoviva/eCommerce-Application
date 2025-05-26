@@ -1,7 +1,8 @@
-export type Locale = "US" | "RU";
+export type Locale = "en-US" | "RU";
 type Material = "wood" | "paper";
 type Color = "red" | "green" | "blue";
 type AgeRestriction = 6 | 14;
+type SortDirection = "asc" | "desc";
 
 export interface UseProductQuery {
   locale: Locale;
@@ -19,4 +20,9 @@ export interface UseProductQuery {
       isAvailable?: boolean;
     };
   };
+  sort?: {
+    price?: SortDirection;
+    name?: SortDirection;
+  };
+  categories?: string[];
 }
