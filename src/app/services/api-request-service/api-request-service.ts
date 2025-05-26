@@ -7,11 +7,35 @@ import type {
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
 import type StateManager from "../state-manager/state-manager";
-import type { Client, TokenStore } from "@commercetools/ts-client";
+import type { Client, QueryParam, TokenStore } from "@commercetools/ts-client";
 import VSATokenCache from "./token-cache";
 import ErrorMsg from "../error-msg/error-msg";
+import type { UseProductQuery } from "../../global-types/types";
 
 type RequestBuilder = "anon" | "password";
+
+interface ProductQuery {
+  [key: string]: QueryParam;
+  markMatchingVariants?: boolean;
+  fuzzy?: boolean;
+  fuzzyLevel?: number;
+  "filter.query"?: string | string[];
+  filter?: string | string[];
+  facet?: string | string[];
+  "filter.facets"?: string | string[];
+  expand?: string | string[];
+  sort?: string | string[];
+  limit?: number;
+  offset?: number;
+  staged?: boolean;
+  priceCurrency?: string;
+  priceCountry?: string;
+  priceCustomerGroup?: string;
+  priceCustomerGroupAssignments?: string | string[];
+  priceChannel?: string;
+  localeProjection?: string | string[];
+  storeProjection?: string;
+}
 
 export default class ApiRequestService {
   private apiRoot!: ByProjectKeyRequestBuilder;
@@ -31,6 +55,31 @@ export default class ApiRequestService {
     if ("error" in reason && Array.isArray(reason.error)) {
       return reason.error.map((x) => x.message);
     } else return [];
+  }
+
+  private static buildProductQuery(userQuery: UseProductQuery): ProductQuery {
+    const result: ProductQuery = {};
+    result.localeProjection = userQuery.locale;
+    result["filter.query"] = [];
+    if (userQuery.attributes) {
+      for (const item of Object.entries(userQuery.attributes.byKey)) {
+        result["filter.query"].push(
+          `variants.attributes.${item[0]}.key:"${item[1]}"`,
+        );
+      }
+      for (const item of Object.entries(userQuery.attributes.byName)) {
+        result["filter.query"].push(
+          `variants.attributes.${item[0]}:"${item[1]}"`,
+        );
+      }
+    }
+    if (userQuery.price) {
+      result["filter.query"].push(
+        `variants.price.centAmount:range (${userQuery.price.from || "*"} to ${userQuery.price.to || "*"})`,
+      );
+    }
+
+    return result;
   }
 
   public getToken(): TokenStore {
@@ -79,6 +128,29 @@ export default class ApiRequestService {
       .signup()
       .post({
         body: registrationData,
+      })
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) {
+          onReject(reason);
+        }
+      });
+  }
+
+  public getProducts(
+    productQuery: UseProductQuery,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    const formatQuery = ApiRequestService.buildProductQuery(productQuery);
+    this.apiRoot
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: formatQuery,
       })
       .execute()
       .then((result) => {
