@@ -11,8 +11,6 @@ import type { Client, QueryParam, TokenStore } from "@commercetools/ts-client";
 import VSATokenCache from "./token-cache";
 import ErrorMsg from "../error-msg/error-msg";
 import type { UseProductQuery } from "../../global-types/types";
-import DataParaser from "./data-parser";
-import DataParser from "./data-parser";
 
 type RequestBuilder = "anon" | "password";
 

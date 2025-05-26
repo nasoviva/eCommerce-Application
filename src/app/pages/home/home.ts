@@ -2,12 +2,6 @@ import { cssClasses, Titles } from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
 import type StateManager from "../../services/state-manager/state-manager";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
-import DataParser from "../../services/api-request-service/data-parser";
-import type {
-  CategoryPagedQueryResponse,
-  ClientResponse,
-  ProductProjectionPagedSearchResponse,
-} from "@commercetools/platform-sdk";
 
 export default class HomeView {
   private readonly homeContainer: ElementCreator;
