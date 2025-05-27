@@ -2,6 +2,7 @@ import type {
   CategoryPagedQueryResponse,
   ClientResponse,
   ProductProjection,
+  Customer,
   ProductProjectionPagedSearchResponse,
 } from "@commercetools/platform-sdk";
 import "../style.css";
@@ -98,15 +99,14 @@ export default class App {
         email: "testemail@testemail.com",
         password: "Test123!",
       }); */
-
       /* Пример получения категорий */
-      this.apiRequestService.getCategories(
+      /* this.apiRequestService.getCategories(
         (result: ClientResponse<CategoryPagedQueryResponse>) => {
           console.log(DataParser.parseCategories(result, "en-US"));
         },
-      );
+      ); */
       /*Пример получения товаров */
-      this.apiRequestService.getProducts(
+      /* this.apiRequestService.getProducts(
         {
           locale: "en-US",
           attributes: {
@@ -131,12 +131,12 @@ export default class App {
         (result: ClientResponse<ProductProjectionPagedSearchResponse>) => {
           console.log(DataParser.parseForCatalog(result, "en-US"));
         },
-      );
+      ); */
       /* Пример получения товаров по поиску */
       this.apiRequestService.searchProducts(
         {
           locale: "en-US",
-          text: "coffee",
+          text: "Coffer",
         },
         (result: ClientResponse<ProductProjectionPagedSearchResponse>) => {
           console.log(DataParser.parseForCatalog(result, "en-US"));

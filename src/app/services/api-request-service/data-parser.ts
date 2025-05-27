@@ -1,6 +1,7 @@
 import type {
   CategoryPagedQueryResponse,
   ProductProjection,
+  Customer,
   ProductProjectionPagedSearchResponse,
 } from "@commercetools/platform-sdk";
 import type { ClientResponse } from "@commercetools/ts-client";
@@ -30,6 +31,23 @@ interface CategoryData {
   description: string;
   name: string;
   ancestors?: string[];
+}
+
+interface AddressData {
+  street: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  country: string;
+  defaultBilling: boolean;
+  defaultShipping: boolean;
+}
+
+interface UserData {
+  name: string;
+  lastName: string;
+  dateOfBirth: string;
+  addresses: AddressData[];
 }
 
 export default class DataParser {
@@ -109,6 +127,38 @@ export default class DataParser {
       }
       result.push(categoryData);
     }
+    return result;
+  }
+
+  public static parseUserData(response: ClientResponse<Customer>): UserData {
+    const name = response.body?.firstName || "";
+    const lastName = response.body?.lastName || "";
+    const dateOfBirth = response.body?.dateOfBirth || "";
+    let addresses: AddressData[] = [];
+    if (response.body?.addresses) {
+      addresses = response.body?.addresses.map((x) => {
+        const isDefaultBilling =
+          x.id === response.body?.defaultBillingAddressId;
+        const isDefaultShipping =
+          x.id === response.body?.defaultShippingAddressId;
+        const address = {
+          street: x.streetName || "",
+          city: x.city || "",
+          state: x.state || "",
+          zipcode: x.postalCode || "",
+          country: x.city || "",
+          defaultBilling: isDefaultBilling,
+          defaultShipping: isDefaultShipping,
+        };
+        return address;
+      });
+    }
+    const result: UserData = {
+      name: name,
+      lastName: lastName,
+      dateOfBirth: dateOfBirth,
+      addresses: addresses,
+    };
     return result;
   }
 }

@@ -63,7 +63,7 @@ export default class ApiRequestService {
     result.localeProjection = userQuery.locale;
     result[`text.${userQuery.locale}`] = userQuery.text;
     result.fuzzy = true;
-    result.fuzzyLevel = 0;
+    result.fuzzyLevel = 1;
     return result;
   }
 
@@ -230,6 +230,22 @@ export default class ApiRequestService {
     this.apiRoot
       .productProjections()
       .withId({ ID: id })
+      .get()
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public getUserInfo(
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .me()
       .get()
       .execute()
       .then((result) => {
