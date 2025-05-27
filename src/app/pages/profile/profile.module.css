@@ -1,0 +1,58 @@
+.mainContainer {
+  composes: container-column from global;
+  width: fit-content;
+  position: relative;
+  background: var(--background-color);
+  z-index: 1;
+}
+
+.title {
+  composes: title from global;
+}
+
+.textField {
+  composes: label from global;
+}
+
+.textInput {
+  composes: input from global;
+}
+
+.inActiveInput {
+  pointer-events: none;
+  background: transparent;
+  border-color: transparent;
+}
+
+.disabled {
+  display: none;
+}
+
+.penIcon {
+  height: 30px;
+  aspect-ratio: 1/1;
+}
+
+.penBtn {
+  cursor: pointer;
+  background: var(--background-color);
+  border: none;
+}
+
+.hiddenBtn {
+  position: absolute;
+  z-index: -1;
+  transition: 0.5s;
+  right: 0px;
+}
+
+.showBtn {
+  transform: translateX(150%);
+}
+
+.blockContainer {
+  composes: container-row from global;
+  justify-content: end;
+  align-items: center;
+  background: var(--background-color);
+}
