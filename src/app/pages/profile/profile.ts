@@ -6,17 +6,22 @@ import InputCreator from "../../shared/input-creator";
 import type { ClientResponse } from "@commercetools/ts-client";
 import type { AddressData } from "../../services/api-request-service/data-parser";
 import DataParser from "../../services/api-request-service/data-parser";
-import type { Customer } from "@commercetools/platform-sdk";
-import { ELEM_PARAM } from "./constants";
+import type {
+  Customer,
+  MyCustomerUpdateAction,
+} from "@commercetools/platform-sdk";
+import { CHANGE_ACTION_LIST, ELEM_PARAM } from "./constants";
 
 export default class ProfileView {
   private readonly stateManager: StateManager;
   private readonly apiRequestService: ApiRequestService;
   private profileContainer = new ElementCreator(ELEM_PARAM.mainContainer);
+  private emailInput = new InputCreator(ELEM_PARAM.emailInput);
   private nameInput = new InputCreator(ELEM_PARAM.nameInput);
   private lastNameInput = new InputCreator(ELEM_PARAM.lastNameInput);
   private dateOfBirthInput = new InputCreator(ELEM_PARAM.dateOfBirthInput);
   private addressArea = new ElementCreator(ELEM_PARAM.addressArea);
+  private version: number = 0;
 
   constructor(
     stateManager: StateManager,
@@ -36,6 +41,8 @@ export default class ProfileView {
   public updateProfileInfo(): void {
     this.apiRequestService.getUserInfo((result: ClientResponse<Customer>) => {
       const data = DataParser.parseUserData(result);
+      this.version = data.version;
+      this.emailInput.getElement().value = data.email;
       this.nameInput.getElement().value = data.name;
       this.lastNameInput.getElement().value = data.lastName;
       this.dateOfBirthInput.getElement().value = data.dateOfBirth;
@@ -51,6 +58,10 @@ export default class ProfileView {
     const title = new ElementCreator(ELEM_PARAM.title);
     this.profileContainer.addInnerElement(
       title,
+      this.formBlock(
+        new ElementCreator(ELEM_PARAM.lastNameLabel),
+        this.emailInput,
+      ),
       this.formBlock(new ElementCreator(ELEM_PARAM.nameLabel), this.nameInput),
       this.formBlock(
         new ElementCreator(ELEM_PARAM.lastNameLabel),
@@ -93,8 +104,56 @@ export default class ProfileView {
       });
     }
 
+    confirmBtn.setCallBack(() => {
+      const changeTarget = inputElement
+        .getElement()
+        .getAttribute("change-target");
+      if (changeTarget) {
+        const value = inputElement.getElement().value;
+        switch (changeTarget) {
+          case CHANGE_ACTION_LIST.firstName: {
+            this.apiRequestService.updateUserInfo(this.version, [
+              {
+                action: "setFirstName",
+                firstName: value,
+              },
+            ]);
+            break;
+          }
+          case CHANGE_ACTION_LIST.lastName: {
+            this.apiRequestService.updateUserInfo(this.version, [
+              {
+                action: "setLastName",
+                lastName: value,
+              },
+            ]);
+            break;
+          }
+          case CHANGE_ACTION_LIST.email: {
+            this.apiRequestService.updateUserInfo(this.version, [
+              {
+                action: "changeEmail",
+                email: value,
+              },
+            ]);
+            break;
+          }
+          case CHANGE_ACTION_LIST.dateOfBirth: {
+            this.apiRequestService.updateUserInfo(this.version, [
+              {
+                action: "setDateOfBirth",
+                dateOfBirth: value,
+              },
+            ]);
+            break;
+          }
+        }
+      }
+    });
+
     penBtn.setCallBack(() => {
       tempVal = inputElement.getElement().value;
+      inputElement.getElement().focus();
     });
 
     crossBtn.setCallBack(() => {

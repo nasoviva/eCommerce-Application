@@ -3,6 +3,7 @@ import type {
   ByProjectKeyRequestBuilder,
   MyCustomerDraft,
   MyCustomerSignin,
+  MyCustomerUpdateAction,
   SearchQuery,
 } from "@commercetools/platform-sdk";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
@@ -192,6 +193,29 @@ export default class ApiRequestService {
     this.apiRoot
       .categories()
       .get()
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public updateUserInfo(
+    version: number,
+    actions: MyCustomerUpdateAction[],
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .me()
+      .post({
+        body: {
+          version: version,
+          actions: actions,
+        },
+      })
       .execute()
       .then((result) => {
         if (onSuccess) onSuccess(result);

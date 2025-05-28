@@ -1,3 +1,4 @@
+import type { MyCustomerUpdateAction } from "@commercetools/platform-sdk";
 import css from "./profile.module.css";
 
 export const ELEM_PARAM = {
@@ -18,6 +19,19 @@ export const ELEM_PARAM = {
     type: "text",
     className: [...css.textInput.split(" "), css.inActiveInput],
   },
+  emailLabel: {
+    tag: "p",
+    className: [...css.textField.split(" ")],
+    textContent: "E-mail:",
+  },
+  emailInput: {
+    type: "text",
+    className: [...css.textInput.split(" "), css.inActiveInput],
+    placeholder: "e-mail",
+    attributes: {
+      "change-target": "email",
+    },
+  },
   nameLabel: {
     tag: "p",
     className: [...css.textField.split(" ")],
@@ -27,6 +41,9 @@ export const ELEM_PARAM = {
     type: "text",
     className: [...css.textInput.split(" "), css.inActiveInput],
     placeholder: "Name",
+    attributes: {
+      "change-target": "firstName",
+    },
   },
   lastNameLabel: {
     tag: "p",
@@ -37,6 +54,9 @@ export const ELEM_PARAM = {
     type: "text",
     className: [...css.textInput.split(" "), css.inActiveInput],
     placeholder: "Last Name",
+    attributes: {
+      "change-target": "lastName",
+    },
   },
   dateOfBirthLabel: {
     tag: "p",
@@ -47,6 +67,9 @@ export const ELEM_PARAM = {
     type: "date",
     className: [...css.textInput.split(" "), css.inActiveInput],
     placeholder: "1999-01-01",
+    attributes: {
+      "change-target": "dateOfBirth",
+    },
   },
   penBtn: {
     tag: "button",
@@ -164,4 +187,11 @@ export const ELEM_PARAM = {
       name: "shippingCheckMark",
     },
   },
+};
+
+export const CHANGE_ACTION_LIST = {
+  firstName: ELEM_PARAM.nameInput.attributes["change-target"],
+  lastName: ELEM_PARAM.lastNameInput.attributes["change-target"],
+  email: ELEM_PARAM.emailInput.attributes["change-target"],
+  dateOfBirth: ELEM_PARAM.dateOfBirthInput.attributes["change-target"],
 };

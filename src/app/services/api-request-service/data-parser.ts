@@ -44,6 +44,8 @@ export interface AddressData {
 }
 
 interface UserData {
+  version: number;
+  email: string;
   name: string;
   lastName: string;
   dateOfBirth: string;
@@ -131,6 +133,8 @@ export default class DataParser {
   }
 
   public static parseUserData(response: ClientResponse<Customer>): UserData {
+    const version = response.body?.version || 0;
+    const email = response.body?.email || "";
     const name = response.body?.firstName || "";
     const lastName = response.body?.lastName || "";
     const dateOfBirth = response.body?.dateOfBirth || "";
@@ -154,6 +158,8 @@ export default class DataParser {
       });
     }
     const result: UserData = {
+      version: version,
+      email: email,
       name: name,
       lastName: lastName,
       dateOfBirth: dateOfBirth,
