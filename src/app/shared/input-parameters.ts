@@ -1,7 +1,7 @@
 export default class InputParameters {
   public type: string;
   public className: string[];
-  public placeholder: string;
+  public placeholder?: string;
   public value?: string;
   public name?: string;
   public callback?: () => void | null;

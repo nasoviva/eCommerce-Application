@@ -78,4 +78,90 @@ export const ELEM_PARAM = {
     className: [...css.blockContainer.split(" ")],
     textContent: "",
   },
+  addressArea: {
+    tag: "div",
+    className: [...css.mainContainer.split(" "), css.addressArea],
+  },
+  addressBlockContainer: {
+    tag: "div",
+    className: [...css.mainContainer.split(" "), css.addressArea],
+  },
+  countryField: {
+    tag: "p",
+    className: [...css.textField.split(" ")],
+    textContent: "Country:",
+  },
+  stateField: {
+    tag: "p",
+    className: [...css.textField.split(" ")],
+    textContent: "State:",
+  },
+  cityField: {
+    tag: "p",
+    className: [...css.textField.split(" ")],
+    textContent: "City:",
+  },
+  streetField: {
+    tag: "p",
+    className: [...css.textField.split(" ")],
+    textContent: "City:",
+  },
+  zipCodeField: {
+    tag: "p",
+    className: [...css.textField.split(" ")],
+    textContent: "Zipcode:",
+  },
+  countryInput: {
+    type: "text",
+    className: [...css.textInput.split(" "), css.inActiveInput],
+    placeholder: "Country",
+  },
+  stateInput: {
+    type: "text",
+    className: [...css.textInput.split(" "), css.inActiveInput],
+    placeholder: "State",
+  },
+  cityInput: {
+    type: "text",
+    className: [...css.textInput.split(" "), css.inActiveInput],
+    placeholder: "City",
+  },
+  streetInput: {
+    type: "text",
+    className: [...css.textInput.split(" "), css.inActiveInput],
+    placeholder: "Street",
+  },
+  zipCodeInput: {
+    type: "text",
+    className: [...css.textInput.split(" "), css.inActiveInput],
+    placeholder: "Zipcode",
+  },
+  labelContainer: {
+    tag: "label",
+    className: [...css.labelContainer.split(" ")],
+  },
+  billingLabel: {
+    tag: "span",
+    className: [...css.textLabel.split(" ")],
+    textContent: "Set this address as default for billing",
+  },
+  shippingLabel: {
+    tag: "span",
+    className: [...css.textLabel.split(" ")],
+    textContent: "Set this address as default for shipping",
+  },
+  billingCheckMark: {
+    type: "checkbox",
+    className: [...css.checkBox.split(" ")],
+    attributes: {
+      name: "billingCheckMark",
+    },
+  },
+  shippingCheckMark: {
+    type: "checkbox",
+    className: [...css.checkBox.split(" ")],
+    attributes: {
+      name: "shippingCheckMark",
+    },
+  },
 };

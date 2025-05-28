@@ -16,7 +16,7 @@ export default class ProfileView {
   private nameInput = new InputCreator(ELEM_PARAM.nameInput);
   private lastNameInput = new InputCreator(ELEM_PARAM.lastNameInput);
   private dateOfBirthInput = new InputCreator(ELEM_PARAM.dateOfBirthInput);
-  private addressArea = new ElementCreator(ELEM_PARAM.mainContainer);
+  private addressArea = new ElementCreator(ELEM_PARAM.addressArea);
 
   constructor(
     stateManager: StateManager,
@@ -39,6 +39,10 @@ export default class ProfileView {
       this.nameInput.getElement().value = data.name;
       this.lastNameInput.getElement().value = data.lastName;
       this.dateOfBirthInput.getElement().value = data.dateOfBirth;
+      this.addressArea.getElement().replaceChildren();
+      for (const item of data.addresses) {
+        this.addressArea.addInnerElement(this.buildAddressBlock(item));
+      }
     });
   }
 
@@ -47,12 +51,12 @@ export default class ProfileView {
     const title = new ElementCreator(ELEM_PARAM.title);
     this.profileContainer.addInnerElement(
       title,
-      this.formBlocks(new ElementCreator(ELEM_PARAM.nameLabel), this.nameInput),
-      this.formBlocks(
+      this.formBlock(new ElementCreator(ELEM_PARAM.nameLabel), this.nameInput),
+      this.formBlock(
         new ElementCreator(ELEM_PARAM.lastNameLabel),
         this.lastNameInput,
       ),
-      this.formBlocks(
+      this.formBlock(
         new ElementCreator(ELEM_PARAM.dateOfBirthLabel),
         this.dateOfBirthInput,
       ),
@@ -61,7 +65,7 @@ export default class ProfileView {
     this.updateProfileInfo();
   }
 
-  private formBlocks(
+  private formBlock(
     fieldName: ElementCreator,
     inputElement: InputCreator,
   ): ElementCreator {
@@ -108,15 +112,47 @@ export default class ProfileView {
     return blockContainer;
   }
 
-  /* private buildAdressBlock(address: AddressData): ElementCreator {
-    const blockContainer = new ElementCreator(ELEM_PARAM.mainContainer);
-    const country = new ElementCreator(ELEM_PARAM.textField);
-    const countryInput = new InputCreator(ELEM_PARAM.nameInput);
-    const country = new ElementCreator(ELEM_PARAM.textField);
-    const countryInput = new InputCreator(ELEM_PARAM.nameInput);
-    const country = new ElementCreator(ELEM_PARAM.textField);
-    const countryInput = new InputCreator(ELEM_PARAM.nameInput);
-    const country = new ElementCreator(ELEM_PARAM.textField);
-    const countryInput = new InputCreator(ELEM_PARAM.nameInput); 
-  } */
+  private buildAddressBlock(address: AddressData): ElementCreator {
+    const blockContainer = new ElementCreator(ELEM_PARAM.addressBlockContainer);
+    const country = new ElementCreator(ELEM_PARAM.countryField);
+    const countryInput = new InputCreator(ELEM_PARAM.countryInput);
+    const city = new ElementCreator(ELEM_PARAM.cityField);
+    const cityInput = new InputCreator(ELEM_PARAM.cityInput);
+    const state = new ElementCreator(ELEM_PARAM.stateField);
+    const stateInput = new InputCreator(ELEM_PARAM.stateInput);
+    const street = new ElementCreator(ELEM_PARAM.streetField);
+    const streetInput = new InputCreator(ELEM_PARAM.streetInput);
+    const zipCode = new ElementCreator(ELEM_PARAM.zipCodeField);
+    const zipCodeInput = new InputCreator(ELEM_PARAM.zipCodeInput);
+    const billingLabel = new ElementCreator(ELEM_PARAM.billingLabel);
+    const billingCheckMark = new InputCreator(ELEM_PARAM.billingCheckMark);
+    const shippingLabel = new ElementCreator(ELEM_PARAM.billingLabel);
+    const shippingCheckMark = new InputCreator(ELEM_PARAM.shippingCheckMark);
+    const billing = new ElementCreator(ELEM_PARAM.labelContainer);
+    billing.addInnerElement(billingLabel, billingCheckMark);
+    const shipping = new ElementCreator(ELEM_PARAM.labelContainer);
+    shipping.addInnerElement(shippingLabel, shippingCheckMark);
+
+    countryInput.getElement().value = address.country;
+    cityInput.getElement().value = address.city;
+    stateInput.getElement().value = address.state;
+    streetInput.getElement().value = address.city;
+    zipCodeInput.getElement().value = address.zipcode;
+    shippingCheckMark.getElement().checked = address.defaultShipping;
+    billingCheckMark.getElement().checked = address.defaultBilling;
+
+    console.log(address.country);
+
+    blockContainer.addInnerElement(
+      this.formBlock(country, countryInput),
+      this.formBlock(city, cityInput),
+      this.formBlock(state, stateInput),
+      this.formBlock(street, streetInput),
+      this.formBlock(zipCode, zipCodeInput),
+      billing,
+      shipping,
+    );
+
+    return blockContainer;
+  }
 }
