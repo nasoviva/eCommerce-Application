@@ -187,6 +187,11 @@ export const ELEM_PARAM = {
       name: "shippingCheckMark",
     },
   },
+  confirmBtn: {
+    tag: "button",
+    className: [...css.button.split(" ")],
+    textContent: "Confirm changes",
+  },
 };
 
 export const CHANGE_ACTION_LIST = {

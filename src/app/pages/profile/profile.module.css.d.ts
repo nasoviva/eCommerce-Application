@@ -3,6 +3,7 @@
 interface CssExports {
   'addressArea': string;
   'blockContainer': string;
+  'button': string;
   'checkBox': string;
   'disabled': string;
   'hiddenBtn': string;

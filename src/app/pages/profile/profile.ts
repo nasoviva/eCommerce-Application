@@ -12,6 +12,12 @@ import type {
 } from "@commercetools/platform-sdk";
 import { CHANGE_ACTION_LIST, ELEM_PARAM } from "./constants";
 
+function isCorrectUpdateData(
+  incoming: object[],
+): incoming is MyCustomerUpdateAction[] {
+  return incoming.every((x) => x !== null && "action" in x);
+}
+
 export default class ProfileView {
   private readonly stateManager: StateManager;
   private readonly apiRequestService: ApiRequestService;
@@ -21,6 +27,9 @@ export default class ProfileView {
   private lastNameInput = new InputCreator(ELEM_PARAM.lastNameInput);
   private dateOfBirthInput = new InputCreator(ELEM_PARAM.dateOfBirthInput);
   private addressArea = new ElementCreator(ELEM_PARAM.addressArea);
+  private confirmBtn = new ElementCreator(ELEM_PARAM.confirmBtn);
+  private updateInfo = new Map();
+
   private version: number = 0;
 
   constructor(
@@ -54,12 +63,16 @@ export default class ProfileView {
   }
 
   private configureView(): void {
-    /* this.profileContainer.getElement().innerHTML = ""; */
-    const title = new ElementCreator(ELEM_PARAM.title);
+    this.confirmBtn.setCallBack(() => {
+      const updateData = Array.from(this.updateInfo.values());
+      console.log(isCorrectUpdateData(updateData), updateData);
+      if (isCorrectUpdateData(updateData))
+        this.apiRequestService.updateUserInfo(this.version, updateData);
+    });
     this.profileContainer.addInnerElement(
-      title,
+      new ElementCreator(ELEM_PARAM.title),
       this.formBlock(
-        new ElementCreator(ELEM_PARAM.lastNameLabel),
+        new ElementCreator(ELEM_PARAM.emailLabel),
         this.emailInput,
       ),
       this.formBlock(new ElementCreator(ELEM_PARAM.nameLabel), this.nameInput),
@@ -72,6 +85,7 @@ export default class ProfileView {
         this.dateOfBirthInput,
       ),
       this.addressArea,
+      this.confirmBtn,
     );
     this.updateProfileInfo();
   }
@@ -104,52 +118,45 @@ export default class ProfileView {
       });
     }
 
-    confirmBtn.setCallBack(() => {
-      const changeTarget = inputElement
-        .getElement()
-        .getAttribute("change-target");
-      if (changeTarget) {
+    const changeTarget = inputElement
+      .getElement()
+      .getAttribute("change-target");
+
+    if (changeTarget) {
+      confirmBtn.setCallBack(() => {
         const value = inputElement.getElement().value;
         switch (changeTarget) {
           case CHANGE_ACTION_LIST.firstName: {
-            this.apiRequestService.updateUserInfo(this.version, [
-              {
-                action: "setFirstName",
-                firstName: value,
-              },
-            ]);
+            this.updateInfo.set(changeTarget, {
+              action: "setFirstName",
+              firstName: value,
+            });
             break;
           }
           case CHANGE_ACTION_LIST.lastName: {
-            this.apiRequestService.updateUserInfo(this.version, [
-              {
-                action: "setLastName",
-                lastName: value,
-              },
-            ]);
+            this.updateInfo.set(changeTarget, {
+              action: "setLastName",
+              lastName: value,
+            });
             break;
           }
           case CHANGE_ACTION_LIST.email: {
-            this.apiRequestService.updateUserInfo(this.version, [
-              {
-                action: "changeEmail",
-                email: value,
-              },
-            ]);
+            this.updateInfo.set(changeTarget, {
+              action: "changeEmail",
+              email: value,
+            });
             break;
           }
           case CHANGE_ACTION_LIST.dateOfBirth: {
-            this.apiRequestService.updateUserInfo(this.version, [
-              {
-                action: "setDateOfBirth",
-                dateOfBirth: value,
-              },
-            ]);
+            this.updateInfo.set(changeTarget, {
+              action: "setDateOfBirth",
+              dateOfBirth: value,
+            });
             break;
           }
         }
-      }
-    });
+      });
+    }
 
     penBtn.setCallBack(() => {
       tempVal = inputElement.getElement().value;
