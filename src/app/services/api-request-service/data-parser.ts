@@ -1,5 +1,6 @@
 import type {
   CategoryPagedQueryResponse,
+  ProductProjection,
   ProductProjectionPagedSearchResponse,
 } from "@commercetools/platform-sdk";
 import type { ClientResponse } from "@commercetools/ts-client";
@@ -12,6 +13,16 @@ interface CatalogData {
   description: string;
   price: number;
   discount?: number;
+}
+
+interface DetailData {
+  id: string;
+  image: string[];
+  name: string;
+  description: string;
+  price: number;
+  discount?: number;
+  attributes: { name: string; value: string }[];
 }
 
 interface CategoryData {
@@ -48,6 +59,30 @@ export default class DataParser {
       result.push(productData);
     }
     return result;
+  }
+
+  public static parseProductDetail(
+    response: ClientResponse<ProductProjection>,
+    country: Localization,
+  ): DetailData | {} {
+    if (!response.body) return {};
+    const item = response.body;
+    const countryParse = country.slice(-2);
+    const productData: DetailData = {
+      id: item.id,
+      image: item.masterVariant.images?.map((x) => x.url) || [],
+      name: Object.values(item.name)[0],
+      description: Object.values(item.description || {}).find((x) => x) || "",
+      price:
+        item.masterVariant.prices?.find((i) => i.country === countryParse)
+          ?.value.centAmount || 0,
+      attributes: item.masterVariant.attributes || [],
+    };
+    const discount = item.masterVariant.prices?.find(
+      (i) => i.country === countryParse,
+    )?.discounted?.value.centAmount;
+    if (discount) productData.discount = discount;
+    return productData;
   }
 
   public static parseCategories(

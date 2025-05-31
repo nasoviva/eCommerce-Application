@@ -222,6 +222,24 @@ export default class ApiRequestService {
       });
   }
 
+  public getProductById(
+    id: string,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .productProjections()
+      .withId({ ID: id })
+      .get()
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
   private switchRequestBuilder(
     type: RequestBuilder,
     loginData?: MyCustomerSignin,
