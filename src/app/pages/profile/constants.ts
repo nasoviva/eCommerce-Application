@@ -127,7 +127,7 @@ export const ELEM_PARAM = {
   streetField: {
     tag: "p",
     className: [...css.textField.split(" ")],
-    textContent: "City:",
+    textContent: "Street:",
   },
   zipCodeField: {
     tag: "p",
@@ -138,26 +138,41 @@ export const ELEM_PARAM = {
     type: "text",
     className: [...css.textInput.split(" "), css.inActiveInput],
     placeholder: "Country",
+    attributes: {
+      "change-target": "country",
+    },
   },
   stateInput: {
     type: "text",
     className: [...css.textInput.split(" "), css.inActiveInput],
     placeholder: "State",
+    attributes: {
+      "change-target": "state",
+    },
   },
   cityInput: {
     type: "text",
     className: [...css.textInput.split(" "), css.inActiveInput],
     placeholder: "City",
+    attributes: {
+      "change-target": "city",
+    },
   },
   streetInput: {
     type: "text",
     className: [...css.textInput.split(" "), css.inActiveInput],
     placeholder: "Street",
+    attributes: {
+      "change-target": "street",
+    },
   },
   zipCodeInput: {
     type: "text",
     className: [...css.textInput.split(" "), css.inActiveInput],
-    placeholder: "Zipcode",
+    placeholder: "postalCode",
+    attributes: {
+      "change-target": "postalCode",
+    },
   },
   labelContainer: {
     tag: "label",
@@ -174,14 +189,14 @@ export const ELEM_PARAM = {
     textContent: "Set this address as default for shipping",
   },
   billingCheckMark: {
-    type: "checkbox",
+    type: "radio",
     className: [...css.checkBox.split(" ")],
     attributes: {
       name: "billingCheckMark",
     },
   },
   shippingCheckMark: {
-    type: "checkbox",
+    type: "radio",
     className: [...css.checkBox.split(" ")],
     attributes: {
       name: "shippingCheckMark",
@@ -191,6 +206,20 @@ export const ELEM_PARAM = {
     tag: "button",
     className: [...css.button.split(" ")],
     textContent: "Confirm changes",
+  },
+  addAddressBtn: {
+    tag: "button",
+    className: [...css.button.split(" ")],
+    textContent: "Add new address",
+  },
+  deleteAddressBtn: {
+    tag: "button",
+    className: [...css.button.split(" ")],
+    textContent: "Delete this address",
+  },
+  separator: {
+    tag: "div",
+    className: [css.separator],
   },
 };
 

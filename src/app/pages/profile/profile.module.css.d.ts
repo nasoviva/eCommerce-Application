@@ -12,6 +12,7 @@ interface CssExports {
   'mainContainer': string;
   'penBtn': string;
   'penIcon': string;
+  'separator': string;
   'showBtn': string;
   'textField': string;
   'textInput': string;

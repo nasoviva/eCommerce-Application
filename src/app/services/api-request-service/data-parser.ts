@@ -34,10 +34,11 @@ interface CategoryData {
 }
 
 export interface AddressData {
+  id: string;
   street: string;
   city: string;
   state: string;
-  zipcode: string;
+  postalCode: string;
   country: string;
   defaultBilling: boolean;
   defaultShipping: boolean;
@@ -146,11 +147,12 @@ export default class DataParser {
         const isDefaultShipping =
           x.id === response.body?.defaultShippingAddressId;
         const address = {
+          id: x.id || "",
           street: x.streetName || "",
           city: x.city || "",
           state: x.state || "",
-          zipcode: x.postalCode || "",
-          country: x.city || "",
+          postalCode: x.postalCode || "",
+          country: x.country || "",
           defaultBilling: isDefaultBilling,
           defaultShipping: isDefaultShipping,
         };
