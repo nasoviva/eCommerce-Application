@@ -1,6 +1,7 @@
 import type {
   CategoryPagedQueryResponse,
   ClientResponse,
+  ProductProjection,
   ProductProjectionPagedSearchResponse,
 } from "@commercetools/platform-sdk";
 import "../style.css";
@@ -139,6 +140,12 @@ export default class App {
         },
         (result: ClientResponse<ProductProjectionPagedSearchResponse>) => {
           console.log(DataParser.parseForCatalog(result, "en-US"));
+        },
+      );
+      this.apiRequestService.getProductById(
+        "b91fbbd1-36df-4222-8929-f04c6eab5157",
+        (result: ClientResponse<ProductProjection>) => {
+          console.log(DataParser.parseProductDetail(result, "en-US"));
         },
       );
     });
