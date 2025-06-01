@@ -10,7 +10,7 @@
   background: white;
   animation: my-animation 6s linear;
   color: red;
-  z-index: 2;
+  z-index: 6;
 }
 
 @keyframes my-animation {

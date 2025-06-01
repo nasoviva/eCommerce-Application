@@ -3,7 +3,7 @@ import type StateManager from "../../services/state-manager/state-manager";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import css from "./profile.module.css";
 import InputCreator from "../../shared/input-creator";
-import type { ClientResponse, executeRequest } from "@commercetools/ts-client";
+import type { ClientResponse } from "@commercetools/ts-client";
 import type { AddressData } from "../../services/api-request-service/data-parser";
 import DataParser from "../../services/api-request-service/data-parser";
 import type {
@@ -49,6 +49,106 @@ export default class ProfileView {
     this.apiRequestService = apiRequestService;
 
     this.configureView();
+  }
+
+  private static inputValidation(
+    input: CustomElementCreator<HTMLSelectElement> | InputCreator,
+    error: ElementCreator,
+    validator: CallableFunction,
+    confirmBtn: ElementCreator,
+  ): void {
+    const value = input.getElement().value;
+    const msg = validator(value);
+    error.getElement().textContent = msg;
+    if (msg !== "") confirmBtn.getElement().classList.add(css.inActiveButton);
+    else confirmBtn.getElement().classList.remove(css.inActiveButton);
+  }
+
+  private static setUpValidationCheck(
+    confirmBtn: ElementCreator,
+    inputElement: InputCreator | CustomElementCreator<HTMLSelectElement>,
+    errorTip: ElementCreator,
+    type: string,
+    countryInput?: CustomElementCreator<HTMLSelectElement>,
+  ): void {
+    const element = inputElement.getElement();
+    const country = countryInput?.getElement();
+    /* const type = element.getAttribute("change-action"); */
+    let validator: CallableFunction;
+    switch (type) {
+      case CHANGE_ACTION_LIST.email: {
+        validator = Validator.checkEmail;
+        break;
+      }
+      case CHANGE_ACTION_LIST.firstName || CHANGE_ACTION_LIST.lastName: {
+        validator = Validator.checkNameOrLastName;
+        break;
+      }
+      case CHANGE_ACTION_LIST.lastName: {
+        validator = Validator.checkNameOrLastName;
+        break;
+      }
+      case CHANGE_ACTION_LIST.dateOfBirth: {
+        validator = Validator.checkBirthDate;
+        break;
+      }
+      case CHANGE_ACTION_LIST.country: {
+        validator = Validator.checkCountry;
+        break;
+      }
+      case CHANGE_ACTION_LIST.state: {
+        validator = Validator.checkCity;
+        break;
+      }
+      case CHANGE_ACTION_LIST.city: {
+        validator = Validator.checkCity;
+        break;
+      }
+      case CHANGE_ACTION_LIST.street: {
+        validator = Validator.checkStreet;
+        break;
+      }
+      case CHANGE_ACTION_LIST.postalCode: {
+        validator =
+          country?.value === "RU"
+            ? Validator.checkIndexRussia
+            : Validator.checkIndexUSA;
+        break;
+      }
+    }
+    element.addEventListener(
+      "input",
+      () =>
+        ProfileView.inputValidation(
+          inputElement,
+          errorTip,
+          validator,
+          confirmBtn,
+        ),
+      /* {
+      const value = inputElement.getElement().value;
+      const msg = validator(value);
+      errorTip.getElement().textContent = msg;
+      if (msg !== "") confirmBtn.getElement().classList.add(css.inActiveButton);
+      else confirmBtn.getElement().classList.remove(css.inActiveButton);
+    } */
+    );
+    if (!country) return;
+    country.addEventListener("change", () => {
+      element.removeEventListener("select", () => ProfileView.inputValidation);
+      validator =
+        element.value === "RU"
+          ? Validator.checkIndexRussia
+          : Validator.checkIndexUSA;
+      element.addEventListener("input", () =>
+        ProfileView.inputValidation(
+          inputElement,
+          errorTip,
+          validator,
+          confirmBtn,
+        ),
+      );
+    });
   }
 
   public getElement(): HTMLElement {
@@ -193,7 +293,7 @@ export default class ProfileView {
       errorTip.getElement().textContent = "";
     });
     if (changeTarget)
-      this.setUpValidationCheck(
+      ProfileView.setUpValidationCheck(
         confirmBtn,
         inputElement,
         errorTip,
@@ -212,95 +312,6 @@ export default class ProfileView {
     console.log(blockContainer.getElement(), errorTip.getElement());
 
     return blockContainer;
-  }
-
-  private setUpValidationCheck(
-    confirmBtn: ElementCreator,
-    inputElement: InputCreator | CustomElementCreator<HTMLSelectElement>,
-    errorTip: ElementCreator,
-    type: string,
-    countryInput?: CustomElementCreator<HTMLSelectElement>,
-  ): void {
-    const element = inputElement.getElement();
-    const country = countryInput?.getElement();
-    /* const type = element.getAttribute("change-action"); */
-    let validator: CallableFunction;
-    switch (type) {
-      case CHANGE_ACTION_LIST.email: {
-        validator = Validator.checkEmail;
-        break;
-      }
-      case CHANGE_ACTION_LIST.firstName || CHANGE_ACTION_LIST.lastName: {
-        validator = Validator.checkNameOrLastName;
-        break;
-      }
-      case CHANGE_ACTION_LIST.lastName: {
-        validator = Validator.checkNameOrLastName;
-        break;
-      }
-      case CHANGE_ACTION_LIST.dateOfBirth: {
-        validator = Validator.checkBirthDate;
-        break;
-      }
-      case CHANGE_ACTION_LIST.country: {
-        validator = Validator.checkCountry;
-        break;
-      }
-      case CHANGE_ACTION_LIST.state: {
-        validator = Validator.checkCity;
-        break;
-      }
-      case CHANGE_ACTION_LIST.city: {
-        validator = Validator.checkCity;
-        break;
-      }
-      case CHANGE_ACTION_LIST.street: {
-        validator = Validator.checkStreet;
-        break;
-      }
-      case CHANGE_ACTION_LIST.postalCode: {
-        validator =
-          country?.value === "RU"
-            ? Validator.checkIndexRussia
-            : Validator.checkIndexUSA;
-        break;
-      }
-    }
-    element.addEventListener(
-      "input",
-      () => this.inputValidation(inputElement, errorTip, validator, confirmBtn),
-      /* {
-      const value = inputElement.getElement().value;
-      const msg = validator(value);
-      errorTip.getElement().textContent = msg;
-      if (msg !== "") confirmBtn.getElement().classList.add(css.inActiveButton);
-      else confirmBtn.getElement().classList.remove(css.inActiveButton);
-    } */
-    );
-    if (!country) return;
-    country.addEventListener("change", () => {
-      element.removeEventListener("select", () => this.inputValidation);
-      validator =
-        element.value === "RU"
-          ? Validator.checkIndexRussia
-          : Validator.checkIndexUSA;
-      element.addEventListener("input", () =>
-        this.inputValidation(inputElement, errorTip, validator, confirmBtn),
-      );
-    });
-  }
-
-  private inputValidation(
-    input: CustomElementCreator<HTMLSelectElement> | InputCreator,
-    error: ElementCreator,
-    validator: CallableFunction,
-    confirmBtn: ElementCreator,
-  ): void {
-    const value = input.getElement().value;
-    const msg = validator(value);
-    error.getElement().textContent = msg;
-    if (msg !== "") confirmBtn.getElement().classList.add(css.inActiveButton);
-    else confirmBtn.getElement().classList.remove(css.inActiveButton);
   }
 
   private buildPasswordChangeBlock(): CustomElementCreator<HTMLDialogElement> {

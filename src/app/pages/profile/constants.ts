@@ -1,4 +1,3 @@
-import type { MyCustomerUpdateAction } from "@commercetools/platform-sdk";
 import css from "./profile.module.css";
 
 export const ELEM_PARAM = {
@@ -239,22 +238,22 @@ export const PASSWORD_BLOCK = {
   confirmBtn: {
     tag: "button",
     className: [...css.button.split(" ")],
-    textContent: "Сменить пароль",
+    textContent: "Change password",
   },
   cancelBtn: {
     tag: "button",
     className: [...css.button.split(" ")],
-    textContent: "Отмена",
+    textContent: "Cancel",
   },
   oldPasswordLabel: {
     tag: "p",
     className: [...css.textField.split(" ")],
-    textContent: "Введите старый пароль",
+    textContent: "Enter current password",
   },
   newPasswordLabel: {
     tag: "p",
     className: [...css.textField.split(" ")],
-    textContent: "Введите новый пароль",
+    textContent: "Enter new password",
   },
   oldPasswordInput: {
     type: "text",

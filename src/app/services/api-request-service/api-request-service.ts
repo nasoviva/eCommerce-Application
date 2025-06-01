@@ -4,7 +4,6 @@ import type {
   MyCustomerDraft,
   MyCustomerSignin,
   MyCustomerUpdateAction,
-  SearchQuery,
 } from "@commercetools/platform-sdk";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
@@ -53,9 +52,10 @@ export default class ApiRequestService {
     this.configureService();
   }
 
-  public static errorParser(reason: Response): string[] {
-    if ("error" in reason && Array.isArray(reason.error)) {
-      return reason.error.map((x) => x.message);
+  public static errorParser(reason: Error): string[] {
+    if ("error" in reason) {
+      const errors = reason.message;
+      return [errors];
     } else return [];
   }
 

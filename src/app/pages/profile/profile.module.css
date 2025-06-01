@@ -1,4 +1,4 @@
-.mainContainer {
+.main-container {
   composes: container-column from global;
   width: fit-content;
   position: relative;
@@ -6,13 +6,13 @@
   z-index: 1;
 }
 
-.passwordModal {
+.password-modal {
   composes: container-column from global;
   padding: 20px;
   margin: auto;
 }
 
-.labelContainer {
+.label-container {
   composes: container-row from global;
 }
 
@@ -20,11 +20,11 @@
   composes: title from global;
 }
 
-.textField {
+.text-field {
   composes: label from global;
 }
 
-.textInput {
+.text-input {
   composes: input from global;
 }
 
@@ -32,7 +32,7 @@
   composes: button from global;
 }
 
-.inActiveInput {
+.in-active-input {
   pointer-events: none;
   background: transparent;
   border-color: transparent;
@@ -42,34 +42,34 @@
   display: none;
 }
 
-.penIcon {
+.pen-icon {
   height: 30px;
   aspect-ratio: 1/1;
 }
 
-.penBtn {
+.pen-btn {
   cursor: pointer;
   background: var(--background-color);
   border: none;
 }
 
-.hiddenBtn {
+.hidden-btn {
   position: absolute;
   z-index: -1;
   transition: 0.5s;
-  right: 0px;
+  right: 0;
 }
 
-.showBtn {
+.show-btn {
   transform: translateX(150%);
 }
 
-.inActiveButton {
+.in-active-button {
   pointer-events: none;
   background: red 80% no-repeat;
 }
 
-.blockContainer {
+.block-container {
   composes: container-row from global;
   justify-content: end;
   align-items: center;
@@ -78,15 +78,15 @@
   flex-wrap: wrap;
 }
 
-.textLabel {
+.text-label {
   composes: checkbox-label from global;
 }
 
-.checkBox {
+.check-box {
   composes: checkbox-wrapper from global;
 }
 
-.addressArea {
+.address-area {
   width: 100%;
 }
 
@@ -96,7 +96,7 @@
   background: var(--primary-color);
 }
 
-.errorTip {
+.error-tip {
   composes: error from global;
   position: absolute;
   width: unset;
@@ -104,6 +104,6 @@
   right: 50px;
 }
 
-.passwordErrorTip {
+.password-error-tip {
   composes: error from global;
 }

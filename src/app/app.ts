@@ -1,5 +1,4 @@
 import type {
-  CategoryPagedQueryResponse,
   ClientResponse,
   ProductProjection,
   Customer,
