@@ -45,6 +45,7 @@ export default class HeaderView extends View {
     this.elementCreator.addInnerElement(this.headerContainer.getElement());
     this.renderHeader();
     this.setupBurgerToggle();
+    window.addEventListener("resize", this.handleResize.bind(this));
   }
 
   public updateHeader(): void {
@@ -227,4 +228,13 @@ export default class HeaderView extends View {
 
     return btn;
   }
+
+  private handleResize(): void {
+  const isMenuOpen = this.mobileMenu.getElement().classList.contains("open");
+  const isWide = window.innerWidth > 768;
+
+  if (isMenuOpen && isWide) {
+    this.toggleMobileMenu(false);
+  }
+}
 }

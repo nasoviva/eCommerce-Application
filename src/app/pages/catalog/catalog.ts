@@ -10,7 +10,7 @@ import type ApiRequestService from "../../services/api-request-service/api-reque
 import type { Localization } from "../../global-types/types";
 import DataParser from "../../services/api-request-service/data-parser";
 import type { ClientResponse } from "@commercetools/ts-client";
-import "../catalog/style/style.css";
+import "./style/style.css";
 
 export default class CatalogView {
   private readonly catalogContainer: ElementCreator;

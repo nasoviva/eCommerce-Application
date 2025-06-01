@@ -57,7 +57,7 @@ const Buttons = {
   LOGOUT: "LogOut",
   HOME: "Home",
   CATALOG: "Catalog",
-  PRODUCT: "Product",
+  PRODUCT: "View Details",
   PROFILE: "Profile",
   REGISTRATION: " SignUp",
   GO_LOGIN: "Back to LogIn",
