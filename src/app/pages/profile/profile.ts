@@ -3,14 +3,16 @@ import type StateManager from "../../services/state-manager/state-manager";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import css from "./profile.module.css";
 import InputCreator from "../../shared/input-creator";
-import type { ClientResponse } from "@commercetools/ts-client";
+import type { ClientResponse, executeRequest } from "@commercetools/ts-client";
 import type { AddressData } from "../../services/api-request-service/data-parser";
 import DataParser from "../../services/api-request-service/data-parser";
 import type {
   Customer,
   MyCustomerUpdateAction,
 } from "@commercetools/platform-sdk";
-import { CHANGE_ACTION_LIST, ELEM_PARAM } from "./constants";
+import { CHANGE_ACTION_LIST, COUNTRY_OPTIONS, ELEM_PARAM } from "./constants";
+import CustomElementCreator from "../../shared/custom-element-creator";
+import Validator from "../../services/validator/validator";
 
 function isCorrectUpdateData(
   incoming: object[],
@@ -115,8 +117,9 @@ export default class ProfileView {
 
   private formBlock(
     fieldName: ElementCreator,
-    inputElement: InputCreator,
+    inputElement: InputCreator | CustomElementCreator<HTMLSelectElement>,
     addressId?: string,
+    countryInput?: CustomElementCreator<HTMLSelectElement>,
   ): ElementCreator {
     const blockContainer = new ElementCreator(ELEM_PARAM.blockContainer);
     const penBtn = new ElementCreator(ELEM_PARAM.penBtn);
@@ -125,6 +128,7 @@ export default class ProfileView {
     const crossIcon = new ElementCreator(ELEM_PARAM.crossIcon);
     const confirmBtn = new ElementCreator(ELEM_PARAM.penBtn);
     const confirmIcon = new ElementCreator(ELEM_PARAM.checkMarkIcon);
+    const errorTip = new ElementCreator(ELEM_PARAM.errorTip);
     penBtn.addInnerElement(penIcon);
     crossBtn.addInnerElement(crossIcon);
     confirmBtn.addInnerElement(confirmIcon);
@@ -170,7 +174,17 @@ export default class ProfileView {
 
     crossBtn.setCallBack(() => {
       inputElement.getElement().value = tempVal;
+      confirmBtn.getElement().classList.remove(css.inActiveButton);
+      errorTip.getElement().textContent = "";
     });
+    if (changeTarget)
+      this.setUpValidationCheck(
+        confirmBtn,
+        inputElement,
+        errorTip,
+        changeTarget,
+        countryInput,
+      );
 
     blockContainer.addInnerElement(
       fieldName,
@@ -178,23 +192,120 @@ export default class ProfileView {
       penBtn,
       confirmBtn,
       crossBtn,
+      errorTip,
     );
+    console.log(blockContainer.getElement(), errorTip.getElement());
 
     return blockContainer;
+  }
+
+  private setUpValidationCheck(
+    confirmBtn: ElementCreator,
+    inputElement: InputCreator | CustomElementCreator<HTMLSelectElement>,
+    errorTip: ElementCreator,
+    type: string,
+    countryInput?: CustomElementCreator<HTMLSelectElement>,
+  ): void {
+    const element = inputElement.getElement();
+    const country = countryInput?.getElement();
+    /* const type = element.getAttribute("change-action"); */
+    let validator: CallableFunction;
+    switch (type) {
+      case CHANGE_ACTION_LIST.email: {
+        validator = Validator.checkEmail;
+        break;
+      }
+      case CHANGE_ACTION_LIST.firstName || CHANGE_ACTION_LIST.lastName: {
+        validator = Validator.checkNameOrLastName;
+        break;
+      }
+      case CHANGE_ACTION_LIST.lastName: {
+        validator = Validator.checkNameOrLastName;
+        break;
+      }
+      case CHANGE_ACTION_LIST.dateOfBirth: {
+        validator = Validator.checkBirthDate;
+        break;
+      }
+      case CHANGE_ACTION_LIST.country: {
+        validator = Validator.checkCountry;
+        break;
+      }
+      case CHANGE_ACTION_LIST.state: {
+        validator = Validator.checkCity;
+        break;
+      }
+      case CHANGE_ACTION_LIST.city: {
+        validator = Validator.checkCity;
+        break;
+      }
+      case CHANGE_ACTION_LIST.street: {
+        validator = Validator.checkStreet;
+        break;
+      }
+      case CHANGE_ACTION_LIST.postalCode: {
+        validator =
+          country?.value === "RU"
+            ? Validator.checkIndexRussia
+            : Validator.checkIndexUSA;
+        break;
+      }
+    }
+    element.addEventListener(
+      "input",
+      () => this.inputValidation(inputElement, errorTip, validator, confirmBtn),
+      /* {
+      const value = inputElement.getElement().value;
+      const msg = validator(value);
+      errorTip.getElement().textContent = msg;
+      if (msg !== "") confirmBtn.getElement().classList.add(css.inActiveButton);
+      else confirmBtn.getElement().classList.remove(css.inActiveButton);
+    } */
+    );
+    if (!country) return;
+    country.addEventListener("change", () => {
+      element.removeEventListener("select", () => this.inputValidation);
+      validator =
+        element.value === "RU"
+          ? Validator.checkIndexRussia
+          : Validator.checkIndexUSA;
+      element.addEventListener("input", () =>
+        this.inputValidation(inputElement, errorTip, validator, confirmBtn),
+      );
+    });
+  }
+
+  private inputValidation(
+    input: CustomElementCreator<HTMLSelectElement> | InputCreator,
+    error: ElementCreator,
+    validator: CallableFunction,
+    confirmBtn: ElementCreator,
+  ): void {
+    const value = input.getElement().value;
+    const msg = validator(value);
+    error.getElement().textContent = msg;
+    if (msg !== "") confirmBtn.getElement().classList.add(css.inActiveButton);
+    else confirmBtn.getElement().classList.remove(css.inActiveButton);
   }
 
   private buildAddressBlock(address?: AddressData): ElementCreator {
     const blockContainer = new ElementCreator(ELEM_PARAM.addressBlockContainer);
     const country = new ElementCreator(ELEM_PARAM.countryField);
-    const countryInput = new InputCreator(ELEM_PARAM.countryInput);
+    const countryInput = new CustomElementCreator<HTMLSelectElement>(
+      ELEM_PARAM.countryInput,
+    );
+    countryInput.addInnerElement(
+      new ElementCreator(COUNTRY_OPTIONS.RU),
+      new ElementCreator(COUNTRY_OPTIONS.US),
+    );
     const city = new ElementCreator(ELEM_PARAM.cityField);
     const cityInput = new InputCreator(ELEM_PARAM.cityInput);
     const state = new ElementCreator(ELEM_PARAM.stateField);
     const stateInput = new InputCreator(ELEM_PARAM.stateInput);
     const street = new ElementCreator(ELEM_PARAM.streetField);
     const streetInput = new InputCreator(ELEM_PARAM.streetInput);
-    const zipCode = new ElementCreator(ELEM_PARAM.zipCodeField);
-    const zipCodeInput = new InputCreator(ELEM_PARAM.zipCodeInput);
+    const postalCode = new ElementCreator(ELEM_PARAM.zipCodeField);
+    const postalCodeInput = new InputCreator(ELEM_PARAM.zipCodeInput);
     const billingLabel = new ElementCreator(ELEM_PARAM.billingLabel);
     const billingCheckMark = new InputCreator(ELEM_PARAM.billingCheckMark);
     const shippingLabel = new ElementCreator(ELEM_PARAM.shippingLabel);
@@ -214,7 +325,7 @@ export default class ProfileView {
       cityInput.getElement().value = address.city;
       stateInput.getElement().value = address.state;
       streetInput.getElement().value = address.city;
-      zipCodeInput.getElement().value = address.postalCode;
+      postalCodeInput.getElement().value = address.postalCode;
       shippingCheckMark.getElement().checked = address.defaultShipping;
       billingCheckMark.getElement().checked = address.defaultBilling;
       shippingCheckMark.getElement().id = address.id;
@@ -273,12 +384,17 @@ export default class ProfileView {
       });
     });
 
+    /*  countryInput.getElement().addEventListener("select", () => {
+      const value = countryInput.getElement().value;
+      if (value === "ru");
+    }); */
+
     blockContainer.addInnerElement(
       this.formBlock(country, countryInput, id),
       this.formBlock(city, cityInput, id),
       this.formBlock(state, stateInput, id),
       this.formBlock(street, streetInput, id),
-      this.formBlock(zipCode, zipCodeInput, id),
+      this.formBlock(postalCode, postalCodeInput, id, countryInput),
       billing,
       shipping,
       deleteBtn,

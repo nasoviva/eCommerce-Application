@@ -135,9 +135,8 @@ export const ELEM_PARAM = {
     textContent: "Zipcode:",
   },
   countryInput: {
-    type: "text",
+    tag: "select",
     className: [...css.textInput.split(" "), css.inActiveInput],
-    placeholder: "Country",
     attributes: {
       "change-target": "country",
     },
@@ -221,6 +220,29 @@ export const ELEM_PARAM = {
     tag: "div",
     className: [css.separator],
   },
+  errorTip: {
+    tag: "p",
+    className: [...css.errorTip.split(" ")],
+  },
+};
+
+export const COUNTRY_OPTIONS = {
+  RU: {
+    tag: "option",
+    className: [],
+    textContent: "Russia",
+    attributes: {
+      value: "RU",
+    },
+  },
+  US: {
+    tag: "option",
+    className: [],
+    textContent: "USA",
+    attributes: {
+      value: "US",
+    },
+  },
 };
 
 export const CHANGE_ACTION_LIST = {
@@ -228,4 +250,9 @@ export const CHANGE_ACTION_LIST = {
   lastName: ELEM_PARAM.lastNameInput.attributes["change-target"],
   email: ELEM_PARAM.emailInput.attributes["change-target"],
   dateOfBirth: ELEM_PARAM.dateOfBirthInput.attributes["change-target"],
+  country: ELEM_PARAM.countryInput.attributes["change-target"],
+  state: ELEM_PARAM.stateInput.attributes["change-target"],
+  city: ELEM_PARAM.cityInput.attributes["change-target"],
+  street: ELEM_PARAM.streetInput.attributes["change-target"],
+  postalCode: ELEM_PARAM.zipCodeInput.attributes["change-target"],
 };

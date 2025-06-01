@@ -6,6 +6,10 @@ export default class ElementCreator {
   public element: HTMLElement;
   constructor(parameter: ElementParameters) {
     this.element = this.createElement(parameter);
+    this.configureElement(parameter);
+  }
+
+  public configureElement(parameter: ElementParameters): void {
     this.setCssClasses(parameter.className);
     if (parameter.textContent) this.setTextContent(parameter.textContent);
     if (parameter.callback) {

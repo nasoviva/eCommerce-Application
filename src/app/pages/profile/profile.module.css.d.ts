@@ -6,7 +6,9 @@ interface CssExports {
   'button': string;
   'checkBox': string;
   'disabled': string;
+  'errorTip': string;
   'hiddenBtn': string;
+  'inActiveButton': string;
   'inActiveInput': string;
   'labelContainer': string;
   'mainContainer': string;
