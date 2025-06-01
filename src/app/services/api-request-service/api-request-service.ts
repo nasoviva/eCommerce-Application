@@ -280,6 +280,34 @@ export default class ApiRequestService {
       });
   }
 
+  public changePassword(
+    version: number,
+    oldPassword: string,
+    newPassword: string,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .me()
+      .password()
+      .post({
+        body: {
+          version: version,
+          currentPassword: oldPassword,
+          newPassword: newPassword,
+        },
+      })
+      .execute()
+      .then((result) => {
+        this.switchRequestBuilder("anon");
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        this.errorMsg.displayErrorMsg(ApiRequestService.errorParser(reason));
+        if (onReject) onReject(reason);
+      });
+  }
+
   private switchRequestBuilder(
     type: RequestBuilder,
     loginData?: MyCustomerSignin,

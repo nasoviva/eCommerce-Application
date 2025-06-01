@@ -12,6 +12,8 @@ interface CssExports {
   'inActiveInput': string;
   'labelContainer': string;
   'mainContainer': string;
+  'passwordErrorTip': string;
+  'passwordModal': string;
   'penBtn': string;
   'penIcon': string;
   'separator': string;

@@ -10,7 +10,12 @@ import type {
   Customer,
   MyCustomerUpdateAction,
 } from "@commercetools/platform-sdk";
-import { CHANGE_ACTION_LIST, COUNTRY_OPTIONS, ELEM_PARAM } from "./constants";
+import {
+  CHANGE_ACTION_LIST,
+  COUNTRY_OPTIONS,
+  ELEM_PARAM,
+  PASSWORD_BLOCK,
+} from "./constants";
 import CustomElementCreator from "../../shared/custom-element-creator";
 import Validator from "../../services/validator/validator";
 
@@ -89,10 +94,19 @@ export default class ProfileView {
       });
       this.addAddressBtn.getElement().classList.remove(css.disabled);
     });
+
     this.addAddressBtn.setCallBack(() => {
       this.addressArea.addInnerElement(this.buildAddressBlock());
       this.addAddressBtn.getElement().classList.add(css.disabled);
     });
+
+    const changePasswordBtn = new ElementCreator(ELEM_PARAM.changePasswordBtn);
+    const passwordChangeModal = this.buildPasswordChangeBlock();
+    changePasswordBtn.setCallBack(() => {
+      this.profileContainer.addInnerElement(passwordChangeModal);
+      passwordChangeModal.getElement().showModal();
+    });
+
     this.profileContainer.addInnerElement(
       new ElementCreator(ELEM_PARAM.title),
       this.formBlock(
@@ -108,6 +122,7 @@ export default class ProfileView {
         new ElementCreator(ELEM_PARAM.dateOfBirthLabel),
         this.dateOfBirthInput,
       ),
+      changePasswordBtn,
       this.addressArea,
       this.addAddressBtn,
       this.confirmBtn,
@@ -286,6 +301,67 @@ export default class ProfileView {
     error.getElement().textContent = msg;
     if (msg !== "") confirmBtn.getElement().classList.add(css.inActiveButton);
     else confirmBtn.getElement().classList.remove(css.inActiveButton);
+  }
+
+  private buildPasswordChangeBlock(): CustomElementCreator<HTMLDialogElement> {
+    const container = new CustomElementCreator<HTMLDialogElement>(
+      PASSWORD_BLOCK.mainContainer,
+    );
+    const oldPasswordInput = new InputCreator(PASSWORD_BLOCK.oldPasswordInput);
+    /* const oldErrorTip = new ElementCreator(ELEM_PARAM.errorTip); */
+    const newPasswordInput = new InputCreator(PASSWORD_BLOCK.newPasswordInput);
+    /* const newErrorTip = new ElementCreator(ELEM_PARAM.errorTip); */
+    const confirmBtn = new ElementCreator(PASSWORD_BLOCK.confirmBtn);
+    const cancelBtn = new ElementCreator(PASSWORD_BLOCK.cancelBtn);
+    const errors = [
+      new ElementCreator(PASSWORD_BLOCK.errorTip),
+      new ElementCreator(PASSWORD_BLOCK.errorTip),
+    ];
+
+    [oldPasswordInput, newPasswordInput].forEach((x, i) =>
+      x.getElement().addEventListener("input", () => {
+        const error = Validator.checkPassword(x.getElement().value);
+        errors[i].getElement().textContent = error;
+      }),
+    );
+
+    cancelBtn.setCallBack(() => {
+      container.getElement().close();
+      container.getElement().remove();
+    });
+
+    confirmBtn.setCallBack(async () => {
+      const newPassword = newPasswordInput.getElement().value;
+      this.apiRequestService.changePassword(
+        this.version,
+        oldPasswordInput.getElement().value,
+        newPassword,
+        () => {
+          this.stateManager.password = newPassword;
+          container;
+          this.apiRequestService.authUser({
+            email: this.stateManager.login || "",
+            password: newPassword,
+          });
+          newPasswordInput.getElement().value = "";
+          oldPasswordInput.getElement().value = "";
+          container.getElement().close();
+          container.getElement().remove();
+        },
+      );
+    });
+
+    container.addInnerElement(
+      new ElementCreator(PASSWORD_BLOCK.oldPasswordLabel),
+      oldPasswordInput,
+      errors[0],
+      new ElementCreator(PASSWORD_BLOCK.newPasswordLabel),
+      newPasswordInput,
+      errors[1],
+      confirmBtn,
+      cancelBtn,
+    );
+    return container;
   }
 
   private buildAddressBlock(address?: AddressData): ElementCreator {

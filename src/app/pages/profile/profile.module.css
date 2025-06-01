@@ -6,6 +6,12 @@
   z-index: 1;
 }
 
+.passwordModal {
+  composes: container-column from global;
+  padding: 20px;
+  margin: auto;
+}
+
 .labelContainer {
   composes: container-row from global;
 }
@@ -96,4 +102,8 @@
   width: unset;
   bottom: -20px;
   right: 50px;
+}
+
+.passwordErrorTip {
+  composes: error from global;
 }

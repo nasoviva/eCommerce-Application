@@ -224,6 +224,52 @@ export const ELEM_PARAM = {
     tag: "p",
     className: [...css.errorTip.split(" ")],
   },
+  changePasswordBtn: {
+    tag: "button",
+    className: [...css.button.split(" ")],
+    textContent: "Change password",
+  },
+};
+
+export const PASSWORD_BLOCK = {
+  mainContainer: {
+    tag: "dialog",
+    className: [...css.passwordModal.split(" ")],
+  },
+  confirmBtn: {
+    tag: "button",
+    className: [...css.button.split(" ")],
+    textContent: "Сменить пароль",
+  },
+  cancelBtn: {
+    tag: "button",
+    className: [...css.button.split(" ")],
+    textContent: "Отмена",
+  },
+  oldPasswordLabel: {
+    tag: "p",
+    className: [...css.textField.split(" ")],
+    textContent: "Введите старый пароль",
+  },
+  newPasswordLabel: {
+    tag: "p",
+    className: [...css.textField.split(" ")],
+    textContent: "Введите новый пароль",
+  },
+  oldPasswordInput: {
+    type: "text",
+    className: [...css.textInput.split(" ")],
+    placeholder: "Old password",
+  },
+  newPasswordInput: {
+    type: "text",
+    className: [...css.textInput.split(" ")],
+    placeholder: "New password",
+  },
+  errorTip: {
+    tag: "p",
+    className: [...css.passwordErrorTip.split(" ")],
+  },
 };
 
 export const COUNTRY_OPTIONS = {
