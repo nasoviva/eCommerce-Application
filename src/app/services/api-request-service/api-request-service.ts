@@ -64,6 +64,8 @@ export default class ApiRequestService {
     result.localeProjection = userQuery.locale;
     result[`text.${userQuery.locale}`] = userQuery.text;
     result.fuzzy = true;
+    if (userQuery.limit) result.limit = userQuery.limit;
+    if (userQuery.offset) result.offset = userQuery.offset;
     result.fuzzyLevel = 1;
     return result;
   }
@@ -103,6 +105,9 @@ export default class ApiRequestService {
       result.sort.push(`price ${userQuery.sort.price}`);
     if (userQuery.sort?.name)
       result.sort.push(`name.${userQuery.locale} ${userQuery.sort.name}`);
+
+    if (userQuery.limit) result.limit = userQuery.limit;
+    if (userQuery.offset) result.offset = userQuery.offset;
 
     return result;
   }

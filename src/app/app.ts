@@ -105,34 +105,17 @@ export default class App {
         },
       ); */
       /*Пример получения товаров */
-      /* this.apiRequestService.getProducts(
+      this.apiRequestService.getProducts(
         {
           locale: "en-US",
-          attributes: {
-            byKey: {},
-            byName: {
-              material: "paper",
-            },
-          },
-          price: {
-            from: 500,
-            to: 1020,
-          },
-          sort: {
-            price: "desc",
-            name: "asc",
-          },
-          categories: [
-            "5494ada2-4552-4264-9d9f-59b836591845",
-            "58d82ca1-34de-417b-b9ec-90a28bd0a043",
-          ],
+          offset: 20,
         },
         (result: ClientResponse<ProductProjectionPagedSearchResponse>) => {
           console.log(DataParser.parseForCatalog(result, "en-US"));
         },
-      ); */
+      );
       /* Пример получения товаров по поиску */
-      this.apiRequestService.searchProducts(
+      /*  this.apiRequestService.searchProducts(
         {
           locale: "en-US",
           text: "Coffer",
@@ -143,7 +126,7 @@ export default class App {
       );
       this.apiRequestService.getUserInfo((result: ClientResponse<Customer>) => {
         console.log(DataParser.parseUserData(result));
-      });
+      }); */
     });
   }
 }
