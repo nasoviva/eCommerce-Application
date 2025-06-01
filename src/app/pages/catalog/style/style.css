@@ -1,0 +1,85 @@
+:root {
+  --primary-color: #0074be;
+  --secondary-color: #004177;
+  --highlight-color: #004177;
+  --button-text-color: white;
+  --button-hover-color: #004177;
+  --button-active-color: #0074be;
+  --background-color: white;
+  --background-color-light: #d9e2eb;
+  --text-color: #004177;
+  --input-border-color: #ccc;
+  --input-focus-border-color: #004177;
+  --input-focus-shadow-color: #0074be;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card-image {
+  display: flex;
+  width: 310px;
+  height: 230px;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+  overflow: clip;
+}
+
+.img {
+  overflow: clip;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-title {
+  text-align: center;
+  padding-top: 20px;
+  text-transform: uppercase;
+  height: 60px;
+}
+
+.card-description {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 10px;
+  height: 60px;
+}
+
+.card {
+  position: relative;
+  text-decoration: none;
+  width: 310px;
+  height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--background-color-light);
+  color: var(--text-color);
+  border-radius: 0.3rem;
+  transition: 0.3s;
+}
+
+.card:hover {
+  cursor: pointer;
+  opacity: 0.9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card:hover .button {
+  background-color: var(--button-hover-color);
+}
+
+.card .button {
+  margin: 20px auto;
+}
+
+.card-price {
+  font-weight: bold;
+}

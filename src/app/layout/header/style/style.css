@@ -1,0 +1,117 @@
+:root {
+  --primary-color: #0074be;
+  --secondary-color: #004177;
+  --highlight-color: #004177;
+  --button-text-color: white;
+  --button-hover-color: #004177;
+  --button-active-color: #0074be;
+  --background-color: white;
+  --background-color-light: #d9e2eb;
+  --text-color: #004177;
+  --input-border-color: #ccc;
+  --input-focus-border-color: #004177;
+  --input-focus-shadow-color: #0074be;
+}
+
+ul {
+  list-style: none;
+}
+
+.header-button {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--primary-color);
+  transition: 0.3s;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  font-weight: bold;
+}
+
+.header-button-active {
+  border-bottom: 2px solid var(--primary-color);
+  pointer-events: none;
+}
+
+.header-button:hover {
+  color: var(--highlight-color);
+  cursor: pointer;
+  border-bottom: 2px solid var(--highlight-color);
+}
+
+.logo {
+  cursor: pointer;
+  text-wrap: nowrap;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 4px 16px;
+  border: 3px solid var(--primary-color);
+  border-radius: 20px;
+  color: var(--primary-color);
+  height: fit-content;
+}
+
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.burger-img {
+  width: 20px;
+  height: 2px;
+  background-color: var(--button-active-color);
+  margin: 4px 0;
+  transition: 0.5s;
+}
+
+.burger.rotate .burger-img:nth-child(1) {
+  transform: rotate(45deg) translate(4px, 3px);
+}
+
+.burger.rotate .burger-img:nth-child(2) {
+  transform: rotate(-45deg) translate(4px, -3px);
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 86px;
+  right: -100%;
+  width: 250px;
+  height: auto;
+  background-color: white;
+  padding: 20px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: start;
+  gap: 10px;
+  transition: right 0.3s ease;
+  z-index: 999;
+}
+
+.mobile-menu.open {
+  right: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .container-buttons {
+    display: none;
+  }
+
+  .burger {
+    display: flex;
+  }
+}

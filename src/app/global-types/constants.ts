@@ -23,6 +23,23 @@ const cssClasses = {
   CHECKBOX_GROUP: "checkbox-group",
   CHECKBOX_WRAPPER: "checkbox-wrapper",
   CHECKBOX_LABEL: "checkbox-label",
+  CARDS: "cards",
+  CARD: "card",
+  CARD_IMAGE_CONTAINER: "card-image",
+  CARD_IMAGE: "img",
+  CARD_TITLE: "card-title",
+  CARD_DESCRIPTION: "card-description",
+  CARD_PRICE: "card-price",
+  MOBILE_MENU_ITEM: "mobile-li",
+  MOBILE_MENU: "mobile-menu",
+  BURGER: "burger",
+  BURGER_IMG: "burger-img",
+  SLIDER: "slider-container",
+  SLIDER_LIST: "slider-list",
+  SLIDER_IMG: "slider-img",
+  SLIDER_BTN: "slider-btn",
+  SLIDER_PREV: "prev-btn",
+  SLIDER_NEXT: "next-btn",
 };
 
 const Routes = {
@@ -55,6 +72,7 @@ const Titles = {
   YEAR: "2025",
   RSSCHOOL: "RS School",
   APP_NAME: "Joke Store",
+  CATALOG: "Find the joke that matches your vibe",
 };
 
 export { Routes, cssClasses, Buttons, Titles };
