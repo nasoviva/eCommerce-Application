@@ -9,8 +9,15 @@
   padding: 20px;
   background: white;
   animation: my-animation 6s linear;
-  color: red;
   z-index: 6;
+}
+
+.good-msg {
+  color: green;
+}
+
+.bad-msg {
+  color: red;
 }
 
 @keyframes my-animation {

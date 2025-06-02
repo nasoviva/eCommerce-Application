@@ -4,6 +4,7 @@ import type ApiRequestService from "../../services/api-request-service/api-reque
 import type { ClientResponse } from "@commercetools/ts-client";
 import "./style/style.css";
 import "../catalog/style/style.css";
+import modalWindow from "../../services/modal-window/modalWindow";
 
 export default class ProductView {
   private readonly productContainer: ElementCreator;
@@ -167,6 +168,33 @@ export default class ProductView {
           } else if (images.length === 1) {
             sliderWrapper.addInnerElement(sliderList.getElement());
           }
+
+          ////////////////////////////////////////////////////////////
+          const handlerClickOnImage = (e: Event): void => {
+            if (e.target && e.target instanceof HTMLElement) {
+              if (e.target.tagName === "IMG") {
+                const modal = modalWindow.createModalWindow(
+                  "",
+                  sliderWrapper.getElement(),
+                  this.productContainer,
+                  handlerClickOnImage,
+                  updateSliderPosition,
+                );
+                this.productContainer.addInnerElement(modal);
+
+                modalWindow.openModalWindow(modal, updateSliderPosition);
+
+                sliderWrapper
+                  .getElement()
+                  .removeEventListener("click", handlerClickOnImage);
+              }
+            }
+          };
+
+          sliderWrapper
+            .getElement()
+            .addEventListener("click", handlerClickOnImage);
+          /////////////////////////////////////////////////////////////
 
           container.addInnerElement(nameEl.getElement());
           container.addInnerElement(descriptionEl.getElement());
