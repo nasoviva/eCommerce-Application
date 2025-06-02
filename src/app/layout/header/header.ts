@@ -230,11 +230,11 @@ export default class HeaderView extends View {
   }
 
   private handleResize(): void {
-  const isMenuOpen = this.mobileMenu.getElement().classList.contains("open");
-  const isWide = window.innerWidth > 768;
+    const isMenuOpen = this.mobileMenu.getElement().classList.contains("open");
+    const isWide = window.innerWidth > 768;
 
-  if (isMenuOpen && isWide) {
-    this.toggleMobileMenu(false);
+    if (isMenuOpen && isWide) {
+      this.toggleMobileMenu(false);
+    }
   }
-}
 }

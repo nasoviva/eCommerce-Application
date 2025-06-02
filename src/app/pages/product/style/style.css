@@ -1,10 +1,9 @@
 .container-product {
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   justify-content: space-between;
-  flex-direction: row;
   width: 100%;
-  padding: 20px;
+  padding: 5%;
 }
 
 .container-description {

@@ -23,6 +23,9 @@ const cssClasses = {
   CHECKBOX_GROUP: "checkbox-group",
   CHECKBOX_WRAPPER: "checkbox-wrapper",
   CHECKBOX_LABEL: "checkbox-label",
+  CONTAINER_NAV: "container-nav",
+  CONTAINER_LEFT: "left-container",
+  CONTAINER_RIGHT: "right-container",
   CARDS: "cards",
   CARD: "card",
   CARD_IMAGE_CONTAINER: "card-image",
@@ -33,6 +36,10 @@ const cssClasses = {
   CATEGORY_FILTER: "category-nav",
   CATEGORY_LINK: "category-link",
   CATEGORY_ACTIVE_LINK: "category-link-active",
+  CATEGORY_SUB_CONTAINER: "subcategory",
+  BREADCRUMBS: "breadcrumbs",
+  BREADCRUMB: "breadcrumb",
+  BREADCRUMB_ACTIVE: "breadcrumb-link-active",
   PAGINATION_BUTTON: "pagination-button",
   PAGINATION_ACTIVE_BUTTON: "pagination-button-active",
   PAGINATION: "pagination",
@@ -81,7 +88,8 @@ const Titles = {
   YEAR: "2025",
   RSSCHOOL: "RS School",
   APP_NAME: "Joke Store",
-  CATALOG: "From clever code-related puns to subtle observations from therapy sessions, our catalog is full of niche humor crafted for brains like yours. Warning: may cause intellectual giggling",
+  CATALOG:
+    "From clever code-related puns to subtle observations from therapy sessions, our catalog is full of niche humor crafted for brains like yours. Warning: may cause intellectual giggling",
 };
 
 export { Routes, cssClasses, Buttons, Titles };

@@ -20,7 +20,6 @@ export default class ProductView {
       className: [cssClasses.CONTAINER_PRODUCT],
       textContent: "",
     });
-
   }
 
   public getElement(): HTMLElement {
@@ -29,7 +28,6 @@ export default class ProductView {
   }
 
   public async configureView(): Promise<void> {
-
     this.productContainer.getElement().innerHTML = "";
 
     const productTitle = new ElementCreator({

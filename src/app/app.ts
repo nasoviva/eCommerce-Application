@@ -1,16 +1,15 @@
-import type {
-  ClientResponse,
-  ProductProjection,
-  Customer,
-  ProductProjectionPagedSearchResponse,
-} from "@commercetools/platform-sdk";
+import type {} from // ClientResponse,
+// ProductProjection,
+// Customer,
+// ProductProjectionPagedSearchResponse,
+"@commercetools/platform-sdk";
 import "../style.css";
 import FooterView from "./layout/footer/footer";
 import HeaderView from "./layout/header/header";
 import MainView from "./layout/main/main";
 import ApiRequestService from "./services/api-request-service/api-request-service";
 import StateManager from "./services/state-manager/state-manager";
-import DataParser from "./services/api-request-service/data-parser";
+// import DataParser from "./services/api-request-service/data-parser";
 
 export default class App {
   private readonly mainView: MainView;

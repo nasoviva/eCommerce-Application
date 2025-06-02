@@ -10,7 +10,8 @@ import type ApiRequestService from "../../services/api-request-service/api-reque
 import type { Localization } from "../../global-types/types";
 import type { ClientResponse } from "@commercetools/ts-client";
 import "./style/style.css";
-import DataParser, { CatalogData } from "../../services/api-request-service/data-parser";
+import type { CatalogData } from "../../services/api-request-service/data-parser";
+import DataParser from "../../services/api-request-service/data-parser";
 
 export default class CatalogView {
   private readonly catalogContainer: ElementCreator;
@@ -18,7 +19,10 @@ export default class CatalogView {
   private readonly apiRequestService: ApiRequestService;
   private readonly cardsContainer: ElementCreator;
   private readonly paginationContainer: ElementCreator;
+  private readonly breadcrumbsContainer: ElementCreator;
   private readonly locale: Localization = "en-US";
+
+  private currentCategoryPath: Array<{ id: string; name: string }> = [];
 
   constructor(
     stateManager: StateManager,
@@ -44,6 +48,14 @@ export default class CatalogView {
       textContent: "",
     });
 
+    this.breadcrumbsContainer = new ElementCreator({
+      tag: "div",
+      className: ["breadcrumbs"],
+      textContent: "",
+    });
+
+    this.locale = this.stateManager.locale;
+
     this.configureView();
   }
 
@@ -61,80 +73,261 @@ export default class CatalogView {
       textContent: "",
     });
 
-
     const welcomeElement = new ElementCreator({
       tag: "h2",
       className: [cssClasses.TITLE],
       textContent: Titles.CATALOG,
     });
+
+    const wrapper = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_NAV],
+      textContent: "",
+    });
+
+    const wrapperNavigation = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_LEFT],
+      textContent: "",
+    });
+    const wrapperCatalog = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_RIGHT],
+      textContent: "",
+    });
     this.catalogContainer.addInnerElement(welcomeElement.getElement());
-    this.catalogContainer.addInnerElement(categoriesContainer.getElement());
-    this.catalogContainer.addInnerElement(this.cardsContainer.getElement());
-
-    this.catalogContainer.addInnerElement(this.paginationContainer.getElement());
-
-    this.apiRequestService.getCategories(
-      (response: ClientResponse) => {
-        const categories = DataParser.parseCategories(response, this.locale);
-        this.renderCategories(categories, categoriesContainer, this.cardsContainer, this.locale);
-      }
+    wrapperNavigation.addInnerElement(categoriesContainer.getElement());
+    wrapperCatalog.addInnerElement(this.breadcrumbsContainer.getElement());
+    wrapperCatalog.addInnerElement(this.cardsContainer.getElement());
+    wrapper.addInnerElement(wrapperNavigation.getElement());
+    wrapper.addInnerElement(wrapperCatalog.getElement());
+    this.catalogContainer.addInnerElement(wrapper.getElement());
+    this.catalogContainer.addInnerElement(
+      this.paginationContainer.getElement(),
     );
 
-    this.loadProducts(this.locale);
+    this.apiRequestService.getCategories((response: ClientResponse) => {
+      const categories = DataParser.parseCategories(response, this.locale);
+
+      this.currentCategoryPath = [];
+      this.loadProducts(this.locale);
+      this.renderCategories(categories, categoriesContainer, this.locale);
+      this.renderBreadcrumbs();
+    });
   }
+  private renderBreadcrumbs(): void {
+    this.breadcrumbsContainer.getElement().innerHTML = "";
 
-private renderCategories(
-  categories: Array<{ id: string; name: string }>,
-  container: ElementCreator,
-  catalog: ElementCreator,
-  locale: Localization,
-): void {
-  const categoryButtons: HTMLElement[] = [];
+    const homeCrumb = new ElementCreator({
+      tag: "span",
+      className: [
+        cssClasses.BREADCRUMB,
+        this.currentCategoryPath.length === 0
+          ? cssClasses.BREADCRUMB_ACTIVE
+          : "",
+      ].filter(Boolean),
+      textContent: this.locale === "RU" ? "Каталог" : "Catalog",
+      callback: (): void => {
+        this.currentCategoryPath = [];
+        this.loadProducts(this.locale);
+        this.renderBreadcrumbs();
+        const buttons = document.querySelectorAll(
+          `.${cssClasses.CATEGORY_ACTIVE_LINK}`,
+        );
+        buttons.forEach((btn) =>
+          btn.classList.remove(cssClasses.CATEGORY_ACTIVE_LINK),
+        );
 
-  const allBtnElement = new ElementCreator({
-    tag: "button",
-    className: [cssClasses.CATEGORY_LINK, cssClasses.CATEGORY_ACTIVE_LINK],
-    textContent: "All",
-    callback: () => {
-      this.loadProducts(locale);
-
-      categoryButtons.forEach(btn => {
-        btn.classList.remove(cssClasses.CATEGORY_ACTIVE_LINK);
-      });
-      allBtnElement.getElement().classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
-    },
-  });
-
-  categoryButtons[0] = allBtnElement.getElement();
-  container.addInnerElement(allBtnElement.getElement());
-
-  categories.forEach((category, index) => {
-    const btnElement = new ElementCreator({
-      tag: "button",
-      className: [cssClasses.CATEGORY_LINK],
-      textContent: category.name,
-      callback: () => {
-        this.loadProducts(locale, category.id);
-
-        categoryButtons.forEach(btn => {
-          btn.classList.remove(cssClasses.CATEGORY_ACTIVE_LINK);
-        });
-        btnElement.getElement().classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
+        const allBtn = document.querySelector(`.${cssClasses.CATEGORY_LINK}`);
+        if (allBtn) {
+          allBtn.classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
+        }
       },
     });
 
-    categoryButtons[index + 1] = btnElement.getElement();
-    container.addInnerElement(btnElement.getElement());
-  });
-}
+    this.breadcrumbsContainer.addInnerElement(homeCrumb.getElement());
+
+    this.currentCategoryPath.forEach((category, index) => {
+      const separator = new ElementCreator({
+        tag: "span",
+        className: [],
+        textContent: " / ",
+      });
+      this.breadcrumbsContainer.addInnerElement(separator.getElement());
+
+      const isActive = index === this.currentCategoryPath.length - 1;
+
+      const crumb = new ElementCreator({
+        tag: "span",
+        className: [
+          cssClasses.BREADCRUMB,
+          isActive ? cssClasses.BREADCRUMB_ACTIVE : "",
+        ].filter(Boolean),
+        textContent: category.name,
+        callback: (): void => {
+          this.currentCategoryPath = this.currentCategoryPath.slice(
+            0,
+            index + 1,
+          );
+          this.loadProducts(this.locale, category.id);
+          this.renderBreadcrumbs();
+          // this.clearActiveCategoryStyles();
+          this.setActiveCategoryButton();
+        },
+      });
+      this.breadcrumbsContainer.addInnerElement(crumb.getElement());
+    });
+    const allBtn = document.querySelector(`.${cssClasses.CATEGORY_LINK}`);
+    const allBtns = document.querySelectorAll(`.${cssClasses.CATEGORY_LINK}`);
+
+    allBtns.forEach((btn) =>
+      btn.classList.remove(cssClasses.CATEGORY_ACTIVE_LINK),
+    );
+    if (this.currentCategoryPath.length === 0 && allBtn) {
+      allBtn.classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
+    }
+  }
+  // private clearActiveCategoryStyles(): void {
+  //   const buttons = document.querySelectorAll(
+  //     `.${cssClasses.CATEGORY_ACTIVE_LINK}`,
+  //   );
+  //   buttons.forEach((btn) =>
+  //     btn.classList.remove(cssClasses.CATEGORY_ACTIVE_LINK),
+  //   );
+  // }
+
+  private setActiveCategoryButton(): void {
+    const buttons = document.querySelectorAll(`.${cssClasses.CATEGORY_LINK}`);
+    buttons.forEach((btn) => {
+      if (btn.textContent === this.currentCategoryPath.at(-1)?.name) {
+        btn.classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
+      }
+    });
+  }
+
+  private renderCategories(
+    categories: Array<{ id: string; name: string; children?: Array<any> }>,
+    container: ElementCreator,
+    locale: Localization,
+    categoryButtons: HTMLElement[] = [],
+  ): void {
+    container.getElement().innerHTML = "";
+
+    const allBtnElement = new ElementCreator({
+      tag: "button",
+      className: [cssClasses.CATEGORY_LINK],
+      textContent: this.locale === "RU" ? "Все" : "All",
+      callback: (): void => {
+        this.currentCategoryPath = [];
+        this.loadProducts(locale);
+        this.renderBreadcrumbs();
+        categoryButtons.forEach((btn) =>
+          btn.classList.remove(cssClasses.CATEGORY_ACTIVE_LINK),
+        );
+        allBtnElement
+          .getElement()
+          .classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
+      },
+    });
+
+    if (this.currentCategoryPath.length === 0) {
+      allBtnElement.getElement().classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
+    }
+
+    container.addInnerElement(allBtnElement.getElement());
+
+    const renderCategoryList = (
+      categoriesList: Array<{
+        id: string;
+        name: string;
+        children?: Array<any>;
+      }>,
+      parentContainer: ElementCreator,
+      level: number = 0,
+    ): void => {
+      categoriesList.forEach((category, index) => {
+        const btnElement = new ElementCreator({
+          tag: "button",
+          className: [
+            cssClasses.CATEGORY_LINK,
+            cssClasses.CATEGORY_SUB_CONTAINER,
+          ],
+          textContent: category.name,
+          callback: (): void => {
+            this.currentCategoryPath = this.findCategoryPath(
+              category.id,
+              categories,
+            );
+            this.loadProducts(locale, category.id);
+            this.renderBreadcrumbs();
+            categoryButtons.forEach((btn) =>
+              btn.classList.remove(cssClasses.CATEGORY_ACTIVE_LINK),
+            );
+            btnElement
+              .getElement()
+              .classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
+          },
+        });
+
+        if (
+          index === 0 &&
+          this.currentCategoryPath.length > 0 &&
+          this.currentCategoryPath[0].id === category.id
+        ) {
+          btnElement
+            .getElement()
+            .classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
+        }
+
+        categoryButtons.push(btnElement.getElement());
+        parentContainer.addInnerElement(btnElement.getElement());
+
+        if (category.children && category.children.length > 0) {
+          const subContainer = new ElementCreator({
+            tag: "div",
+            className: [cssClasses.CATEGORY_SUB_CONTAINER],
+            textContent: "",
+          });
+          parentContainer.addInnerElement(subContainer.getElement());
+
+          renderCategoryList(category.children, subContainer, level + 1);
+        }
+      });
+    };
+
+    renderCategoryList(categories, container);
+  }
+
+  private findCategoryPath(
+    categoryId: string,
+    categories: Array<{ id: string; name: string; children?: Array<any> }>,
+    path: Array<{ id: string; name: string }> = [],
+  ): Array<{ id: string; name: string }> {
+    for (const category of categories) {
+      const newPath = [...path, { id: category.id, name: category.name }];
+      if (category.id === categoryId) {
+        return newPath;
+      }
+      if (category.children) {
+        const result = this.findCategoryPath(
+          categoryId,
+          category.children,
+          newPath,
+        );
+        if (result.length > 0) {
+          return result;
+        }
+      }
+    }
+    return [];
+  }
 
   private loadProducts(
     locale: Localization,
     categoryId?: string,
     page: number = 1,
-    pageSize: number = 20
+    pageSize: number = 20,
   ): void {
-
     const offset = (page - 1) * pageSize;
 
     const query = {
@@ -157,13 +350,18 @@ private renderCategories(
         this.paginationContainer.getElement().innerHTML = "";
 
         this.renderProducts(products);
-        this.renderPagination(response.body.total, page, pageSize, locale, categoryId);
+        this.renderPagination(
+          response.body.total,
+          page,
+          pageSize,
+          locale,
+          categoryId,
+        );
       },
       (error: Error) => {
         console.error(error);
       },
     );
-
   }
 
   private renderProducts(products: CatalogData[]): void {
@@ -178,13 +376,14 @@ private renderCategories(
     }
 
     products.forEach((product) => {
-
       const cardLink = new ElementCreator({
         tag: "a",
         className: [cssClasses.CARD],
         textContent: "",
       });
-      cardLink.getElement().setAttribute("href", `${Routes.PRODUCT}=${product.id}`);
+      cardLink
+        .getElement()
+        .setAttribute("href", `${Routes.PRODUCT}=${product.id}`);
 
       const imageContainer = new ElementCreator({
         tag: "div",
@@ -258,7 +457,7 @@ private renderCategories(
     currentPage: number,
     pageSize: number,
     locale: Localization,
-    categoryId?: string
+    categoryId?: string,
   ): void {
     const totalPages = Math.ceil(total / pageSize);
     this.paginationContainer.getElement().innerHTML = "";
@@ -268,7 +467,7 @@ private renderCategories(
         tag: "button",
         className: [cssClasses.PAGINATION_BUTTON],
         textContent: `${i}`,
-        callback: () => {
+        callback: (): void => {
           this.loadProducts(locale, categoryId, i, pageSize);
         },
       });

@@ -13,6 +13,29 @@
   --input-focus-shadow-color: #0074be;
 }
 
+.container-nav {
+  display: flex;
+  align-items: start;
+  justify-content: flex-start;
+}
+
+@media (width <=768px) {
+  .container-nav {
+    flex-direction: column;
+  }
+}
+
+.left-container {
+  padding: 20px;
+}
+
+.right-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
 .cards {
   display: flex;
   flex-wrap: wrap;
@@ -35,7 +58,6 @@
   height: 100%;
   object-fit: cover;
   object-position: top;
-
 }
 
 .card-title {
@@ -72,10 +94,10 @@
 .card:hover {
   cursor: pointer;
   opacity: 0.9;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
 }
 
-.card:hover .button {
+.card:hover.button {
   background-color: var(--button-hover-color);
 }
 
@@ -88,13 +110,13 @@
 }
 
 .category-nav {
-
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  flex-direction: row;
-  gap: 8px;
-  margin-bottom: 16px;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: flex-start;
+  align-self: start;
+  padding-left: 10px;
+  border-left: 1px solid var(--button-active-color);
 }
 
 .category-link {
@@ -102,6 +124,8 @@
   background-color: var(--button-active-color);
   color: white;
   font-size: 0.8rem;
+  text-wrap: nowrap;
+  width: 160px;
   border: none;
   border-radius: 0.3rem;
   cursor: pointer;
@@ -109,9 +133,9 @@
 }
 
 .category-link-active {
-    cursor: default;
-    pointer-events: none;
-    background-color: var(--button-hover-color);
+  cursor: default;
+  pointer-events: none;
+  background-color: var(--button-hover-color);
 }
 
 .category-link:hover {
@@ -148,4 +172,35 @@
   background-color: var(--button-hover-color);
   cursor: pointer;
   box-shadow: 1px 2px 2px #0074be;
+}
+
+.breadcrumbs {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: var(--button-active-color);
+  transition: 0.3s;
+}
+
+.breadcrumb {
+  display: inline;
+  height: 10px;
+}
+
+.breadcrumb:hover {
+  cursor: pointer;
+  color: var(--button-hover-color);
+}
+
+.breadcrumb-link-active {
+  cursor: default;
+  pointer-events: none;
+}
+
+.subcategory {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 20px;
+  border-left: 1px solid var(--button-active-color);
 }

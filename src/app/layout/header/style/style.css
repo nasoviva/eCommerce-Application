@@ -99,14 +99,14 @@ ul {
 
 .mobile-menu.open {
   right: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
 }
 
 .no-scroll {
   overflow: hidden;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .container-buttons {
     display: none;
   }
