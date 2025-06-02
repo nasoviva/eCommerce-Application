@@ -44,7 +44,7 @@ export default class MainView extends View {
       this.stateManager,
       this.apiRequestService,
     );
-    this.productView = new ProductView("");
+    this.productView = new ProductView("", this.apiRequestService);
     this.profileView = new ProfileView(
       this.stateManager,
       this.apiRequestService,
@@ -90,19 +90,13 @@ export default class MainView extends View {
       }
       this.setContent(this.loginView.getElement());
     } else if (path === Routes.CATALOG) {
-      // if (isLoggedIn) {
       globalThis.location.hash = Routes.CATALOG;
       this.setContent(this.catalogView.getElement());
-      // } else {
-      //   globalThis.location.hash = Routes.HOME;
-      //   return;
-      // }
     } else if (path.startsWith(`${Routes.PRODUCT}=`)) {
       const id = path.split("=")[1];
-      // if (isLoggedIn && id) {
       if (id) {
-        const productView = new ProductView(id);
-        this.setContent(productView.getElement(id));
+        const productView = new ProductView(id, this.apiRequestService);
+        this.setContent(productView.getElement());
       } else {
         globalThis.location.hash = Routes.NOT_FOUND;
         this.setContent(this.notFoundView.getElement());
@@ -112,7 +106,7 @@ export default class MainView extends View {
         globalThis.location.hash = Routes.PROFILE;
         this.setContent(this.profileView.getElement());
       } else {
-        globalThis.location.hash = Routes.HOME;
+        globalThis.location.hash = Routes.LOGIN;
         return;
       }
     } else if (path === Routes.REGISTRATION) {
