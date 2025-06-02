@@ -255,6 +255,7 @@ body {
 
 .footer .title {
   text-wrap: nowrap;
-  margin-bottom: 0;
+  margin: 0;
   height: fit-content;
+  min-height: auto;
 }
