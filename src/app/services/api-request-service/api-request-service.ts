@@ -98,7 +98,6 @@ export default class ApiRequestService {
         .map((x) => `subtree("${x}")`)
         .join(", ");
       result["filter.query"].push(`categories.id: ${idList}`);
-      console.log(`categories.id: ${idList}`);
     }
 
     if (userQuery.sort?.price)
@@ -113,7 +112,6 @@ export default class ApiRequestService {
   }
 
   public getToken(): TokenStore {
-    console.log(this.tokenCache.get());
     return this.tokenCache.get();
   }
 

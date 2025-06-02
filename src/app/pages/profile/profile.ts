@@ -274,11 +274,7 @@ export default class ProfileView {
             action: `${actionType}${changeTarget.replace(/^./, (match) => match.toUpperCase())}`,
             [changeTarget]: value,
           });
-        } else {
-          const data = this.updateInfo.get(addressId);
-          this.updateInfo.get(addressId).address[changeTarget] = value;
-          console.log(data, data[changeTarget], this.updateInfo);
-        }
+        } else this.updateInfo.get(addressId).address[changeTarget] = value;
       });
     }
 
@@ -309,7 +305,6 @@ export default class ProfileView {
       crossBtn,
       errorTip,
     );
-    console.log(blockContainer.getElement(), errorTip.getElement());
 
     return blockContainer;
   }
