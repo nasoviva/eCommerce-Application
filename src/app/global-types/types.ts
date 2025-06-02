@@ -34,4 +34,6 @@ export interface UseSearchQuery {
   text: string;
   offset?: number;
   limit?: number;
+  fuzzy?: boolean;
+  fuzzyLevel?: number;
 }

@@ -7,11 +7,12 @@ import {
 import ElementCreator from "../../shared/element-creator";
 import type StateManager from "../../services/state-manager/state-manager";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
-import type { Localization } from "../../global-types/types";
+import type { Localization, UseSearchQuery } from "../../global-types/types";
 import type { ClientResponse } from "@commercetools/ts-client";
 import "./style/style.css";
 import type { CatalogData } from "../../services/api-request-service/data-parser";
 import DataParser from "../../services/api-request-service/data-parser";
+import InputCreator from "../../shared/input-creator";
 
 export default class CatalogView {
   private readonly catalogContainer: ElementCreator;
@@ -23,6 +24,7 @@ export default class CatalogView {
   private readonly locale: Localization = "en-US";
 
   private currentCategoryPath: Array<{ id: string; name: string }> = [];
+  private readonly search: InputCreator;
 
   constructor(
     stateManager: StateManager,
@@ -54,6 +56,12 @@ export default class CatalogView {
       textContent: "",
     });
 
+    this.search = new InputCreator({
+      type: "input",
+      className: [cssClasses.INPUT],
+      placeholder: "Search...",
+    });
+
     this.locale = this.stateManager.locale;
 
     this.configureView();
@@ -64,6 +72,7 @@ export default class CatalogView {
   }
 
   private configureView(): void {
+    this.clearInputs();
     this.cardsContainer.getElement().innerHTML = "";
     this.paginationContainer.getElement().innerHTML = "";
 
@@ -79,6 +88,29 @@ export default class CatalogView {
       textContent: Titles.CATALOG,
     });
 
+    const searchContainer = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_CENTER],
+    });
+
+    const searchButton = new ElementCreator({
+      tag: "button",
+      className: [cssClasses.BUTTON, cssClasses.SEARCH_BUTTON],
+      textContent: this.locale === "RU" ? "Поиск" : "Search",
+      callback: (): void => {
+        this.handleSearch(this.search.getElement().value);
+      },
+    });
+
+    this.search
+      .getElement()
+      .addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Enter")
+          this.handleSearch(this.search.getElement().value);
+      });
+
+    searchContainer.addInnerElement(this.search.getElement());
+    searchContainer.addInnerElement(searchButton.getElement());
     const wrapper = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_NAV],
@@ -96,8 +128,12 @@ export default class CatalogView {
       textContent: "",
     });
     this.catalogContainer.addInnerElement(welcomeElement.getElement());
+    this.catalogContainer.addInnerElement(
+      this.breadcrumbsContainer.getElement(),
+    );
+    wrapperNavigation.addInnerElement(searchContainer.getElement());
     wrapperNavigation.addInnerElement(categoriesContainer.getElement());
-    wrapperCatalog.addInnerElement(this.breadcrumbsContainer.getElement());
+
     wrapperCatalog.addInnerElement(this.cardsContainer.getElement());
     wrapper.addInnerElement(wrapperNavigation.getElement());
     wrapper.addInnerElement(wrapperCatalog.getElement());
@@ -355,10 +391,11 @@ export default class CatalogView {
   }
 
   private renderProducts(products: CatalogData[]): void {
+    this.clearInputs();
     if (products.length === 0) {
       const emptyMsg = new ElementCreator({
         tag: "p",
-        className: [],
+        className: [cssClasses.TEXT],
         textContent: "No available products",
       });
       this.cardsContainer.addInnerElement(emptyMsg.getElement());
@@ -466,5 +503,42 @@ export default class CatalogView {
       }
       this.paginationContainer.addInnerElement(pageBtn.getElement());
     }
+  }
+  private handleSearch(queryText: string): void {
+    const trimmedQuery = queryText.trim();
+    if (trimmedQuery.length <= 2) {
+      return;
+    }
+
+    const fuzzyLevel = trimmedQuery.length <= 5 ? 1 : 2;
+
+    const searchQuery: UseSearchQuery = {
+      locale: this.locale,
+      text: trimmedQuery,
+      limit: 20,
+      offset: 0,
+      fuzzy: true,
+      fuzzyLevel: fuzzyLevel,
+    };
+
+    this.apiRequestService.searchProducts(
+      searchQuery,
+      (response: ClientResponse) => {
+        const products: CatalogData[] = DataParser.parseForCatalog(
+          response,
+          this.locale,
+        );
+        this.cardsContainer.getElement().innerHTML = "";
+        this.renderProducts(products);
+        this.paginationContainer.getElement().innerHTML = "";
+      },
+      (error: Error) => {
+        console.error("Search failed:", error);
+      },
+    );
+  }
+
+  private clearInputs(): void {
+    this.search.getElement().value = "";
   }
 }

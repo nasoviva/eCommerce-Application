@@ -234,7 +234,6 @@ export default class LoginView {
       (error: Error) => {
         const message = error instanceof Error ? error.message : String(error);
         this.displayMessage(message, true);
-        // },
       },
     );
   }
