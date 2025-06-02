@@ -391,6 +391,7 @@ export default class CatalogView {
   }
 
   private renderProducts(products: CatalogData[]): void {
+    this.clearInputs();
     if (products.length === 0) {
       const emptyMsg = new ElementCreator({
         tag: "p",
