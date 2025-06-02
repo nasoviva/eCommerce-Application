@@ -1,11 +1,11 @@
-@media screen and (width <= 1440px) {
+@media screen and (width <= 1200px) {
   .modal-window {
     width: 85%;
     height: 90%;
   }
 
   .modal-close-button {
-    top: 93%;
+    top: 94%;
     right: 1%;
   }
 }

@@ -20,8 +20,7 @@
 .modal-window {
   position: relative;
   width: 55%;
-  height: 95%;
-  padding: 45px;
+  height: 96%;
   margin-right: 0;
   font-size: 30px;
   z-index: 1;
@@ -52,8 +51,8 @@
 
 .modal-close-button {
   position: absolute;
-  top: 861px;
-  right: 4px;
+  top: 95%;
+  right: 1px;
   background-image: linear-gradient(#0074be, rgb(0 84 84));
   border-bottom: 0 none rgb(230 244 244);
   border-radius: 4px;
