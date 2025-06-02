@@ -173,8 +173,8 @@ export default class ProductView {
           container.addInnerElement(priceEl.getElement());
           productTitle.addInnerElement(backButton.getElement());
           this.productContainer.addInnerElement(productTitle.getElement());
-          this.productContainer.addInnerElement(sliderWrapper.getElement());
           this.productContainer.addInnerElement(container.getElement());
+          this.productContainer.addInnerElement(sliderWrapper.getElement());
         },
         (error: Error) => {
           console.error(error);

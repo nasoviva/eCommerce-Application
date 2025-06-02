@@ -107,33 +107,6 @@ export default class DataParser {
     return productData;
   }
 
-  // public static parseCategories(
-  //   response: ClientResponse<CategoryPagedQueryResponse>,
-  //   country: Localization,
-  // ): CategoryData[] {
-  //   const result: CategoryData[] = [];
-  //   if (!response.body) return result;
-  //   for (const item of response.body.results) {
-  //     const categoryData: CategoryData = {
-  //       id: item.id,
-  //       name: item.name[country],
-  //       description: item.description ? item.description[country] : "",
-  //     };
-  //     if (item.ancestors) {
-  //       const path: string[] = [];
-  //       for (const ancestor of item.ancestors) {
-  //         const pathPart = response.body.results.find(
-  //           (x) => x.id === ancestor.id,
-  //         )?.name[country];
-  //         if (pathPart) path.push(pathPart);
-  //       }
-  //       categoryData.ancestors = path;
-  //     }
-  //     result.push(categoryData);
-  //   }
-  //   return result;
-  // }
-
   public static parseCategories(
     response: ClientResponse<CategoryPagedQueryResponse>,
     country: Localization,

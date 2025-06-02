@@ -52,7 +52,7 @@
   overflow: clip;
 }
 
-.img {
+.card-img {
   overflow: clip;
   width: 100%;
   height: 100%;
@@ -176,19 +176,22 @@
 
 .breadcrumbs {
   font-weight: bold;
+  font-size: 0.9rem;
   margin-bottom: 10px;
-  color: var(--button-active-color);
+  color: var(--text-color);
   transition: 0.3s;
 }
 
 .breadcrumb {
   display: inline;
   height: 10px;
+  border-bottom: 1px solid transparent;
 }
 
 .breadcrumb:hover {
   cursor: pointer;
   color: var(--button-hover-color);
+  border-bottom: 1px solid var(--button-hover-color);
 }
 
 .breadcrumb-link-active {

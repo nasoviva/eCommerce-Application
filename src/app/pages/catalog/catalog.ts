@@ -171,7 +171,6 @@ export default class CatalogView {
           );
           this.loadProducts(this.locale, category.id);
           this.renderBreadcrumbs();
-          // this.clearActiveCategoryStyles();
           this.setActiveCategoryButton();
         },
       });
@@ -187,15 +186,6 @@ export default class CatalogView {
       allBtn.classList.add(cssClasses.CATEGORY_ACTIVE_LINK);
     }
   }
-  // private clearActiveCategoryStyles(): void {
-  //   const buttons = document.querySelectorAll(
-  //     `.${cssClasses.CATEGORY_ACTIVE_LINK}`,
-  //   );
-  //   buttons.forEach((btn) =>
-  //     btn.classList.remove(cssClasses.CATEGORY_ACTIVE_LINK),
-  //   );
-  // }
-
   private setActiveCategoryButton(): void {
     const buttons = document.querySelectorAll(`.${cssClasses.CATEGORY_LINK}`);
     buttons.forEach((btn) => {
