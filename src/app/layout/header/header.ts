@@ -60,8 +60,20 @@ export default class HeaderView extends View {
     const logoContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.LOGO],
-      textContent: "Joke Store",
+      textContent: "",
     });
+
+    const logoImage = new ElementCreator({
+      tag: "img",
+      className: [cssClasses.LOGO_IMG],
+      textContent: "",
+      attributes: {
+        src: "./img/image-welcome.png",
+        alt: "Joke Store",
+      },
+    });
+
+    logoContainer.addInnerElement(logoImage.getElement());
 
     logoContainer.getElement().addEventListener("click", () => {
       globalThis.location.hash = Routes.HOME;

@@ -12,6 +12,7 @@ const cssClasses = {
   HEADER_BUTTON: "header-button",
   HEADER_BUTTON_ACTIVE: "header-button-active",
   LOGO: "logo",
+  LOGO_IMG: "logo-img",
   TITLE: "title",
   LABEL: "label",
   ERROR: "error",
@@ -26,10 +27,12 @@ const cssClasses = {
   CONTAINER_NAV: "container-nav",
   CONTAINER_LEFT: "left-container",
   CONTAINER_RIGHT: "right-container",
+  IMAGE_CONTAINER: "image",
+  IMAGE: "img",
   CARDS: "cards",
   CARD: "card",
   CARD_IMAGE_CONTAINER: "card-image",
-  CARD_IMAGE: "img",
+  CARD_IMAGE: "card-img",
   CARD_TITLE: "card-title",
   CARD_DESCRIPTION: "card-description",
   CARD_PRICE: "card-price",
@@ -55,6 +58,7 @@ const cssClasses = {
   SLIDER_BTN: "slider-btn",
   SLIDER_PREV: "prev-btn",
   SLIDER_NEXT: "next-btn",
+  TEXT: "text",
 };
 
 const Routes = {
@@ -76,7 +80,7 @@ const Buttons = {
   PROFILE: "Profile",
   REGISTRATION: " SignUp",
   GO_LOGIN: "Back to LogIn",
-  GO_CATALOG: "Back to Catalog",
+  GO_CATALOG: "Go to Catalog",
 };
 
 const Titles = {
@@ -90,6 +94,7 @@ const Titles = {
   APP_NAME: "Joke Store",
   CATALOG:
     "From clever code-related puns to subtle observations from therapy sessions, our catalog is full of niche humor crafted for brains like yours. Warning: may cause intellectual giggling",
+  HOME: "Hey, ready for some laughs? We’ve got the freshest, sharpest, and laugh-out-loud funniest jokes around 😄 Looking to crack up a friend, a coworker, or just yourself? Dive into the catalog 👀",
 };
 
 export { Routes, cssClasses, Buttons, Titles };
