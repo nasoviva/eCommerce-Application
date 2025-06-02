@@ -1,0 +1,109 @@
+.main-container {
+  composes: container-column from global;
+  width: fit-content;
+  position: relative;
+  background: var(--background-color);
+  z-index: 1;
+}
+
+.password-modal {
+  composes: container-column from global;
+  padding: 20px;
+  margin: auto;
+}
+
+.label-container {
+  composes: container-row from global;
+}
+
+.title {
+  composes: title from global;
+}
+
+.text-field {
+  composes: label from global;
+}
+
+.text-input {
+  composes: input from global;
+}
+
+.button {
+  composes: button from global;
+}
+
+.in-active-input {
+  pointer-events: none;
+  background: transparent;
+  border-color: transparent;
+}
+
+.disabled {
+  display: none;
+}
+
+.pen-icon {
+  height: 30px;
+  aspect-ratio: 1/1;
+}
+
+.pen-btn {
+  cursor: pointer;
+  background: var(--background-color);
+  border: none;
+}
+
+.hidden-btn {
+  position: absolute;
+  z-index: -1;
+  transition: 0.5s;
+  right: 0;
+}
+
+.show-btn {
+  transform: translateX(150%);
+}
+
+.in-active-button {
+  pointer-events: none;
+  background: red 80% no-repeat;
+}
+
+.block-container {
+  composes: container-row from global;
+  justify-content: end;
+  align-items: center;
+  background: var(--background-color);
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.text-label {
+  composes: checkbox-label from global;
+}
+
+.check-box {
+  composes: checkbox-wrapper from global;
+}
+
+.address-area {
+  width: 100%;
+}
+
+.separator {
+  width: 100%;
+  height: 5px;
+  background: var(--primary-color);
+}
+
+.error-tip {
+  composes: error from global;
+  position: absolute;
+  width: unset;
+  bottom: -20px;
+  right: 50px;
+}
+
+.password-error-tip {
+  composes: error from global;
+}

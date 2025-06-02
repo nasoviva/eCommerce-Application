@@ -6,7 +6,8 @@ export default class InputCreator {
   constructor(parameters: InputParameters) {
     this.inputElement = document.createElement("input");
     this.inputElement.type = parameters.type;
-    this.inputElement.placeholder = parameters.placeholder;
+    if (parameters.placeholder)
+      this.inputElement.placeholder = parameters.placeholder;
     this.inputElement.classList.add(...parameters.className);
 
     if (parameters.attributes) {
