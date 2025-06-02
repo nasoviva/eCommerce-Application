@@ -59,6 +59,7 @@ const cssClasses = {
   SLIDER_PREV: "prev-btn",
   SLIDER_NEXT: "next-btn",
   TEXT: "text",
+  SEARCH_BUTTON: "search-button",
 };
 
 const Routes = {
