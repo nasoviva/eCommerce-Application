@@ -10,7 +10,7 @@ import { projectKey } from "./constants";
 import type StateManager from "../state-manager/state-manager";
 import type { Client, QueryParam, TokenStore } from "@commercetools/ts-client";
 import VSATokenCache from "./token-cache";
-import ErrorMsg from "../error-msg/error-msg";
+import ToastMsg from "../error-msg/toast-msg";
 import type { UseProductQuery, UseSearchQuery } from "../../global-types/types";
 
 type RequestBuilder = "anon" | "password";
@@ -43,12 +43,12 @@ export default class ApiRequestService {
   private stateManager: StateManager;
   private currentClientType!: RequestBuilder;
   private tokenCache: VSATokenCache;
-  private errorMsg: ErrorMsg;
+  private toastMsg: ToastMsg;
 
   constructor(stateManager: StateManager) {
     this.stateManager = stateManager;
     this.tokenCache = new VSATokenCache();
-    this.errorMsg = new ErrorMsg();
+    this.toastMsg = new ToastMsg();
     this.configureService();
   }
 
@@ -98,7 +98,6 @@ export default class ApiRequestService {
         .map((x) => `subtree("${x}")`)
         .join(", ");
       result["filter.query"].push(`categories.id: ${idList}`);
-      console.log(`categories.id: ${idList}`);
     }
 
     if (userQuery.sort?.price)
@@ -113,7 +112,6 @@ export default class ApiRequestService {
   }
 
   public getToken(): TokenStore {
-    console.log(this.tokenCache.get());
     return this.tokenCache.get();
   }
 
@@ -223,9 +221,11 @@ export default class ApiRequestService {
       })
       .execute()
       .then((result) => {
+        this.toastMsg.displaySuccessMsg(["Your data was successfully updated"]);
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
+        this.toastMsg.displayErrorMsg(ApiRequestService.errorParser(reason));
         if (onReject) onReject(reason);
       });
   }
@@ -305,10 +305,13 @@ export default class ApiRequestService {
       .execute()
       .then((result) => {
         this.switchRequestBuilder("anon");
+        this.toastMsg.displaySuccessMsg([
+          "Your password was successfully updated",
+        ]);
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
-        this.errorMsg.displayErrorMsg(ApiRequestService.errorParser(reason));
+        this.toastMsg.displayErrorMsg(ApiRequestService.errorParser(reason));
         if (onReject) onReject(reason);
       });
   }
