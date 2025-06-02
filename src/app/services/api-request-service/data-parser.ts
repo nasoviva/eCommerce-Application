@@ -1,12 +1,13 @@
 import type {
   CategoryPagedQueryResponse,
   ProductProjection,
+  Customer,
   ProductProjectionPagedSearchResponse,
 } from "@commercetools/platform-sdk";
 import type { ClientResponse } from "@commercetools/ts-client";
 import type { Localization } from "../../global-types/types";
 
-interface CatalogData {
+export  interface CatalogData {
   id: string;
   image: string;
   name: string;
@@ -30,6 +31,26 @@ interface CategoryData {
   description: string;
   name: string;
   ancestors?: string[];
+}
+
+export interface AddressData {
+  id: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  defaultBilling: boolean;
+  defaultShipping: boolean;
+}
+
+interface UserData {
+  version: number;
+  email: string;
+  name: string;
+  lastName: string;
+  dateOfBirth: string;
+  addresses: AddressData[];
 }
 
 export default class DataParser {
@@ -109,6 +130,43 @@ export default class DataParser {
       }
       result.push(categoryData);
     }
+    return result;
+  }
+
+  public static parseUserData(response: ClientResponse<Customer>): UserData {
+    const version = response.body?.version || 0;
+    const email = response.body?.email || "";
+    const name = response.body?.firstName || "";
+    const lastName = response.body?.lastName || "";
+    const dateOfBirth = response.body?.dateOfBirth || "";
+    let addresses: AddressData[] = [];
+    if (response.body?.addresses) {
+      addresses = response.body?.addresses.map((x) => {
+        const isDefaultBilling =
+          x.id === response.body?.defaultBillingAddressId;
+        const isDefaultShipping =
+          x.id === response.body?.defaultShippingAddressId;
+        const address = {
+          id: x.id || "",
+          street: x.streetName || "",
+          city: x.city || "",
+          state: x.state || "",
+          postalCode: x.postalCode || "",
+          country: x.country || "",
+          defaultBilling: isDefaultBilling,
+          defaultShipping: isDefaultShipping,
+        };
+        return address;
+      });
+    }
+    const result: UserData = {
+      version: version,
+      email: email,
+      name: name,
+      lastName: lastName,
+      dateOfBirth: dateOfBirth,
+      addresses: addresses,
+    };
     return result;
   }
 }

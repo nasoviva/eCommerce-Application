@@ -106,7 +106,7 @@ export default class MainView extends View {
         globalThis.location.hash = Routes.PROFILE;
         this.setContent(this.profileView.getElement());
       } else {
-        globalThis.location.hash = Routes.HOME;
+        globalThis.location.hash = Routes.LOGIN;
         return;
       }
     } else if (path === Routes.REGISTRATION) {

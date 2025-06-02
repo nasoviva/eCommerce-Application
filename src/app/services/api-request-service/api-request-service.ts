@@ -3,7 +3,7 @@ import type {
   ByProjectKeyRequestBuilder,
   MyCustomerDraft,
   MyCustomerSignin,
-  SearchQuery,
+  MyCustomerUpdateAction,
 } from "@commercetools/platform-sdk";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
@@ -52,9 +52,10 @@ export default class ApiRequestService {
     this.configureService();
   }
 
-  public static errorParser(reason: Response): string[] {
-    if ("error" in reason && Array.isArray(reason.error)) {
-      return reason.error.map((x) => x.message);
+  public static errorParser(reason: Error): string[] {
+    if ("error" in reason) {
+      const errors = reason.message;
+      return [errors];
     } else return [];
   }
 
@@ -63,7 +64,9 @@ export default class ApiRequestService {
     result.localeProjection = userQuery.locale;
     result[`text.${userQuery.locale}`] = userQuery.text;
     result.fuzzy = true;
-    result.fuzzyLevel = 0;
+    if (userQuery.limit) result.limit = userQuery.limit;
+    if (userQuery.offset) result.offset = userQuery.offset;
+    result.fuzzyLevel = 1;
     return result;
   }
 
@@ -102,6 +105,9 @@ export default class ApiRequestService {
       result.sort.push(`price ${userQuery.sort.price}`);
     if (userQuery.sort?.name)
       result.sort.push(`name.${userQuery.locale} ${userQuery.sort.name}`);
+
+    if (userQuery.limit) result.limit = userQuery.limit;
+    if (userQuery.offset) result.offset = userQuery.offset;
 
     return result;
   }
@@ -201,6 +207,29 @@ export default class ApiRequestService {
       });
   }
 
+  public updateUserInfo(
+    version: number,
+    actions: MyCustomerUpdateAction[],
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .me()
+      .post({
+        body: {
+          version: version,
+          actions: actions,
+        },
+      })
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
   public searchProducts(
     searchQuery: UseSearchQuery,
     onSuccess?: CallableFunction,
@@ -236,6 +265,50 @@ export default class ApiRequestService {
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public getUserInfo(
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .me()
+      .get()
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public changePassword(
+    version: number,
+    oldPassword: string,
+    newPassword: string,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .me()
+      .password()
+      .post({
+        body: {
+          version: version,
+          currentPassword: oldPassword,
+          newPassword: newPassword,
+        },
+      })
+      .execute()
+      .then((result) => {
+        this.switchRequestBuilder("anon");
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        this.errorMsg.displayErrorMsg(ApiRequestService.errorParser(reason));
         if (onReject) onReject(reason);
       });
   }

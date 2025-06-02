@@ -1,8 +1,25 @@
+.container-product {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+  padding: 20px;
+}
+
+.container-description {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 38%;
+}
+
 .slider-container {
   position: relative;
-  width: 600px;
+  width: 60%;
   overflow: hidden;
-  margin: 20px 40px;
+  margin: 20px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,4 +58,27 @@
   position: absolute;
   right: 0;
   z-index: 1;
+}
+
+.container-product .button {
+  align-self: flex-start;
+}
+
+@media (width <=768px) {
+  .container-product {
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .container-description {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .slider-container {
+    width: 100%;
+  }
 }

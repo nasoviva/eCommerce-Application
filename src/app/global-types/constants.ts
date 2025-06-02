@@ -30,10 +30,18 @@ const cssClasses = {
   CARD_TITLE: "card-title",
   CARD_DESCRIPTION: "card-description",
   CARD_PRICE: "card-price",
+  CATEGORY_FILTER: "category-nav",
+  CATEGORY_LINK: "category-link",
+  CATEGORY_ACTIVE_LINK: "category-link-active",
+  PAGINATION_BUTTON: "pagination-button",
+  PAGINATION_ACTIVE_BUTTON: "pagination-button-active",
+  PAGINATION: "pagination",
   MOBILE_MENU_ITEM: "mobile-li",
   MOBILE_MENU: "mobile-menu",
   BURGER: "burger",
   BURGER_IMG: "burger-img",
+  CONTAINER_PRODUCT: "container-product",
+  CONTAINER_DESCRIPTION: "container-description",
   SLIDER: "slider-container",
   SLIDER_LIST: "slider-list",
   SLIDER_IMG: "slider-img",
@@ -61,6 +69,7 @@ const Buttons = {
   PROFILE: "Profile",
   REGISTRATION: " SignUp",
   GO_LOGIN: "Back to LogIn",
+  GO_CATALOG: "Back to Catalog",
 };
 
 const Titles = {
@@ -72,7 +81,7 @@ const Titles = {
   YEAR: "2025",
   RSSCHOOL: "RS School",
   APP_NAME: "Joke Store",
-  CATALOG: "Find the joke that matches your vibe",
+  CATALOG: "From clever code-related puns to subtle observations from therapy sessions, our catalog is full of niche humor crafted for brains like yours. Warning: may cause intellectual giggling",
 };
 
 export { Routes, cssClasses, Buttons, Titles };

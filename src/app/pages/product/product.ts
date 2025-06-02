@@ -17,9 +17,10 @@ export default class ProductView {
 
     this.productContainer = new ElementCreator({
       tag: "div",
-      className: [cssClasses.CONTAINER_COLUMN],
+      className: [cssClasses.CONTAINER_PRODUCT],
       textContent: "",
     });
+
   }
 
   public getElement(): HTMLElement {
@@ -28,25 +29,29 @@ export default class ProductView {
   }
 
   public async configureView(): Promise<void> {
+
     this.productContainer.getElement().innerHTML = "";
 
-    const titleEl = new ElementCreator({
-      tag: "h2",
-      className: [cssClasses.TITLE],
-      textContent: "Product Details",
+    const productTitle = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_COLUMN],
+      textContent: "",
+    });
+
+    const container = new ElementCreator({
+      tag: "div",
+      className: [cssClasses.CONTAINER_DESCRIPTION],
+      textContent: "",
     });
 
     const backButton = new ElementCreator({
       tag: "button",
       className: [cssClasses.BUTTON],
-      textContent: Buttons.CATALOG,
+      textContent: Buttons.GO_CATALOG,
       callback: (): void => {
         globalThis.location.hash = Routes.CATALOG;
       },
     });
-
-    this.productContainer.addInnerElement(titleEl.getElement());
-    this.productContainer.addInnerElement(backButton.getElement());
 
     try {
       this.api.getProductById(
@@ -165,10 +170,13 @@ export default class ProductView {
             sliderWrapper.addInnerElement(sliderList.getElement());
           }
 
-          this.productContainer.addInnerElement(nameEl.getElement());
-          this.productContainer.addInnerElement(descriptionEl.getElement());
-          this.productContainer.addInnerElement(priceEl.getElement());
+          container.addInnerElement(nameEl.getElement());
+          container.addInnerElement(descriptionEl.getElement());
+          container.addInnerElement(priceEl.getElement());
+          productTitle.addInnerElement(backButton.getElement());
+          this.productContainer.addInnerElement(productTitle.getElement());
           this.productContainer.addInnerElement(sliderWrapper.getElement());
+          this.productContainer.addInnerElement(container.getElement());
         },
         (error: Error) => {
           console.error(error);

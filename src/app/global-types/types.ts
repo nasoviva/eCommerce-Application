@@ -24,10 +24,14 @@ export interface UseProductQuery {
     price?: SortDirection;
     name?: SortDirection;
   };
+  offset?: number;
+  limit?: number;
   categories?: string[];
 }
 
 export interface UseSearchQuery {
   locale: Localization;
   text: string;
+  offset?: number;
+  limit?: number;
 }
