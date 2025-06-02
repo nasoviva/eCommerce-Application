@@ -1,12 +1,17 @@
 import type ElementParameters from "./element-parameters";
+import InputCreator from "./input-creator";
 import type View from "./view";
 
 export default class ElementCreator {
   public element: HTMLElement;
   constructor(parameter: ElementParameters) {
     this.element = this.createElement(parameter);
+    this.configureElement(parameter);
+  }
+
+  public configureElement(parameter: ElementParameters): void {
     this.setCssClasses(parameter.className);
-    this.setTextContent(parameter.textContent);
+    if (parameter.textContent) this.setTextContent(parameter.textContent);
     if (parameter.callback) {
       this.setCallBack(parameter.callback);
     }
@@ -33,9 +38,11 @@ export default class ElementCreator {
     return this.element;
   }
 
-  public addInnerElement(...elements: (HTMLElement | ElementCreator)[]): void {
+  public addInnerElement(
+    ...elements: (HTMLElement | ElementCreator | InputCreator)[]
+  ): void {
     for (const item of elements) {
-      if (item instanceof ElementCreator) {
+      if (item instanceof ElementCreator || item instanceof InputCreator) {
         this.element.append(item.getElement());
       } else {
         this.element.append(item);

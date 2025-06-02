@@ -1,3 +1,5 @@
+import type { Localization } from "../../global-types/types";
+
 export interface ValidJSON {
   login: string;
   password: string;
@@ -29,6 +31,7 @@ export default class StateManager {
   public login: string | undefined;
   public password: string | undefined;
   public userId: string | undefined;
+  public locale: Localization = "en-US";
   private state: ValidJSON | undefined;
 
   constructor() {

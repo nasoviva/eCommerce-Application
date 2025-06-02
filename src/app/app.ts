@@ -1,7 +1,7 @@
 import type {
-  CategoryPagedQueryResponse,
   ClientResponse,
   ProductProjection,
+  Customer,
   ProductProjectionPagedSearchResponse,
 } from "@commercetools/platform-sdk";
 import "../style.css";
@@ -98,56 +98,35 @@ export default class App {
         email: "testemail@testemail.com",
         password: "Test123!",
       }); */
-
       /* Пример получения категорий */
-      this.apiRequestService.getCategories(
+      /* this.apiRequestService.getCategories(
         (result: ClientResponse<CategoryPagedQueryResponse>) => {
           console.log(DataParser.parseCategories(result, "en-US"));
         },
-      );
+      ); */
       /*Пример получения товаров */
       this.apiRequestService.getProducts(
         {
           locale: "en-US",
-          attributes: {
-            byKey: {},
-            byName: {
-              material: "paper",
-            },
-          },
-          price: {
-            from: 500,
-            to: 1020,
-          },
-          sort: {
-            price: "desc",
-            name: "asc",
-          },
-          categories: [
-            "5494ada2-4552-4264-9d9f-59b836591845",
-            "58d82ca1-34de-417b-b9ec-90a28bd0a043",
-          ],
+          offset: 20,
         },
         (result: ClientResponse<ProductProjectionPagedSearchResponse>) => {
           console.log(DataParser.parseForCatalog(result, "en-US"));
         },
       );
       /* Пример получения товаров по поиску */
-      this.apiRequestService.searchProducts(
+      /*  this.apiRequestService.searchProducts(
         {
           locale: "en-US",
-          text: "coffee",
+          text: "Coffer",
         },
         (result: ClientResponse<ProductProjectionPagedSearchResponse>) => {
           console.log(DataParser.parseForCatalog(result, "en-US"));
         },
       );
-      this.apiRequestService.getProductById(
-        "b91fbbd1-36df-4222-8929-f04c6eab5157",
-        (result: ClientResponse<ProductProjection>) => {
-          console.log(DataParser.parseProductDetail(result, "en-US"));
-        },
-      );
+      this.apiRequestService.getUserInfo((result: ClientResponse<Customer>) => {
+        console.log(DataParser.parseUserData(result));
+      }); */
     });
   }
 }

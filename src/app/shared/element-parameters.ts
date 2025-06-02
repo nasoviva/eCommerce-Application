@@ -1,7 +1,7 @@
 export default class ElementParameters {
   public tag: string;
   public className: string[];
-  public textContent: string;
+  public textContent?: string;
   public callback?: (() => void) | null;
   public attributes?: Record<string, string>;
   constructor(
