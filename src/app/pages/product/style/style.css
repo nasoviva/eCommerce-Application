@@ -1,7 +1,8 @@
 .container-product {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 20px;
   width: 100%;
   padding: 5%;
 }
@@ -11,14 +12,13 @@
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: column;
-  width: 38%;
+  width: 55%;
 }
 
 .slider-container {
   position: relative;
-  width: 60%;
+  width: 40%;
   overflow: hidden;
-  margin: 20px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,13 +61,14 @@
 
 .container-product .button {
   align-self: flex-start;
+  margin-left: 20px;
 }
 
 @media (width <=768px) {
   .container-product {
     justify-content: center;
     flex-direction: column;
-    width: 100%;
+    width: 60%;
     padding: 20px;
   }
 
