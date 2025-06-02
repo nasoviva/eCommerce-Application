@@ -1,0 +1,12 @@
+@media screen and (width <= 440px) {
+  .modal-window {
+    position: relative;
+    width: 360px;
+    height: 400px;
+  }
+
+  .modal-close-button {
+    top: 340px;
+    right: 145px;
+  }
+}

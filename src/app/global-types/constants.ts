@@ -12,6 +12,7 @@ const cssClasses = {
   HEADER_BUTTON: "header-button",
   HEADER_BUTTON_ACTIVE: "header-button-active",
   LOGO: "logo",
+  LOGO_IMG: "logo-img",
   TITLE: "title",
   LABEL: "label",
   ERROR: "error",
@@ -23,21 +24,63 @@ const cssClasses = {
   CHECKBOX_GROUP: "checkbox-group",
   CHECKBOX_WRAPPER: "checkbox-wrapper",
   CHECKBOX_LABEL: "checkbox-label",
+  CONTAINER_NAV: "container-nav",
+  CONTAINER_LEFT: "left-container",
+  CONTAINER_RIGHT: "right-container",
+  IMAGE_CONTAINER: "image",
+  IMAGE: "img",
+  CARDS: "cards",
+  CARD: "card",
+  CARD_IMAGE_CONTAINER: "card-image",
+  CARD_IMAGE: "card-img",
+  CARD_TITLE: "card-title",
+  CARD_DESCRIPTION: "card-description",
+  CARD_PRICE: "card-price",
+  CATEGORY_FILTER: "category-nav",
+  CATEGORY_LINK: "category-link",
+  CATEGORY_ACTIVE_LINK: "category-link-active",
+  CATEGORY_SUB_CONTAINER: "subcategory",
+  BREADCRUMBS: "breadcrumbs",
+  BREADCRUMB: "breadcrumb",
+  BREADCRUMB_ACTIVE: "breadcrumb-link-active",
+  PAGINATION_BUTTON: "pagination-button",
+  PAGINATION_ACTIVE_BUTTON: "pagination-button-active",
+  PAGINATION: "pagination",
+  MOBILE_MENU_ITEM: "mobile-li",
+  MOBILE_MENU: "mobile-menu",
+  BURGER: "burger",
+  BURGER_IMG: "burger-img",
+  CONTAINER_PRODUCT: "container-product",
+  CONTAINER_DESCRIPTION: "container-description",
+  SLIDER: "slider-container",
+  SLIDER_LIST: "slider-list",
+  SLIDER_IMG: "slider-img",
+  SLIDER_BTN: "slider-btn",
+  SLIDER_PREV: "prev-btn",
+  SLIDER_NEXT: "next-btn",
+  TEXT: "text",
 };
 
 const Routes = {
   LOGIN: "#login",
   HOME: "#home",
   REGISTRATION: "#registration",
+  CATALOG: "#catalog",
+  PRODUCT: "#product",
+  PROFILE: "#profile",
   NOT_FOUND: "#not-found",
 };
 
 const Buttons = {
   LOGIN: "LogIn",
   LOGOUT: "LogOut",
-  GO_HOME: "Home",
+  HOME: "Home",
+  CATALOG: "Catalog",
+  PRODUCT: "View Details",
+  PROFILE: "Profile",
   REGISTRATION: " SignUp",
   GO_LOGIN: "Back to LogIn",
+  GO_CATALOG: "Go to Catalog",
 };
 
 const Titles = {
@@ -49,6 +92,9 @@ const Titles = {
   YEAR: "2025",
   RSSCHOOL: "RS School",
   APP_NAME: "Joke Store",
+  CATALOG:
+    "From clever code-related puns to subtle observations from therapy sessions, our catalog is full of niche humor crafted for brains like yours. Warning: may cause intellectual giggling",
+  HOME: "Hey, ready for some laughs? We’ve got the freshest, sharpest, and laugh-out-loud funniest jokes around 😄 Looking to crack up a friend, a coworker, or just yourself? Dive into the catalog 👀",
 };
 
 export { Routes, cssClasses, Buttons, Titles };

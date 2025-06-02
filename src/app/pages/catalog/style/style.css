@@ -1,0 +1,209 @@
+:root {
+  --primary-color: #0074be;
+  --secondary-color: #004177;
+  --highlight-color: #004177;
+  --button-text-color: white;
+  --button-hover-color: #004177;
+  --button-active-color: #0074be;
+  --background-color: white;
+  --background-color-light: #d9e2eb;
+  --text-color: #004177;
+  --input-border-color: #ccc;
+  --input-focus-border-color: #004177;
+  --input-focus-shadow-color: #0074be;
+}
+
+.container-nav {
+  display: flex;
+  align-items: start;
+  justify-content: flex-start;
+}
+
+@media (width <=768px) {
+  .container-nav {
+    flex-direction: column;
+  }
+}
+
+.left-container {
+  padding: 20px;
+}
+
+.right-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card-image {
+  display: flex;
+  width: 310px;
+  height: 230px;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+  overflow: clip;
+}
+
+.card-img {
+  overflow: clip;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.card-title {
+  text-align: center;
+  padding-top: 20px;
+  text-transform: uppercase;
+  height: 60px;
+}
+
+.card-description {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 10px 0;
+  height: 60px;
+}
+
+.card {
+  position: relative;
+  text-decoration: none;
+  width: 310px;
+  height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--background-color-light);
+  color: var(--text-color);
+  border-radius: 0.3rem;
+  transition: 0.3s;
+  padding: 0 10px;
+}
+
+.card:hover {
+  cursor: pointer;
+  opacity: 0.9;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+}
+
+.card:hover.button {
+  background-color: var(--button-hover-color);
+}
+
+.card .button {
+  margin: 20px auto;
+}
+
+.card-price {
+  font-weight: bold;
+}
+
+.category-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: flex-start;
+  align-self: start;
+  padding-left: 10px;
+  border-left: 1px solid var(--button-active-color);
+}
+
+.category-link {
+  padding: 8px 12px;
+  background-color: var(--button-active-color);
+  color: white;
+  font-size: 0.8rem;
+  text-wrap: nowrap;
+  width: 160px;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.category-link-active {
+  cursor: default;
+  pointer-events: none;
+  background-color: var(--button-hover-color);
+}
+
+.category-link:hover {
+  background-color: var(--button-hover-color);
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  border-radius: 0.3rem;
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+  transition: 0.3s;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  border: none;
+}
+
+.pagination-button-active {
+  background-color: var(--button-hover-color);
+  color: white;
+}
+
+.pagination-button:hover,
+.pagination-button-active {
+  background-color: var(--button-hover-color);
+  cursor: pointer;
+  box-shadow: 1px 2px 2px #0074be;
+}
+
+.breadcrumbs {
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  color: var(--text-color);
+  transition: 0.3s;
+}
+
+.breadcrumb {
+  display: inline;
+  height: 10px;
+  border-bottom: 1px solid transparent;
+}
+
+.breadcrumb:hover {
+  cursor: pointer;
+  color: var(--button-hover-color);
+  border-bottom: 1px solid var(--button-hover-color);
+}
+
+.breadcrumb-link-active {
+  cursor: default;
+  pointer-events: none;
+}
+
+.subcategory {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 20px;
+  border-left: 1px solid var(--button-active-color);
+}

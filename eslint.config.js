@@ -53,7 +53,7 @@ export default defineConfig([
       "unicorn/no-array-method-this-argument": "error",
     },
     linterOptions: {
-      noInlineConfig: true,
+      noInlineConfig: false,
       reportUnusedDisableDirectives: true,
     },
   },
