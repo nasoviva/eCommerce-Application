@@ -108,6 +108,7 @@ export default class HeaderView extends View {
     const links = [
       { text: Buttons.HOME, route: Routes.HOME },
       { text: Buttons.CATALOG, route: Routes.CATALOG },
+      { text: Buttons.ABOUT, route: Routes.ABOUT },
       { text: Buttons.REGISTRATION, route: Routes.REGISTRATION },
       { text: Buttons.LOGIN, route: Routes.LOGIN, disable: isLoggedIn },
       { text: Buttons.PROFILE, route: Routes.PROFILE, disable: !isLoggedIn },
@@ -117,6 +118,7 @@ export default class HeaderView extends View {
         isLogout: true,
         disable: !isLoggedIn,
       },
+      { text: Buttons.BASKET, route: Routes.BASKET },
     ];
 
     links.forEach(({ text, route, disable, isLogout }) => {
@@ -170,15 +172,18 @@ export default class HeaderView extends View {
     const buttonsData = [
       { text: Buttons.HOME, route: Routes.HOME },
       { text: Buttons.CATALOG, route: Routes.CATALOG },
+      { text: Buttons.ABOUT, route: Routes.ABOUT },
       { text: Buttons.REGISTRATION, route: Routes.REGISTRATION },
       { text: Buttons.LOGIN, route: Routes.LOGIN, disable: isLoggedIn },
       { text: Buttons.PROFILE, route: Routes.PROFILE, disable: !isLoggedIn },
+
       {
         text: Buttons.LOGOUT,
         route: null,
         isLogout: true,
         disable: !isLoggedIn,
       },
+      { text: Buttons.BASKET, route: Routes.BASKET },
     ];
 
     buttonsData.forEach(({ text, route, disable, isLogout }) => {

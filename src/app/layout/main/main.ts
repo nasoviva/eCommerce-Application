@@ -1,4 +1,6 @@
 import { cssClasses, Routes } from "../../global-types/constants";
+import AboutView from "../../pages/about/about";
+import BasketView from "../../pages/basket/basket";
 import CatalogView from "../../pages/catalog/catalog";
 import HomeView from "../../pages/home/home";
 import LoginView from "../../pages/login/login";
@@ -16,6 +18,8 @@ export default class MainView extends View {
   private readonly contentContainer: ElementCreator;
   private readonly loginView: LoginView;
   private readonly catalogView: CatalogView;
+  private readonly basketView: BasketView;
+  private readonly aboutView: AboutView;
   private readonly productView: ProductView;
   private readonly profileView: ProfileView;
   private readonly homeView: HomeView;
@@ -54,6 +58,11 @@ export default class MainView extends View {
       this.apiRequestService,
     );
     this.homeView = new HomeView(this.stateManager, this.apiRequestService);
+    this.basketView = new BasketView(
+      this.stateManager,
+      this.apiRequestService,
+    );
+    this.aboutView = new AboutView();
     this.notFoundView = new NotFoundView();
 
     this.contentContainer = new ElementCreator({
@@ -92,6 +101,12 @@ export default class MainView extends View {
     } else if (path === Routes.CATALOG) {
       globalThis.location.hash = Routes.CATALOG;
       this.setContent(this.catalogView.getElement());
+    } else if (path === Routes.BASKET) {
+      globalThis.location.hash = Routes.BASKET;
+      this.setContent(this.basketView.getElement());
+    } else if (path === Routes.ABOUT) {
+      globalThis.location.hash = Routes.ABOUT;
+      this.setContent(this.aboutView.getElement());
     } else if (path.startsWith(`${Routes.PRODUCT}=`)) {
       const id = path.split("=")[1];
       if (id) {

@@ -60,6 +60,7 @@ const cssClasses = {
   SLIDER_NEXT: "next-btn",
   TEXT: "text",
   SEARCH_BUTTON: "search-button",
+  BASKET: "basket",
 };
 
 const Routes = {
@@ -69,6 +70,8 @@ const Routes = {
   CATALOG: "#catalog",
   PRODUCT: "#product",
   PROFILE: "#profile",
+  BASKET: "#basket",
+  ABOUT: "#about",
   NOT_FOUND: "#not-found",
 };
 
@@ -82,6 +85,8 @@ const Buttons = {
   REGISTRATION: " SignUp",
   GO_LOGIN: "Back to LogIn",
   GO_CATALOG: "Go to Catalog",
+  ABOUT: "About us",
+  BASKET: "🛒",
 };
 
 const Titles = {
@@ -96,6 +101,8 @@ const Titles = {
   CATALOG:
     "From clever code-related puns to subtle observations from therapy sessions, our catalog is full of niche humor crafted for brains like yours. Warning: may cause intellectual giggling",
   HOME: "Hey, ready for some laughs? We’ve got the freshest, sharpest, and laugh-out-loud funniest jokes around 😄 Looking to crack up a friend, a coworker, or just yourself? Dive into the catalog 👀",
+  BASKET: "Basket",
+
 };
 
 export { Routes, cssClasses, Buttons, Titles };

@@ -410,7 +410,6 @@ export default class CatalogView {
       });
       cardLink
         .getElement()
-        .setAttribute("href", `${Routes.PRODUCT}=${product.id}`);
 
       const imageContainer = new ElementCreator({
         tag: "div",
@@ -458,6 +457,15 @@ export default class CatalogView {
       });
       price.getElement().innerHTML = priceText;
 
+      const basket = new ElementCreator({
+        tag: "button",
+        className: [cssClasses.BASKET],
+        textContent: Buttons.BASKET,
+        callback: (): void => {
+          console.log(`add to basket ${product.id}`);
+        },
+      });
+
       const button = new ElementCreator({
         tag: "button",
         className: [cssClasses.BUTTON],
@@ -473,6 +481,7 @@ export default class CatalogView {
       cardLink.addInnerElement(title.getElement());
       cardLink.addInnerElement(descriptionContainer.getElement());
       cardLink.addInnerElement(price.getElement());
+      cardLink.addInnerElement(basket.getElement());
       cardLink.addInnerElement(button.getElement());
 
       this.cardsContainer.addInnerElement(cardLink.getElement());

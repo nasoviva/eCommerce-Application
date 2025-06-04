@@ -64,6 +64,14 @@
   margin-left: 20px;
 }
 
+.basket {
+
+}
+
+.basket:hover {
+  cursor: pointer;
+}
+
 @media (width <=768px) {
   .container-product {
     justify-content: center;
@@ -80,5 +88,19 @@
 
   .slider-container {
     width: 100%;
+  }
+
+  .container-product .button {
+    align-self: center;
+    margin-left: 0;
+  }
+}
+
+@media (width <=580px) {
+  .container-product {
+    justify-content: center;
+    flex-direction: column;
+    width: 90%;
+    padding: 20px;
   }
 }

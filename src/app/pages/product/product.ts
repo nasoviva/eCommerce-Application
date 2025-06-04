@@ -90,6 +90,15 @@ export default class ProductView {
             priceEl.getElement().innerHTML = `Price: $${(price / 100).toFixed(2)}`;
           }
 
+          const basket = new ElementCreator({
+                  tag: "button",
+                  className: [cssClasses.BASKET],
+                  textContent: Buttons.BASKET,
+                  callback: (): void => {
+                    console.log(`add to basket ${product.id}`);
+                  },
+                });
+
           const sliderWrapper = new ElementCreator({
             tag: "div",
             className: [cssClasses.SLIDER],
@@ -199,6 +208,7 @@ export default class ProductView {
           container.addInnerElement(nameEl.getElement());
           container.addInnerElement(descriptionEl.getElement());
           container.addInnerElement(priceEl.getElement());
+          container.addInnerElement(basket.getElement());
           productTitle.addInnerElement(backButton.getElement());
           this.productContainer.addInnerElement(productTitle.getElement());
           this.productContainer.addInnerElement(container.getElement());
