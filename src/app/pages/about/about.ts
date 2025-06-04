@@ -5,7 +5,6 @@ export default class AboutView {
   private readonly aboutContainer: ElementCreator;
 
   constructor() {
-
     this.aboutContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_COLUMN],
@@ -20,7 +19,7 @@ export default class AboutView {
   }
 
   private configureView(): void {
-   const text = new ElementCreator({
+    const text = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_COLUMN],
       textContent: "Text",

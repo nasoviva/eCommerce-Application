@@ -107,10 +107,10 @@ export default class ProductView {
             tag: "button",
             className: [cssClasses.BASKET],
             textContent: "+",
-            callback: () => {
+            callback: (): void => {
               count++;
               quantityText.getElement().textContent = String(count);
-              console.log(`add to basket ${product.id} +1`)
+              console.log(`add to basket ${product.id} +1`);
             },
           });
 
@@ -118,7 +118,7 @@ export default class ProductView {
             tag: "button",
             className: [cssClasses.BASKET],
             textContent: "-",
-            callback: () => {
+            callback: (): void => {
               count--;
               if (count <= 0) {
                 quantityWrapper.getElement().innerHTML = "";
@@ -127,16 +127,16 @@ export default class ProductView {
               } else {
                 quantityText.getElement().textContent = String(count);
               }
-              console.log(`add to basket ${product.id} -1`)
+              console.log(`add to basket ${product.id} -1`);
             },
           });
 
           const quantityControls = (): ElementCreator => {
             const wrapper = new ElementCreator({
-            tag: "div",
-            className: [cssClasses.CONTROLS],
-            textContent: "",
-          });
+              tag: "div",
+              className: [cssClasses.CONTROLS],
+              textContent: "",
+            });
             wrapper.getElement().appendChild(minusBtn.getElement());
             wrapper.getElement().appendChild(quantityText.getElement());
             wrapper.getElement().appendChild(plusBtn.getElement());
@@ -151,8 +151,10 @@ export default class ProductView {
               count = 1;
               quantityText.getElement().textContent = String(count);
               quantityWrapper.getElement().innerHTML = "";
-              quantityWrapper.getElement().appendChild(quantityControls().getElement());
-              console.log(`add to basket ${product.id}`)
+              quantityWrapper
+                .getElement()
+                .appendChild(quantityControls().getElement());
+              console.log(`add to basket ${product.id}`);
             },
           });
 

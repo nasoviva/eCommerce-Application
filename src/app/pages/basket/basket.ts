@@ -1,11 +1,8 @@
-import { ClientResponse } from "@commercetools/ts-client";
-import { cssClasses, Titles, Routes, Buttons } from "../../global-types/constants";
-import { Localization, UseSearchQuery } from "../../global-types/types";
-import ApiRequestService from "../../services/api-request-service/api-request-service";
-import DataParser, { CatalogData } from "../../services/api-request-service/data-parser";
-import StateManager from "../../services/state-manager/state-manager";
+import { cssClasses, Titles } from "../../global-types/constants";
+import type { Localization } from "../../global-types/types";
+import type ApiRequestService from "../../services/api-request-service/api-request-service";
+import type StateManager from "../../services/state-manager/state-manager";
 import ElementCreator from "../../shared/element-creator";
-import InputCreator from "../../shared/input-creator";
 
 export default class BasketView {
   private readonly mainContainer: ElementCreator;
@@ -36,7 +33,6 @@ export default class BasketView {
   }
 
   private configureView(): void {
-
     const basketContainer = new ElementCreator({
       tag: "div",
       className: [cssClasses.CONTAINER_COLUMN],
@@ -50,7 +46,6 @@ export default class BasketView {
     });
 
     basketContainer.addInnerElement(welcomeElement.getElement());
-    this.mainContainer.addInnerElement(basketContainer.getElement(),
-    );
+    this.mainContainer.addInnerElement(basketContainer.getElement());
   }
 }

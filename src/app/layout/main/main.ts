@@ -58,10 +58,7 @@ export default class MainView extends View {
       this.apiRequestService,
     );
     this.homeView = new HomeView(this.stateManager, this.apiRequestService);
-    this.basketView = new BasketView(
-      this.stateManager,
-      this.apiRequestService,
-    );
+    this.basketView = new BasketView(this.stateManager, this.apiRequestService);
     this.aboutView = new AboutView();
     this.notFoundView = new NotFoundView();
 

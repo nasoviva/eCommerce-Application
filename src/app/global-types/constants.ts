@@ -105,7 +105,6 @@ const Titles = {
     "From clever code-related puns to subtle observations from therapy sessions, our catalog is full of niche humor crafted for brains like yours. Warning: may cause intellectual giggling",
   HOME: "Hey, ready for some laughs? We’ve got the freshest, sharpest, and laugh-out-loud funniest jokes around 😄 Looking to crack up a friend, a coworker, or just yourself? Dive into the catalog 👀",
   BASKET: "Basket",
-
 };
 
 export { Routes, cssClasses, Buttons, Titles };
