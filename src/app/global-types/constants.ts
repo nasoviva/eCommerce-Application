@@ -61,6 +61,9 @@ const cssClasses = {
   TEXT: "text",
   SEARCH_BUTTON: "search-button",
   BASKET: "basket",
+  CONTROLS: "quantity-controls",
+  CONTROLS_CONTAINER: "quantity-wrapper",
+  NUMBER: "quantity-number",
 };
 
 const Routes = {

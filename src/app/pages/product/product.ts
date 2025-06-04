@@ -90,14 +90,73 @@ export default class ProductView {
             priceEl.getElement().innerHTML = `Price: $${(price / 100).toFixed(2)}`;
           }
 
-          const basket = new ElementCreator({
-                  tag: "button",
-                  className: [cssClasses.BASKET],
-                  textContent: Buttons.BASKET,
-                  callback: (): void => {
-                    console.log(`add to basket ${product.id}`);
-                  },
-                });
+          const quantityWrapper = new ElementCreator({
+            tag: "div",
+            className: [cssClasses.CONTROLS_CONTAINER],
+          });
+
+          let count = 1;
+
+          const quantityText = new ElementCreator({
+            tag: "span",
+            className: [cssClasses.NUMBER],
+            textContent: String(count),
+          });
+
+          const plusBtn = new ElementCreator({
+            tag: "button",
+            className: [cssClasses.BASKET],
+            textContent: "+",
+            callback: () => {
+              count++;
+              quantityText.getElement().textContent = String(count);
+              console.log(`add to basket ${product.id} +1`)
+            },
+          });
+
+          const minusBtn = new ElementCreator({
+            tag: "button",
+            className: [cssClasses.BASKET],
+            textContent: "-",
+            callback: () => {
+              count--;
+              if (count <= 0) {
+                quantityWrapper.getElement().innerHTML = "";
+                quantityWrapper.addInnerElement(basketButton.getElement());
+                count = 1;
+              } else {
+                quantityText.getElement().textContent = String(count);
+              }
+              console.log(`add to basket ${product.id} -1`)
+            },
+          });
+
+          const quantityControls = (): ElementCreator => {
+            const wrapper = new ElementCreator({
+            tag: "div",
+            className: [cssClasses.CONTROLS],
+            textContent: "",
+          });
+            wrapper.getElement().appendChild(minusBtn.getElement());
+            wrapper.getElement().appendChild(quantityText.getElement());
+            wrapper.getElement().appendChild(plusBtn.getElement());
+            return wrapper;
+          };
+
+          const basketButton = new ElementCreator({
+            tag: "button",
+            className: [cssClasses.BASKET],
+            textContent: Buttons.BASKET,
+            callback: (): void => {
+              count = 1;
+              quantityText.getElement().textContent = String(count);
+              quantityWrapper.getElement().innerHTML = "";
+              quantityWrapper.getElement().appendChild(quantityControls().getElement());
+              console.log(`add to basket ${product.id}`)
+            },
+          });
+
+          quantityWrapper.addInnerElement(basketButton.getElement());
 
           const sliderWrapper = new ElementCreator({
             tag: "div",
@@ -208,7 +267,7 @@ export default class ProductView {
           container.addInnerElement(nameEl.getElement());
           container.addInnerElement(descriptionEl.getElement());
           container.addInnerElement(priceEl.getElement());
-          container.addInnerElement(basket.getElement());
+          container.addInnerElement(quantityWrapper.getElement());
           productTitle.addInnerElement(backButton.getElement());
           this.productContainer.addInnerElement(productTitle.getElement());
           this.productContainer.addInnerElement(container.getElement());

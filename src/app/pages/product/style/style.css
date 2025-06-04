@@ -64,14 +64,6 @@
   margin-left: 20px;
 }
 
-.basket {
-
-}
-
-.basket:hover {
-  cursor: pointer;
-}
-
 @media (width <=768px) {
   .container-product {
     justify-content: center;
