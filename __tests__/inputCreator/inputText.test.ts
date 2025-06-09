@@ -1,11 +1,15 @@
 import InputCreator from "../../src/app/shared/input-creator";
 import { cssClasses } from "../../src/app/global-types/constants";
+import InputParameters from "../../src/app/shared/input-parameters";
 
-const textInputElement = new InputCreator({
-  type: "text",
-  className: [cssClasses.INPUT],
-  placeholder: "Enter text",
-});
+const parameters = new InputParameters(
+  "test",
+  [cssClasses.INPUT],
+  "Enter text",
+  () => {},
+);
+
+const textInputElement = new InputCreator(parameters);
 
 const textInputElementHtml = textInputElement.getElement();
 

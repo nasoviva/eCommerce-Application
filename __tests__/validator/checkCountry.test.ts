@@ -5,8 +5,8 @@ type typeAttempts = {
 };
 
 const attempts: typeAttempts = {
-  Russia: "",
-  USA: "",
+  RU: "",
+  US: "",
   Argentina: "Please enter a valid country!",
   Brazil: "Please enter a valid country!",
   "185$-57$!": "Please enter a valid country!",
