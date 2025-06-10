@@ -430,6 +430,38 @@ export default class ApiRequestService {
       });
   }
 
+  public async changeProductQuantity(
+    productId: string,
+    amount: number = 1,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<void> {
+    await this.apiRoot
+      .me()
+      .carts()
+      .withId({ ID: this.cartId })
+      .post({
+        body: {
+          version: this.cartVersion,
+          actions: [
+            {
+              action: "changeLineItemQuantity",
+              lineItemKey: productId,
+              quantity: amount,
+            },
+          ],
+        },
+      })
+      .execute()
+      .then((result) => {
+        this.cartVersion = result.body.version;
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
   private switchRequestBuilder(
     type: RequestBuilder,
     loginData?: MyCustomerSignin,
