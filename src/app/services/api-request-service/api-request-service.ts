@@ -11,7 +11,11 @@ import type StateManager from "../state-manager/state-manager";
 import type { Client, QueryParam, TokenStore } from "@commercetools/ts-client";
 import VSATokenCache from "./token-cache";
 import ToastMsg from "../error-msg/toast-msg";
-import type { UseProductQuery, UseSearchQuery } from "../../global-types/types";
+import type {
+  Localization,
+  UseProductQuery,
+  UseSearchQuery,
+} from "../../global-types/types";
 
 type RequestBuilder = "anon" | "password";
 
@@ -44,6 +48,8 @@ export default class ApiRequestService {
   private currentClientType!: RequestBuilder;
   private tokenCache: VSATokenCache;
   private toastMsg: ToastMsg;
+  private cartVersion: number = 0;
+  private cartId: string = "";
 
   constructor(stateManager: StateManager) {
     this.stateManager = stateManager;
@@ -132,6 +138,7 @@ export default class ApiRequestService {
       .then((result) => {
         /* TODO: сделать сохранение токена здесь */
         this.stateManager.setState();
+        this.getCart();
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
@@ -312,6 +319,113 @@ export default class ApiRequestService {
       })
       .catch((reason) => {
         this.toastMsg.displayErrorMsg(ApiRequestService.errorParser(reason));
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public getCart(
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .me()
+      .activeCart()
+      /* .carts()
+      .withId({ ID: this.stateManager.cartId }) */
+      .get()
+      .execute()
+      .then((result) => {
+        this.cartVersion = result.body.version;
+        this.cartId = result.body.id;
+        console.log(result.body);
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public async createCart(
+    currency: string,
+    country: Localization,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<void> {
+    await this.apiRoot
+      .me()
+      .carts()
+      .post({
+        body: {
+          currency: currency,
+          country: country.slice(-2),
+        },
+      })
+      .execute()
+      .then((result) => {
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public removeProduct(
+    productId: string,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): void {
+    this.apiRoot
+      .me()
+      .carts()
+      .withId({ ID: this.cartId })
+      .post({
+        body: {
+          version: this.cartVersion,
+          actions: [
+            {
+              action: "removeLineItem",
+              lineItemKey: productId,
+            },
+          ],
+        },
+      })
+      .execute()
+      .then((result) => {
+        this.cartVersion = result.body.version;
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public async addProduct(
+    productId: string,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<void> {
+    await this.apiRoot
+      .me()
+      .carts()
+      .withId({ ID: this.cartId })
+      .post({
+        body: {
+          version: this.cartVersion,
+          actions: [
+            {
+              action: "addLineItem",
+              productId: productId,
+              key: productId,
+            },
+          ],
+        },
+      })
+      .execute()
+      .then((result) => {
+        this.cartVersion = result.body.version;
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
         if (onReject) onReject(reason);
       });
   }
