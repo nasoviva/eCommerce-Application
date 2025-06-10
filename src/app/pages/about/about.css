@@ -1,0 +1,112 @@
+.about-container {
+  margin: 0;
+}
+
+.team-member {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateX(60px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+
+.rs-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-left: 45%;
+  font-weight: bolder;
+  font-size: larger;
+}
+
+.link-rs {
+  width: 100px;
+}
+
+.rs-logo-picture {
+  flex: 1;
+  max-width: 100px;
+  height: 100px;
+  margin-right: 15px;
+  width: 100%;
+  margin-top: 25px;
+}
+
+.team-member.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.photo {
+  flex: 1;
+  max-width: 200px;
+  height: 245px;
+  margin-right: 10px;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.text-element {
+  flex: 2;
+  padding: 2px;
+  margin: 0;
+}
+
+.about-us-title {
+  flex: 2;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+}
+
+.title-text {
+  flex: 2;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.text-about-aur-work {
+  flex: 2;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: larger;
+}
+
+.description {
+  flex: 2;
+  background-color: #fff;
+  padding: 10px;
+  width: 1200px;
+  height: 245px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+}
+
+@media (width <= 768px) {
+  .team-member {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .photo {
+    margin-right: 0;
+    margin-bottom: 15px;
+    max-width: 150px;
+  }
+
+  .description {
+    width: auto;
+    padding: 10px;
+  }
+
+  .rs-logo {
+    margin-left: 20%;
+    width: auto;
+  }
+}
