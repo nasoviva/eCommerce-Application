@@ -33,8 +33,6 @@ export default class App {
     App.setFavicon("./favicon.ico");
     this.createView();
 
-    this.configureAPI();
-
     this.testMethod();
   }
 
@@ -104,14 +102,5 @@ export default class App {
           "0f599752-d8cb-4918-8c82-a937c4cf4c73",
         );
     });
-  }
-
-  private async configureAPI(): Promise<void> {
-    if (!this.stateManager.isLoggedIn)
-      await this.apiRequestService.createCart(
-        this.stateManager.currency,
-        this.stateManager.locale,
-      );
-    this.apiRequestService.getCart();
   }
 }

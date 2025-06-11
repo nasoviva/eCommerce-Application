@@ -1,14 +1,21 @@
 import ApiClientBuilder from "./build-client";
 import type {
   ByProjectKeyRequestBuilder,
+  Cart,
   MyCustomerDraft,
   MyCustomerSignin,
   MyCustomerUpdateAction,
+  ProductProjection,
 } from "@commercetools/platform-sdk";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
 import type StateManager from "../state-manager/state-manager";
-import type { Client, QueryParam, TokenStore } from "@commercetools/ts-client";
+import type {
+  Client,
+  ClientResponse,
+  QueryParam,
+  TokenStore,
+} from "@commercetools/ts-client";
 import VSATokenCache from "./token-cache";
 import ToastMsg from "../error-msg/toast-msg";
 import type {
@@ -258,22 +265,22 @@ export default class ApiRequestService {
       });
   }
 
-  public getProductById(
+  public async getProductById(
     id: string,
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
-  ): void {
-    this.apiRoot
-      .productProjections()
-      .withId({ ID: id })
-      .get()
-      .execute()
-      .then((result) => {
-        if (onSuccess) onSuccess(result);
-      })
-      .catch((reason) => {
-        if (onReject) onReject(reason);
-      });
+  ): Promise<ClientResponse<ProductProjection> | void> {
+    try {
+      const result = await this.apiRoot
+        .productProjections()
+        .withId({ ID: id })
+        .get()
+        .execute();
+      if (onSuccess) onSuccess(result);
+      return result;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
   }
 
   public getUserInfo(
@@ -323,26 +330,25 @@ export default class ApiRequestService {
       });
   }
 
-  public getCart(
+  public async getCart(
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
-  ): void {
-    this.apiRoot
-      .me()
-      .activeCart()
-      /* .carts()
+  ): Promise<ClientResponse<Cart> | void> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .activeCart()
+        /* .carts()
       .withId({ ID: this.stateManager.cartId }) */
-      .get()
-      .execute()
-      .then((result) => {
-        this.cartVersion = result.body.version;
-        this.cartId = result.body.id;
-        console.log(result.body);
-        if (onSuccess) onSuccess(result);
-      })
-      .catch((reason) => {
-        if (onReject) onReject(reason);
-      });
+        .get()
+        .execute();
+      this.cartVersion = result.body.version;
+      this.cartId = result.body.id;
+      if (onSuccess) onSuccess(result);
+      return result;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
   }
 
   public async createCart(
@@ -362,6 +368,8 @@ export default class ApiRequestService {
       })
       .execute()
       .then((result) => {
+        this.cartVersion = result.body.version;
+        this.cartId = result.body.id;
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {

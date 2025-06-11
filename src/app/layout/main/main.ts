@@ -96,9 +96,11 @@ export default class MainView extends View {
       }
       this.setContent(this.loginView.getElement());
     } else if (path === Routes.CATALOG) {
+      this.configureBasket();
       globalThis.location.hash = Routes.CATALOG;
       this.setContent(this.catalogView.getElement());
     } else if (path === Routes.BASKET) {
+      this.basketView.updateBasket();
       globalThis.location.hash = Routes.BASKET;
       this.setContent(this.basketView.getElement());
     } else if (path === Routes.ABOUT) {
@@ -130,6 +132,16 @@ export default class MainView extends View {
       globalThis.location.hash = Routes.NOT_FOUND;
       this.setContent(this.notFoundView.getElement());
     }
+  }
+
+  private async configureBasket(): Promise<void> {
+    if (!this.stateManager.activeCart) {
+      await this.apiRequestService.createCart(
+        this.stateManager.currency,
+        this.stateManager.locale,
+      );
+      this.stateManager.activeCart = true;
+    } else this.apiRequestService.getCart();
   }
 
   private setupRouting(): void {
