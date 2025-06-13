@@ -54,7 +54,7 @@ export default class AboutView {
       className: ["photo"],
       textContent: "",
       attributes: {
-        src: "./img/Vika.PNG",
+        src: "./img/Vika.webp",
         alt: "Vika",
       },
     });
@@ -170,7 +170,7 @@ export default class AboutView {
       className: ["photo"],
       textContent: "",
       attributes: {
-        src: "./img/Anton.PNG",
+        src: "./img/Anton.webp",
         alt: "Anton",
       },
     });
@@ -285,7 +285,7 @@ export default class AboutView {
       className: ["photo"],
       textContent: "",
       attributes: {
-        src: "./img/Sergey.jpg",
+        src: "./img/Sergey.webp",
         alt: "Sergey",
       },
     });

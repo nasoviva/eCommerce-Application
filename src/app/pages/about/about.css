@@ -1,5 +1,11 @@
 .about-container {
   margin: 0;
+  justify-content: center;
+}
+
+.team {
+  margin: 2px;
+  width: 100%;
 }
 
 .team-member {
@@ -43,10 +49,10 @@
 .photo {
   flex: 1;
   max-width: 200px;
-  height: 245px;
   margin-right: 10px;
   width: 100%;
   border-radius: 8px;
+  height: auto;
 }
 
 .text-element {
@@ -81,8 +87,8 @@
   flex: 2;
   background-color: #fff;
   padding: 10px;
-  width: 1200px;
-  height: 245px;
+  width: 100%;
+  height: auto;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
@@ -106,7 +112,13 @@
   }
 
   .rs-logo {
-    margin-left: 20%;
+    width: auto;
+  }
+}
+
+@media (width <= 380px) {
+  .rs-logo {
+    margin-left: 35%;
     width: auto;
   }
 }
