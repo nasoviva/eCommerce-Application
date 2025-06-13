@@ -69,7 +69,7 @@ export default class App {
   }
 
   /* метод для тестирования функций позже можно будет удалить */
-  public async testMethod(): Promise<void> {
+  private async testMethod(): Promise<void> {
     const myButton = document.createElement("button");
     myButton.textContent = "ADD ITEM";
     const myButton2 = document.createElement("button");

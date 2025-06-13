@@ -143,7 +143,6 @@ export default class ApiRequestService {
       })
       .execute()
       .then((result) => {
-        /* TODO: сделать сохранение токена здесь */
         this.stateManager.setState();
         this.getCart();
         if (onSuccess) onSuccess(result);
@@ -377,34 +376,33 @@ export default class ApiRequestService {
       });
   }
 
-  public removeProduct(
+  public async removeProduct(
     lineItemId: string,
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
-  ): void {
-    this.apiRoot
-      .me()
-      .carts()
-      .withId({ ID: this.cartId })
-      .post({
-        body: {
-          version: this.cartVersion,
-          actions: [
-            {
-              action: "removeLineItem",
-              lineItemId: lineItemId,
-            },
-          ],
-        },
-      })
-      .execute()
-      .then((result) => {
-        this.cartVersion = result.body.version;
-        if (onSuccess) onSuccess(result);
-      })
-      .catch((reason) => {
-        if (onReject) onReject(reason);
-      });
+  ): Promise<ClientResponse<Cart> | void> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({
+          body: {
+            version: this.cartVersion,
+            actions: [
+              {
+                action: "removeLineItem",
+                lineItemId: lineItemId,
+              },
+            ],
+          },
+        })
+        .execute();
+      this.cartVersion = result.body.version;
+      if (onSuccess) onSuccess(result);
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
   }
 
   public async addProduct(
@@ -468,31 +466,81 @@ export default class ApiRequestService {
     amount: number = 1,
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
+  ): Promise<ClientResponse<Cart> | void> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({
+          body: {
+            version: this.cartVersion,
+            actions: [
+              {
+                action: "changeLineItemQuantity",
+                lineItemId: lineItemId,
+                quantity: amount,
+              },
+            ],
+          },
+        })
+        .execute();
+      this.cartVersion = result.body.version;
+      if (onSuccess) onSuccess(result);
+      return result;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
+  }
+
+  public async clearCart(
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
   ): Promise<void> {
-    await this.apiRoot
-      .me()
-      .carts()
-      .withId({ ID: this.cartId })
-      .post({
-        body: {
-          version: this.cartVersion,
-          actions: [
-            {
-              action: "changeLineItemQuantity",
-              lineItemId: lineItemId,
-              quantity: amount,
-            },
-          ],
-        },
-      })
-      .execute()
-      .then((result) => {
-        this.cartVersion = result.body.version;
-        if (onSuccess) onSuccess(result);
-      })
-      .catch((reason) => {
-        if (onReject) onReject(reason);
-      });
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .delete({ queryArgs: { version: this.cartVersion } })
+        .execute();
+      await this.createCart(
+        this.stateManager.currency,
+        this.stateManager.locale,
+      );
+      if (onSuccess) onSuccess(result);
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
+  }
+
+  public async useDiscountCode(
+    discountCode: string,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<ClientResponse<Cart> | void> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({
+          body: {
+            version: this.cartVersion,
+            actions: [
+              {
+                action: "addDiscountCode",
+                code: discountCode,
+              },
+            ],
+          },
+        })
+        .execute();
+      if (onSuccess) onSuccess(result);
+      return result;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
   }
 
   private switchRequestBuilder(
