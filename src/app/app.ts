@@ -78,29 +78,30 @@ export default class App {
     document.body.append(myButton, myButton2);
     // Cчётчик товара
     let count = 0;
+    let count2 = 0;
+    let id: string = "";
     myButton.addEventListener("click", async () => {
       count += 1;
-      if (count > 1)
-        this.apiRequestService.changeProductQuantity(
-          "0f599752-d8cb-4918-8c82-a937c4cf4c73",
-          count,
-        );
+      if (count > 1) this.apiRequestService.changeProductQuantity(id, count);
       else
-        this.apiRequestService.addProduct(
+        id = await this.apiRequestService.addProduct(
           "0f599752-d8cb-4918-8c82-a937c4cf4c73",
         );
     });
     myButton2.addEventListener("click", () => {
-      count -= 1;
-      if (count > 0)
+      /* count2 += 1;
+      if (count2 > 1)
         this.apiRequestService.changeProductQuantity(
-          "0f599752-d8cb-4918-8c82-a937c4cf4c73",
-          count,
+          "794ecccd-1deb-4425-8922-576f38f10f8e",
+          count2,
         );
       else
-        this.apiRequestService.removeProduct(
-          "0f599752-d8cb-4918-8c82-a937c4cf4c73",
-        );
+        this.apiRequestService.addProduct(
+          "794ecccd-1deb-4425-8922-576f38f10f8e",
+        ); */
+      count -= 1;
+      if (count > 0) this.apiRequestService.changeProductQuantity(id, count);
+      else this.apiRequestService.removeProduct(id);
     });
   }
 }

@@ -378,7 +378,7 @@ export default class ApiRequestService {
   }
 
   public removeProduct(
-    productId: string,
+    lineItemId: string,
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
   ): void {
@@ -392,7 +392,7 @@ export default class ApiRequestService {
           actions: [
             {
               action: "removeLineItem",
-              lineItemKey: productId,
+              lineItemId: lineItemId,
             },
           ],
         },
@@ -408,11 +408,36 @@ export default class ApiRequestService {
   }
 
   public async addProduct(
-    productId: string,
+    lineItemId: string,
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
-  ): Promise<void> {
-    await this.apiRoot
+  ): Promise<string> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({
+          body: {
+            version: this.cartVersion,
+            actions: [
+              {
+                action: "addLineItem",
+                productId: lineItemId,
+                key: lineItemId,
+              },
+            ],
+          },
+        })
+        .execute();
+      this.cartVersion = result.body.version;
+      if (onSuccess) onSuccess(result);
+      return result.body.lineItems[0].id;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+      return "";
+    }
+    /* await this.apiRoot
       .me()
       .carts()
       .withId({ ID: this.cartId })
@@ -422,8 +447,8 @@ export default class ApiRequestService {
           actions: [
             {
               action: "addLineItem",
-              productId: productId,
-              key: productId,
+              productId: lineItemId,
+              key: lineItemId,
             },
           ],
         },
@@ -435,11 +460,11 @@ export default class ApiRequestService {
       })
       .catch((reason) => {
         if (onReject) onReject(reason);
-      });
+      }); */
   }
 
   public async changeProductQuantity(
-    productId: string,
+    lineItemId: string,
     amount: number = 1,
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
@@ -454,7 +479,7 @@ export default class ApiRequestService {
           actions: [
             {
               action: "changeLineItemQuantity",
-              lineItemKey: productId,
+              lineItemId: lineItemId,
               quantity: amount,
             },
           ],

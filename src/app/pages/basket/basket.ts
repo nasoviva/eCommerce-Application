@@ -5,7 +5,7 @@ import type ApiRequestService from "../../services/api-request-service/api-reque
 import type StateManager from "../../services/state-manager/state-manager";
 import ElementCreator from "../../shared/element-creator";
 import css from "./basket.module.css";
-import type { Cart } from "@commercetools/platform-sdk";
+import type { Cart, ProductProjection } from "@commercetools/platform-sdk";
 import DataParser from "../../services/api-request-service/data-parser";
 
 const ELEM_PARAM = {
@@ -51,6 +51,11 @@ const ELEM_PARAM = {
     tag: "p",
     className: [css.counter],
   },
+  removeBtn: {
+    tag: "button",
+    className: [css.controlBtn],
+    textContent: "\u274C",
+  },
 };
 
 export default class BasketView {
@@ -78,45 +83,82 @@ export default class BasketView {
       await this.apiRequestService.getCart();
     const items = result?.body?.lineItems.map((x) => {
       return {
-        id: x.key || "",
+        id: x.id || "",
         count: x.quantity,
         name: x.name,
-        price: x.price,
+        price: x.price.discounted?.value.centAmount || x.price.value.centAmount,
+        totalPrice: x.totalPrice.centAmount,
+        currency: x.price.value.currencyCode,
+        productId: x.productId,
       };
     });
     console.log(items);
+    this.productArea.getElement().replaceChildren();
     if (!items) return;
     for (const item of items) {
       const container = new ElementCreator(ELEM_PARAM.itemContainer);
+      const image = new ElementCreator(ELEM_PARAM.image);
       const title = new ElementCreator(ELEM_PARAM.title);
       const price = new ElementCreator(ELEM_PARAM.price);
+      const totalPrice = new ElementCreator(ELEM_PARAM.price);
       const addBtn = new ElementCreator(ELEM_PARAM.addBtn);
       const subBtn = new ElementCreator(ELEM_PARAM.subBtn);
       const counter = new ElementCreator(ELEM_PARAM.counter);
+      const removeBtn = new ElementCreator(ELEM_PARAM.removeBtn);
       this.productArea.addInnerElement(container);
-      container.addInnerElement(title, price, addBtn, counter, subBtn);
+      container.addInnerElement(
+        image,
+        title,
+        price,
+        totalPrice,
+        addBtn,
+        counter,
+        subBtn,
+        removeBtn,
+      );
 
       counter.setTextContent(`${item.count}`);
       title.setTextContent(`${item.name[this.stateManager.locale]}`);
-      price.setTextContent(
-        `${item.price.discounted?.value.centAmount || item.price.value.centAmount} ${item.price.value.currencyCode}`,
-      );
+      totalPrice.setTextContent(`${item.totalPrice} ${item.currency}`);
+      price.setTextContent(`${item.price} ${item.currency}`);
+
       let count = item.count;
+
       addBtn.setCallBack(() => {
         count += 1;
         this.apiRequestService.changeProductQuantity(item.id, count);
+        item.totalPrice += item.price;
+        totalPrice.setTextContent(`${item.totalPrice} ${item.currency}`);
         counter.setTextContent(`${count}`);
       });
+
       subBtn.setCallBack(() => {
         count -= 1;
         if (count > 0) {
           counter.setTextContent(`${count}`);
           this.apiRequestService.changeProductQuantity(item.id, count);
+          item.totalPrice -= item.price;
+          totalPrice.setTextContent(`${item.totalPrice} ${item.currency}`);
         } else {
           this.apiRequestService.removeProduct(item.id);
           container.getElement().remove();
         }
       });
+
+      removeBtn.setCallBack(() => {
+        this.apiRequestService.removeProduct(item.id);
+        container.getElement().remove();
+      });
+
+      this.apiRequestService.getProductById(
+        item.productId,
+        (result: ClientResponse<ProductProjection>) => {
+          const src = result.body?.masterVariant.images?.map((x) => x.url) || [
+            "",
+          ];
+          image.setAttributes({ src: src[0] });
+        },
+      );
     }
   }
 
