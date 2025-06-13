@@ -1,0 +1,128 @@
+.main-container {
+  composes: container-row from global;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+
+  @media (width < 540px) {
+    flex-direction: column-reverse;
+  }
+}
+
+.product-area {
+  composes: container-column from global;
+  max-width: 80%;
+  @media (width < 540px) {
+    max-width: 100%;
+  }
+}
+
+.side-bar {
+  composes: container-row from global;
+  position: sticky;
+  flex-wrap: wrap;
+  width: 20%;
+  min-width: 170px;
+}
+
+.disabled {
+  background: grey;
+  pointer-events: none;
+}
+
+.hidden {
+  display: none;
+}
+
+.item-container {
+  composes: container-row from global;
+  composes: input from global;
+  display: grid;
+  grid-template:
+    "a b b b b r" 1fr
+    "a c w q e r" 1fr
+    "a d w q e r" 1fr / 20% 20% min-content min-content min-content min-content;
+  width: 100%;
+  height: 10rem;
+}
+
+.img {
+  max-height: 100%;
+  max-width: 100%;
+  aspect-ratio: 1/1;
+  grid-area: a;
+}
+
+.price {
+  composes: card-price from global;
+  font-size: 0.8rem;
+}
+
+.one-price {
+  grid-area: c;
+
+  &::after {
+    content: " per item ";
+  }
+}
+
+.sum-price {
+  grid-area: d;
+
+  &::after {
+    content: " total ";
+  }
+}
+
+.total-price {
+  &::before {
+    content: "Total price: ";
+  }
+}
+
+.title {
+  composes: card-title from global;
+  width: 100%;
+  grid-area: b;
+}
+
+.counter {
+  grid-area: q;
+}
+
+.discounted {
+  text-decoration: line-through;
+
+  font-size: 0.8rem;
+
+  &::before {
+    display: inline;
+    content: "Old price: ";
+    text-decoration: none;
+  }
+}
+
+.control-btn {
+  composes: button from global;
+  width: fit-content;
+  min-width: 30px;
+}
+
+.add-btn {
+  grid-area: w;
+}
+.sub-btn {
+  grid-area: e;
+}
+.remove-btn {
+  grid-area: r;
+}
+.side-bar-btn {
+  composes: button from global;
+  width: 100%;
+}
+
+.input {
+  composes: input from global;
+  width: 100%;
+}
