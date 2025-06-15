@@ -5,6 +5,7 @@ export interface ValidJSON {
   password: string;
   isLoggedIn: boolean;
   userId: string;
+  activeCart: boolean;
 }
 
 const STORAGE_KEYS = {
@@ -22,7 +23,9 @@ function isValidJSON(incomingJSON: unknown): incomingJSON is ValidJSON {
     "isLoggedIn" in incomingJSON &&
     typeof incomingJSON.isLoggedIn === "boolean" &&
     "userId" in incomingJSON &&
-    typeof incomingJSON.userId === "string"
+    typeof incomingJSON.userId === "string" &&
+    "activeCart" in incomingJSON &&
+    typeof incomingJSON.activeCart === "boolean"
   );
 }
 
@@ -33,6 +36,8 @@ export default class StateManager {
   public userId: string | undefined;
   public locale: Localization = "en-US";
   public currency: Currency = "USD";
+  public activeCart = false;
+
   private state: ValidJSON | undefined;
 
   constructor() {
@@ -49,6 +54,7 @@ export default class StateManager {
         password: this.password,
         isLoggedIn: this.isLoggedIn,
         userId: this.userId,
+        activeCart: this.activeCart,
       };
       globalThis.sessionStorage.setItem(
         STORAGE_KEYS.loginData,
@@ -68,6 +74,7 @@ export default class StateManager {
       this.password = loginData.password;
       this.isLoggedIn = loginData.isLoggedIn;
       this.userId = loginData.userId;
+      this.activeCart = loginData.activeCart;
     }
   }
 

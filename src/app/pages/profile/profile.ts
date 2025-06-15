@@ -227,7 +227,7 @@ export default class ProfileView {
       this.addAddressBtn,
       this.confirmBtn,
     );
-    this.updateProfileInfo();
+    /* this.updateProfileInfo(); */
   }
 
   private formBlock(
