@@ -123,34 +123,51 @@ export default class BasketView {
   }
 
   public getElement(): HTMLElement {
+    this.updateBasket();
     return this.mainContainer.getElement();
   }
 
-  public async updateBasket(): Promise<void> {
-    const result = await this.apiRequestService.getCart();
-    if (result) this.updateTotalPrice(result);
-    const items = result?.body?.lineItems.map((x) => {
-      return {
-        id: x.id || "",
-        count: x.quantity,
-        name: x.name,
-        price: x.price.discounted?.value.centAmount || x.price.value.centAmount,
-        totalPrice: x.totalPrice.centAmount,
-        currency: x.price.value.currencyCode,
-        productId: x.productId,
-      };
-    });
-    console.log(items);
+  public switchBasketTypeTo(type: "empty" | "hasItems"): void {
     this.productArea.getElement().replaceChildren();
-    if (!items || items.length === 0) {
+    if (type === "empty") {
       this.productArea.getElement().classList.add(css.hidden);
       this.sideBar.getElement().classList.add(css.hidden);
       this.emptyMessage.getElement().classList.remove(css.hidden);
+    } else {
+      this.productArea.getElement().classList.remove(css.hidden);
+      this.sideBar.getElement().classList.remove(css.hidden);
+      this.emptyMessage.getElement().classList.add(css.hidden);
+    }
+  }
+
+  public async updateBasket(): Promise<void> {
+    if (!this.stateManager.activeCart) {
+      this.switchBasketTypeTo("empty");
       return;
     }
-    this.productArea.getElement().classList.remove(css.hidden);
-    this.sideBar.getElement().classList.remove(css.hidden);
-    this.emptyMessage.getElement().classList.add(css.hidden);
+
+    const result = await this.apiRequestService.getCart();
+    if (!result || result.body?.lineItems.length == 0) {
+      this.switchBasketTypeTo("empty");
+      return;
+    } else this.switchBasketTypeTo("hasItems");
+
+    this.updateTotalPrice(result);
+
+    const items =
+      result?.body?.lineItems.map((x) => {
+        return {
+          id: x.id || "",
+          count: x.quantity,
+          name: x.name,
+          price:
+            x.price.discounted?.value.centAmount || x.price.value.centAmount,
+          totalPrice: x.totalPrice.centAmount,
+          currency: x.price.value.currencyCode,
+          productId: x.productId,
+        };
+      }) || [];
+
     for (const item of items) {
       const container = new ElementCreator(ELEM_PARAM.itemContainer);
       const image = new ElementCreator(ELEM_PARAM.image);
@@ -242,8 +259,8 @@ export default class BasketView {
     } else this.totalPriceBeforeDiscount.getElement().classList.add(css.hidden);
   }
 
-  private configureView(): void {
-    this.configureBasket();
+  private async configureView(): Promise<void> {
+    await this.configureBasket();
     this.configureEmptyMessage();
     this.configureSideBar();
     this.mainContainer.addInnerElement(

@@ -99,7 +99,6 @@ export default class MainView extends View {
       globalThis.location.hash = Routes.CATALOG;
       this.setContent(this.catalogView.getElement());
     } else if (path === Routes.BASKET) {
-      this.basketView.updateBasket();
       globalThis.location.hash = Routes.BASKET;
       this.setContent(this.basketView.getElement());
     } else if (path === Routes.ABOUT) {

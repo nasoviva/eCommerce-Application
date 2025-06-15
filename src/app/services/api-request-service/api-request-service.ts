@@ -369,6 +369,7 @@ export default class ApiRequestService {
       .then((result) => {
         this.cartVersion = result.body.version;
         this.cartId = result.body.id;
+        this.stateManager.activeCart = true;
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
