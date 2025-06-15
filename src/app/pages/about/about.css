@@ -1,6 +1,7 @@
 .about-container {
+  display: flex;
+  flex-direction: column;
   margin: 0;
-  justify-content: center;
 }
 
 .team {
@@ -10,7 +11,7 @@
 
 .team-member {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 10px;
   opacity: 0;
   transform: translateX(60px);
@@ -23,13 +24,24 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  margin-left: 45%;
+  flex-direction: column;
+  align-self: center;
   font-weight: bolder;
   font-size: larger;
 }
 
+a.title-text,
 .link-rs {
-  width: 100px;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: 0.3s;
+  border-bottom: 1px solid transparent;
+}
+
+a:hover.title-text,
+.link-rs:hover {
+  text-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  border-bottom: 1px solid var(--text-color);
 }
 
 .rs-logo-picture {
@@ -39,20 +51,38 @@
   margin-right: 15px;
   width: 100%;
   margin-top: 25px;
+  margin-bottom: 10px;
 }
 
 .team-member.visible {
   opacity: 1;
   transform: translateX(0);
+  background-color: #fff;
+  padding: 10px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 .photo {
+  margin-right: 0;
+}
+
+div .photo {
   flex: 1;
-  max-width: 200px;
-  margin-right: 10px;
-  width: 100%;
+  margin: 5px 15px 10px 0;
   border-radius: 8px;
+  width: 200px;
+  height: 230px;
+  flex-grow: 0;
+  object-fit: cover;
+}
+
+img .photo {
+  width: 100%;
   height: auto;
+  object-fit: cover;
 }
 
 .text-element {
@@ -70,8 +100,7 @@
 
 .title-text {
   flex: 2;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  margin: 5px 0;
 }
 
 .text-about-aur-work {
@@ -85,12 +114,6 @@
 
 .description {
   flex: 2;
-  background-color: #fff;
-  padding: 10px;
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 @media (width <= 768px) {
@@ -118,7 +141,7 @@
 
 @media (width <= 380px) {
   .rs-logo {
-    margin-left: 35%;
+    margin-left: 10%;
     width: auto;
   }
 }

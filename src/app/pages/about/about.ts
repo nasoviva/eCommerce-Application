@@ -29,7 +29,7 @@ export default class AboutView {
 
     const text = new ElementCreator({
       tag: "p",
-      className: ["text-about-aur-work"],
+      className: ["text-about-aur-work", "team-member"],
       textContent:
         "Our team followed an Agile workflow, holding daily standups in Discord, managing tasks via Trello, and organizing weekly Zoom meetings to discuss progress and challenges in depth. Each team member took ownership of their responsibilities while actively supporting others — whether through debugging, code reviews, or UI discussions. Regular communication and openness to feedback fostered a collaborative and supportive environment, resulting in a well-structured and polished final product.",
     });
@@ -387,9 +387,12 @@ export default class AboutView {
     teamContainer.addInnerElement(member3Container.getElement());
 
     const rsLogoContainer = new ElementCreator({
-      tag: "div",
+      tag: "a",
       className: ["rs-logo"],
       textContent: "",
+      attributes: {
+        href: "https://rs.school/",
+      },
     });
 
     const rsLogo = new ElementCreator({
@@ -421,6 +424,7 @@ export default class AboutView {
 
     const members = [
       "plug",
+      text.getElement(),
       member1Container.getElement(),
       member2Container.getElement(),
       member3Container.getElement(),
