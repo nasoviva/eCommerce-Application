@@ -37,6 +37,7 @@ export default class StateManager {
   public locale: Localization = "en-US";
   public currency: Currency = "USD";
   public activeCart = false;
+
   private state: ValidJSON | undefined;
 
   constructor() {

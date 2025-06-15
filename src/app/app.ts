@@ -33,6 +33,9 @@ export default class App {
     App.setFavicon("./favicon.ico");
     this.createView();
 
+
+    this.configureAPI();
+
     this.testMethod();
   }
 
@@ -104,4 +107,5 @@ export default class App {
       else this.apiRequestService.removeProduct(id);
     });
   }
+
 }
