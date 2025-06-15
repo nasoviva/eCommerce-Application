@@ -68,7 +68,7 @@ export default class HeaderView extends View {
       className: [cssClasses.LOGO_IMG],
       textContent: "",
       attributes: {
-        src: "./img/image-welcome.png",
+        src: "./img/image-welcome.webp",
         alt: "Joke Store",
       },
     });

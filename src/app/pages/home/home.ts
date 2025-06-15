@@ -73,7 +73,7 @@ export default class HomeView {
       className: [cssClasses.IMAGE],
       textContent: "",
       attributes: {
-        src: "./img/image-home.png",
+        src: "./img/image-home.webp",
         alt: "Funny illustration",
       },
     });
