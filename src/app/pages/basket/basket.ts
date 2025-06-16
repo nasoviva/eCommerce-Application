@@ -1,13 +1,10 @@
 import type { ClientResponse } from "@commercetools/ts-client";
-import { cssClasses, Routes, Titles } from "../../global-types/constants";
-import type { Localization } from "../../global-types/types";
+import { Routes } from "../../global-types/constants";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
 import ElementCreator from "../../shared/element-creator";
 import css from "./basket.module.css";
 import type { Cart, ProductProjection } from "@commercetools/platform-sdk";
-import DataParser from "../../services/api-request-service/data-parser";
-import InputCreator from "../../shared/input-creator";
 import CustomElementCreator from "../../shared/custom-element-creator";
 
 const ELEM_PARAM = {
@@ -221,7 +218,9 @@ export default class BasketView {
           );
           if (result) this.updateTotalPrice(result);
         } else {
-          this.apiRequestService.removeProduct(item.id);
+          const result = await this.apiRequestService.removeProduct(item.id);
+          if (result && result.body?.lineItems.length === 0)
+            this.switchBasketTypeTo("empty");
           container.getElement().remove();
         }
       });
@@ -260,7 +259,7 @@ export default class BasketView {
   }
 
   private async configureView(): Promise<void> {
-    await this.configureBasket();
+    /* await this.configureBasket(); */
     this.configureEmptyMessage();
     this.configureSideBar();
     this.mainContainer.addInnerElement(
@@ -268,16 +267,6 @@ export default class BasketView {
       this.productArea,
       this.emptyMessage,
     );
-  }
-
-  private async configureBasket(): Promise<void> {
-    if (!this.stateManager.activeCart) {
-      await this.apiRequestService.createCart(
-        this.stateManager.currency,
-        this.stateManager.locale,
-      );
-      this.stateManager.activeCart = true;
-    } else await this.apiRequestService.getCart();
   }
 
   private configureEmptyMessage(): void {

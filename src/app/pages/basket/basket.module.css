@@ -12,6 +12,7 @@
 .product-area {
   composes: container-column from global;
   max-width: 80%;
+
   @media (width < 540px) {
     max-width: 100%;
   }
@@ -92,7 +93,6 @@
 
 .discounted {
   text-decoration: line-through;
-
   font-size: 0.8rem;
 
   &::before {
@@ -111,12 +111,15 @@
 .add-btn {
   grid-area: w;
 }
+
 .sub-btn {
   grid-area: e;
 }
+
 .remove-btn {
   grid-area: r;
 }
+
 .side-bar-btn {
   composes: button from global;
   width: 100%;
