@@ -27,8 +27,6 @@ export default class App {
 
     App.setFavicon("./favicon.ico");
     this.createView();
-
-    this.testMethod();
   }
 
   private static setFavicon(url: string): void {
@@ -61,41 +59,5 @@ export default class App {
       this.mainView.getHtmlElement(),
       this.footerView.getHtmlElement(),
     );
-  }
-
-  /* метод для тестирования функций позже можно будет удалить */
-  private async testMethod(): Promise<void> {
-    const myButton = document.createElement("button");
-    myButton.textContent = "ADD ITEM";
-    const myButton2 = document.createElement("button");
-    myButton2.textContent = "REMOVE ITEM";
-    /* КНОПКА ЗДЕСЬ */
-    document.body.append(myButton, myButton2);
-    // Cчётчик товара
-    let count = 0;
-    let id: string = "";
-    myButton.addEventListener("click", async () => {
-      count += 1;
-      if (count > 1) this.apiRequestService.changeProductQuantity(id, count);
-      else
-        id = await this.apiRequestService.addProduct(
-          "0f599752-d8cb-4918-8c82-a937c4cf4c73",
-        );
-    });
-    myButton2.addEventListener("click", () => {
-      /* count2 += 1;
-      if (count2 > 1)
-        this.apiRequestService.changeProductQuantity(
-          "794ecccd-1deb-4425-8922-576f38f10f8e",
-          count2,
-        );
-      else
-        this.apiRequestService.addProduct(
-          "794ecccd-1deb-4425-8922-576f38f10f8e",
-        ); */
-      count -= 1;
-      if (count > 0) this.apiRequestService.changeProductQuantity(id, count);
-      else this.apiRequestService.removeProduct(id);
-    });
   }
 }
