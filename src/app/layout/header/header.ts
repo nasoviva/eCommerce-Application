@@ -68,7 +68,7 @@ export default class HeaderView extends View {
       className: [cssClasses.LOGO_IMG],
       textContent: "",
       attributes: {
-        src: "./img/image-welcome.png",
+        src: "./img/image-welcome.webp",
         alt: "Joke Store",
       },
     });
@@ -108,6 +108,7 @@ export default class HeaderView extends View {
     const links = [
       { text: Buttons.HOME, route: Routes.HOME },
       { text: Buttons.CATALOG, route: Routes.CATALOG },
+      { text: Buttons.ABOUT, route: Routes.ABOUT },
       { text: Buttons.REGISTRATION, route: Routes.REGISTRATION },
       { text: Buttons.LOGIN, route: Routes.LOGIN, disable: isLoggedIn },
       { text: Buttons.PROFILE, route: Routes.PROFILE, disable: !isLoggedIn },
@@ -117,6 +118,7 @@ export default class HeaderView extends View {
         isLogout: true,
         disable: !isLoggedIn,
       },
+      { text: Buttons.BASKET, route: Routes.BASKET },
     ];
 
     links.forEach(({ text, route, disable, isLogout }) => {
@@ -170,15 +172,18 @@ export default class HeaderView extends View {
     const buttonsData = [
       { text: Buttons.HOME, route: Routes.HOME },
       { text: Buttons.CATALOG, route: Routes.CATALOG },
+      { text: Buttons.ABOUT, route: Routes.ABOUT },
       { text: Buttons.REGISTRATION, route: Routes.REGISTRATION },
       { text: Buttons.LOGIN, route: Routes.LOGIN, disable: isLoggedIn },
       { text: Buttons.PROFILE, route: Routes.PROFILE, disable: !isLoggedIn },
+
       {
         text: Buttons.LOGOUT,
         route: null,
         isLogout: true,
         disable: !isLoggedIn,
       },
+      { text: Buttons.BASKET, route: Routes.BASKET },
     ];
 
     buttonsData.forEach(({ text, route, disable, isLogout }) => {
@@ -237,7 +242,23 @@ export default class HeaderView extends View {
         }
       },
     });
+    if (text === Buttons.BASKET) {
+      this.apiRequestService.getCart().then((result) => {
+        if (result?.body?.lineItems) {
+          const total = result.body.lineItems.reduce(
+            (sum, item) => sum + item.quantity,
+            0,
+          );
 
+          if (total > 0) {
+            const counter = document.createElement("span");
+            counter.className = "cart-counter";
+            counter.textContent = String(total);
+            btn.getElement().appendChild(counter);
+          }
+        }
+      });
+    }
     return btn;
   }
 

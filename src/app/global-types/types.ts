@@ -1,4 +1,5 @@
 export type Localization = "en-US" | "RU";
+export type Currency = "USD" | "RUB";
 type Material = "wood" | "paper";
 type Color = "red" | "green" | "blue";
 type AgeRestriction = 6 | 14;

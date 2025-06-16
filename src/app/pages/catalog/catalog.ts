@@ -6,15 +6,17 @@ import {
 } from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
 import type StateManager from "../../services/state-manager/state-manager";
-import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type { Localization, UseSearchQuery } from "../../global-types/types";
 import type { ClientResponse } from "@commercetools/ts-client";
 import "./style/style.css";
 import type { CatalogData } from "../../services/api-request-service/data-parser";
 import DataParser from "../../services/api-request-service/data-parser";
 import InputCreator from "../../shared/input-creator";
+import type HeaderView from "../../layout/header/header";
+import type ApiRequestService from "../../services/api-request-service/api-request-service";
 
 export default class CatalogView {
+  private readonly headerView: HeaderView;
   private readonly catalogContainer: ElementCreator;
   private readonly stateManager: StateManager;
   private readonly apiRequestService: ApiRequestService;
@@ -29,7 +31,9 @@ export default class CatalogView {
   constructor(
     stateManager: StateManager,
     apiRequestService: ApiRequestService,
+    headerView: HeaderView,
   ) {
+    this.headerView = headerView;
     this.stateManager = stateManager;
     this.apiRequestService = apiRequestService;
 
@@ -75,6 +79,11 @@ export default class CatalogView {
     this.clearInputs();
     this.cardsContainer.getElement().innerHTML = "";
     this.paginationContainer.getElement().innerHTML = "";
+
+    this.stateManager.onCartChange(() => {
+      const currentCategoryId = this.currentCategoryPath.at(-1)?.id;
+      this.loadProducts(this.locale, currentCategoryId, 1);
+    });
 
     const categoriesContainer = new ElementCreator({
       tag: "div",
@@ -390,7 +399,7 @@ export default class CatalogView {
     );
   }
 
-  private renderProducts(products: CatalogData[]): void {
+  private async renderProducts(products: CatalogData[]): Promise<void> {
     this.clearInputs();
     if (products.length === 0) {
       const emptyMsg = new ElementCreator({
@@ -401,16 +410,15 @@ export default class CatalogView {
       this.cardsContainer.addInnerElement(emptyMsg.getElement());
       return;
     }
-
+    const currentCartResp = await this.apiRequestService.getCart();
+    const cartItems = currentCartResp?.body?.lineItems || [];
     products.forEach((product) => {
       const cardLink = new ElementCreator({
         tag: "a",
         className: [cssClasses.CARD],
         textContent: "",
       });
-      cardLink
-        .getElement()
-        .setAttribute("href", `${Routes.PRODUCT}=${product.id}`);
+      cardLink.getElement();
 
       const imageContainer = new ElementCreator({
         tag: "div",
@@ -458,6 +466,47 @@ export default class CatalogView {
       });
       price.getElement().innerHTML = priceText;
 
+      const quantityWrapper = new ElementCreator({
+        tag: "div",
+        className: [cssClasses.CONTROLS_CONTAINER],
+      });
+      const itemInCart = cartItems.find(
+        (item) => item.productId === product.id,
+      );
+
+      const basketButton = new ElementCreator({
+        tag: "button",
+        className: [cssClasses.BASKET],
+        textContent: itemInCart ? "X" : Buttons.BASKET,
+        callback: async (): Promise<void> => {
+          const currentCartResp = await this.apiRequestService.getCart();
+          if (!currentCartResp?.body) return;
+
+          const itemInCart = currentCartResp.body.lineItems.find(
+            (item) => item.productId === product.id,
+          );
+
+          if (itemInCart) {
+            await this.apiRequestService.removeProduct(itemInCart.id);
+          } else {
+            await this.apiRequestService.addProduct(product.id);
+          }
+
+          const updatedCartResp = await this.apiRequestService.getCart();
+
+          if (updatedCartResp && updatedCartResp.body) {
+            const updatedItem = updatedCartResp.body.lineItems.find(
+              (item: { productId: string }) => item.productId === product.id,
+            );
+
+            basketButton.setTextContent(updatedItem ? "X" : Buttons.BASKET);
+            this.headerView.updateHeader();
+            await this.renderProducts(products);
+          }
+        },
+      });
+      quantityWrapper.addInnerElement(basketButton.getElement());
+
       const button = new ElementCreator({
         tag: "button",
         className: [cssClasses.BUTTON],
@@ -473,6 +522,7 @@ export default class CatalogView {
       cardLink.addInnerElement(title.getElement());
       cardLink.addInnerElement(descriptionContainer.getElement());
       cardLink.addInnerElement(price.getElement());
+      cardLink.addInnerElement(quantityWrapper.getElement());
       cardLink.addInnerElement(button.getElement());
 
       this.cardsContainer.addInnerElement(cardLink.getElement());

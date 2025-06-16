@@ -1,20 +1,27 @@
 import { cssClasses, Buttons, Routes } from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
-import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type { ClientResponse } from "@commercetools/ts-client";
 import "./style/style.css";
 import "../catalog/style/style.css";
 import modalWindow from "../../services/modal-window/modalWindow";
+import type HeaderView from "../../layout/header/header";
+import type ApiRequestService from "../../services/api-request-service/api-request-service";
 
 export default class ProductView {
+  private readonly headerView: HeaderView;
   private readonly productContainer: ElementCreator;
   private readonly id: string;
-  private readonly api: ApiRequestService;
+  private readonly apiRequestService: ApiRequestService;
   private currentIndex = 0;
 
-  constructor(id: string, apiRequestService: ApiRequestService) {
+  constructor(
+    id: string,
+    apiRequestService: ApiRequestService,
+    headerView: HeaderView,
+  ) {
+    this.headerView = headerView;
     this.id = id;
-    this.api = apiRequestService;
+    this.apiRequestService = apiRequestService;
 
     this.productContainer = new ElementCreator({
       tag: "div",
@@ -51,9 +58,10 @@ export default class ProductView {
         globalThis.location.hash = Routes.CATALOG;
       },
     });
-
+    const currentCartResp = await this.apiRequestService.getCart();
+    const cartItems = currentCartResp?.body?.lineItems || [];
     try {
-      this.api.getProductById(
+      this.apiRequestService.getProductById(
         this.id,
         (result: ClientResponse) => {
           const product = result.body;
@@ -89,6 +97,46 @@ export default class ProductView {
           } else {
             priceEl.getElement().innerHTML = `Price: $${(price / 100).toFixed(2)}`;
           }
+
+          const quantityWrapper = new ElementCreator({
+            tag: "div",
+            className: [cssClasses.CONTROLS_CONTAINER],
+          });
+          const itemInCart = cartItems.find(
+            (item) => item.productId === product.id,
+          );
+          const basketButton = new ElementCreator({
+            tag: "button",
+            className: [cssClasses.BASKET],
+            textContent: itemInCart ? "X" : Buttons.BASKET,
+            callback: async (): Promise<void> => {
+              const currentCartResp = await this.apiRequestService.getCart();
+              if (!currentCartResp?.body) return;
+
+              const itemInCart = currentCartResp.body.lineItems.find(
+                (item) => item.productId === product.id,
+              );
+
+              if (itemInCart) {
+                await this.apiRequestService.removeProduct(itemInCart.id);
+              } else {
+                await this.apiRequestService.addProduct(product.id);
+              }
+
+              const updatedCartResp = await this.apiRequestService.getCart();
+
+              if (updatedCartResp && updatedCartResp.body) {
+                const updatedItem = updatedCartResp.body.lineItems.find(
+                  (item: { productId: string }) =>
+                    item.productId === product.id,
+                );
+
+                basketButton.setTextContent(updatedItem ? "X" : Buttons.BASKET);
+                this.headerView.updateHeader();
+              }
+            },
+          });
+          quantityWrapper.addInnerElement(basketButton.getElement());
 
           const sliderWrapper = new ElementCreator({
             tag: "div",
@@ -199,6 +247,7 @@ export default class ProductView {
           container.addInnerElement(nameEl.getElement());
           container.addInnerElement(descriptionEl.getElement());
           container.addInnerElement(priceEl.getElement());
+          container.addInnerElement(quantityWrapper.getElement());
           productTitle.addInnerElement(backButton.getElement());
           this.productContainer.addInnerElement(productTitle.getElement());
           this.productContainer.addInnerElement(container.getElement());

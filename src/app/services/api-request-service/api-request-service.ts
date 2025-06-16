@@ -1,17 +1,28 @@
 import ApiClientBuilder from "./build-client";
 import type {
   ByProjectKeyRequestBuilder,
+  Cart,
   MyCustomerDraft,
   MyCustomerSignin,
   MyCustomerUpdateAction,
+  ProductProjection,
 } from "@commercetools/platform-sdk";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { projectKey } from "./constants";
 import type StateManager from "../state-manager/state-manager";
-import type { Client, QueryParam, TokenStore } from "@commercetools/ts-client";
+import type {
+  Client,
+  ClientResponse,
+  QueryParam,
+  TokenStore,
+} from "@commercetools/ts-client";
 import VSATokenCache from "./token-cache";
 import ToastMsg from "../error-msg/toast-msg";
-import type { UseProductQuery, UseSearchQuery } from "../../global-types/types";
+import type {
+  Localization,
+  UseProductQuery,
+  UseSearchQuery,
+} from "../../global-types/types";
 
 type RequestBuilder = "anon" | "password";
 
@@ -44,6 +55,8 @@ export default class ApiRequestService {
   private currentClientType!: RequestBuilder;
   private tokenCache: VSATokenCache;
   private toastMsg: ToastMsg;
+  private cartVersion: number = 0;
+  private cartId: string = "";
 
   constructor(stateManager: StateManager) {
     this.stateManager = stateManager;
@@ -130,8 +143,8 @@ export default class ApiRequestService {
       })
       .execute()
       .then((result) => {
-        /* TODO: сделать сохранение токена здесь */
         this.stateManager.setState();
+        this.getCart();
         if (onSuccess) onSuccess(result);
       })
       .catch((reason) => {
@@ -199,6 +212,7 @@ export default class ApiRequestService {
       .execute()
       .then((result) => {
         if (onSuccess) onSuccess(result);
+        this.configureBasket();
       })
       .catch((reason) => {
         if (onReject) onReject(reason);
@@ -251,29 +265,29 @@ export default class ApiRequestService {
       });
   }
 
-  public getProductById(
+  public async getProductById(
     id: string,
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
-  ): void {
-    this.apiRoot
-      .productProjections()
-      .withId({ ID: id })
-      .get()
-      .execute()
-      .then((result) => {
-        if (onSuccess) onSuccess(result);
-      })
-      .catch((reason) => {
-        if (onReject) onReject(reason);
-      });
+  ): Promise<ClientResponse<ProductProjection> | void> {
+    try {
+      const result = await this.apiRoot
+        .productProjections()
+        .withId({ ID: id })
+        .get()
+        .execute();
+      if (onSuccess) onSuccess(result);
+      return result;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
   }
 
-  public getUserInfo(
+  public async getUserInfo(
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
-  ): void {
-    this.apiRoot
+  ): Promise<void> {
+    await this.apiRoot
       .me()
       .get()
       .execute()
@@ -314,6 +328,232 @@ export default class ApiRequestService {
         this.toastMsg.displayErrorMsg(ApiRequestService.errorParser(reason));
         if (onReject) onReject(reason);
       });
+  }
+
+  public async getCart(
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<ClientResponse<Cart> | void> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .activeCart()
+        /* .carts()
+      .withId({ ID: this.stateManager.cartId }) */
+        .get()
+        .execute();
+      this.cartVersion = result.body.version;
+      this.cartId = result.body.id;
+      if (onSuccess) onSuccess(result);
+      return result;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
+  }
+
+  public async createCart(
+    currency: string,
+    country: Localization,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<void> {
+    await this.apiRoot
+      .me()
+      .carts()
+      .post({
+        body: {
+          currency: currency,
+          country: country.slice(-2),
+        },
+      })
+      .execute()
+      .then((result) => {
+        this.cartVersion = result.body.version;
+        this.cartId = result.body.id;
+        this.stateManager.activeCart = true;
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      });
+  }
+
+  public async removeProduct(
+    lineItemId: string,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<ClientResponse<Cart> | void> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({
+          body: {
+            version: this.cartVersion,
+            actions: [
+              {
+                action: "removeLineItem",
+                lineItemId: lineItemId,
+              },
+            ],
+          },
+        })
+        .execute();
+      this.cartVersion = result.body.version;
+      if (onSuccess) onSuccess(result);
+      return result;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
+  }
+
+  public async addProduct(
+    lineItemId: string,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<string> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({
+          body: {
+            version: this.cartVersion,
+            actions: [
+              {
+                action: "addLineItem",
+                productId: lineItemId,
+                key: lineItemId,
+              },
+            ],
+          },
+        })
+        .execute();
+      this.cartVersion = result.body.version;
+      if (onSuccess) onSuccess(result);
+      return result.body.lineItems[0].id;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+      return "";
+    }
+    /* await this.apiRoot
+      .me()
+      .carts()
+      .withId({ ID: this.cartId })
+      .post({
+        body: {
+          version: this.cartVersion,
+          actions: [
+            {
+              action: "addLineItem",
+              productId: lineItemId,
+              key: lineItemId,
+            },
+          ],
+        },
+      })
+      .execute()
+      .then((result) => {
+        this.cartVersion = result.body.version;
+        if (onSuccess) onSuccess(result);
+      })
+      .catch((reason) => {
+        if (onReject) onReject(reason);
+      }); */
+  }
+
+  public async changeProductQuantity(
+    lineItemId: string,
+    amount: number = 1,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<ClientResponse<Cart> | void> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({
+          body: {
+            version: this.cartVersion,
+            actions: [
+              {
+                action: "changeLineItemQuantity",
+                lineItemId: lineItemId,
+                quantity: amount,
+              },
+            ],
+          },
+        })
+        .execute();
+      this.cartVersion = result.body.version;
+      if (onSuccess) onSuccess(result);
+      return result;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
+  }
+
+  public async clearCart(
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<void> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .delete({ queryArgs: { version: this.cartVersion } })
+        .execute();
+      await this.createCart(
+        this.stateManager.currency,
+        this.stateManager.locale,
+      );
+      if (onSuccess) onSuccess(result);
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
+  }
+
+  public async useDiscountCode(
+    discountCode: string,
+    onSuccess?: CallableFunction,
+    onReject?: CallableFunction,
+  ): Promise<ClientResponse<Cart> | void> {
+    try {
+      const result = await this.apiRoot
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({
+          body: {
+            version: this.cartVersion,
+            actions: [
+              {
+                action: "addDiscountCode",
+                code: discountCode,
+              },
+            ],
+          },
+        })
+        .execute();
+      if (onSuccess) onSuccess(result);
+      return result;
+    } catch (reason) {
+      if (onReject) onReject(reason);
+    }
+  }
+
+  public async configureBasket(): Promise<void> {
+    if (!this.stateManager.activeCart) {
+      await this.createCart(
+        this.stateManager.currency,
+        this.stateManager.locale,
+      );
+      this.stateManager.activeCart = true;
+    } else await this.getCart();
   }
 
   private switchRequestBuilder(

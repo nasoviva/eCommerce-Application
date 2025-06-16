@@ -6,6 +6,10 @@ test("check type of result VSATokenCache class create", () => {
   expect(typeof elementVSATokenCache).toBe("object");
 });
 
-test("check availability inputElement property in  emailInputElement", () => {
+test("check token property in  elementVSATokenCache", () => {
   expect("token" in elementVSATokenCache).toBeTruthy();
+});
+
+test("check availability expirationTime property in tokenCache", () => {
+  expect("expirationTime" in elementVSATokenCache).toBeTruthy();
 });

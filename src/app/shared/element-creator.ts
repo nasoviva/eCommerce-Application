@@ -53,7 +53,7 @@ export default class ElementCreator {
   public setCssClasses(cssClasses: string[]): void {
     if (this.element) {
       for (const className of cssClasses) {
-        this.element.classList.add(className);
+        this.element.classList.add(...className.split(" "));
       }
     }
   }

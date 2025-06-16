@@ -30,10 +30,12 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--background-color);
+
+  /* background-color: var(--background-color); */
   color: var(--text-color);
   font-size: 16px;
   font-family: "Open Sans", sans-serif;
+  background-color: #f5f0f0;
 }
 
 .main {
@@ -263,6 +265,36 @@ body {
   cursor: pointer;
   width: 20px;
   height: 20px;
+}
+
+.quantity-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.basket {
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid var(--button-active-color);
+  border-radius: 3px;
+}
+
+.basket:hover {
+  cursor: pointer;
+  border: 1px solid var(--button-hover-color);
+  opacity: 0.9;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
+}
+
+.quantity-number {
+  min-width: 20px;
+  text-align: center;
+  font-weight: bold;
+  padding: 0 4px;
 }
 
 .link {

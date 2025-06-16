@@ -1,10 +1,11 @@
-import type { Localization } from "../../global-types/types";
+import type { Currency, Localization } from "../../global-types/types";
 
 export interface ValidJSON {
   login: string;
   password: string;
   isLoggedIn: boolean;
   userId: string;
+  activeCart: boolean;
 }
 
 const STORAGE_KEYS = {
@@ -22,7 +23,9 @@ function isValidJSON(incomingJSON: unknown): incomingJSON is ValidJSON {
     "isLoggedIn" in incomingJSON &&
     typeof incomingJSON.isLoggedIn === "boolean" &&
     "userId" in incomingJSON &&
-    typeof incomingJSON.userId === "string"
+    typeof incomingJSON.userId === "string" &&
+    "activeCart" in incomingJSON &&
+    typeof incomingJSON.activeCart === "boolean"
   );
 }
 
@@ -32,12 +35,29 @@ export default class StateManager {
   public password: string | undefined;
   public userId: string | undefined;
   public locale: Localization = "en-US";
+  public currency: Currency = "USD";
+  public activeCart = false;
+
   private state: ValidJSON | undefined;
+  private readonly cartListeners: (() => void)[] = [];
 
   constructor() {
     this.isLoggedIn = false;
     this.state = undefined;
     this.configureStateStorage();
+  }
+
+  public onCartChange(callback: () => void): void {
+    this.cartListeners.push(callback);
+  }
+
+  public notifyCartChanged(): void {
+    for (const cb of this.cartListeners) cb();
+  }
+
+  public setActiveCart(isActive: boolean): void {
+    this.activeCart = isActive;
+    this.notifyCartChanged();
   }
 
   public setState(loginStatus?: boolean): void {
@@ -48,6 +68,7 @@ export default class StateManager {
         password: this.password,
         isLoggedIn: this.isLoggedIn,
         userId: this.userId,
+        activeCart: this.activeCart,
       };
       globalThis.sessionStorage.setItem(
         STORAGE_KEYS.loginData,
@@ -67,6 +88,7 @@ export default class StateManager {
       this.password = loginData.password;
       this.isLoggedIn = loginData.isLoggedIn;
       this.userId = loginData.userId;
+      this.activeCart = loginData.activeCart;
     }
   }
 
