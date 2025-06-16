@@ -8,7 +8,7 @@ import NotFoundView from "../../pages/not-found/not-found";
 import ProductView from "../../pages/product/product";
 import ProfileView from "../../pages/profile/profile";
 import RegistrationView from "../../pages/registration/registration";
-import ApiRequestService from "../../services/api-request-service/api-request-service";
+import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
 import ElementCreator from "../../shared/element-creator";
 import View from "../../shared/view";

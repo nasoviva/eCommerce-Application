@@ -14,7 +14,6 @@ import DataParser from "../../services/api-request-service/data-parser";
 import InputCreator from "../../shared/input-creator";
 import type HeaderView from "../../layout/header/header";
 import type ApiRequestService from "../../services/api-request-service/api-request-service";
-import { Cart } from "@commercetools/platform-sdk";
 
 export default class CatalogView {
   private readonly headerView: HeaderView;
@@ -77,15 +76,14 @@ export default class CatalogView {
   }
 
   private configureView(): void {
-
     this.clearInputs();
     this.cardsContainer.getElement().innerHTML = "";
     this.paginationContainer.getElement().innerHTML = "";
 
     this.stateManager.onCartChange(() => {
-  const currentCategoryId = this.currentCategoryPath.at(-1)?.id;
-  this.loadProducts(this.locale, currentCategoryId, 1);
-});
+      const currentCategoryId = this.currentCategoryPath.at(-1)?.id;
+      this.loadProducts(this.locale, currentCategoryId, 1);
+    });
 
     const categoriesContainer = new ElementCreator({
       tag: "div",
@@ -472,19 +470,20 @@ export default class CatalogView {
         tag: "div",
         className: [cssClasses.CONTROLS_CONTAINER],
       });
-      const itemInCart = cartItems.find(item => item.productId === product.id);
+      const itemInCart = cartItems.find(
+        (item) => item.productId === product.id,
+      );
 
       const basketButton = new ElementCreator({
         tag: "button",
         className: [cssClasses.BASKET],
         textContent: itemInCart ? "X" : Buttons.BASKET,
         callback: async (): Promise<void> => {
-
           const currentCartResp = await this.apiRequestService.getCart();
           if (!currentCartResp?.body) return;
 
           const itemInCart = currentCartResp.body.lineItems.find(
-            (item) => item.productId === product.id
+            (item) => item.productId === product.id,
           );
 
           if (itemInCart) {
@@ -497,16 +496,15 @@ export default class CatalogView {
 
           if (updatedCartResp && updatedCartResp.body) {
             const updatedItem = updatedCartResp.body.lineItems.find(
-              (item: { productId: string }) => item.productId === product.id
+              (item: { productId: string }) => item.productId === product.id,
             );
 
             basketButton.setTextContent(updatedItem ? "X" : Buttons.BASKET);
             this.headerView.updateHeader();
             await this.renderProducts(products);
           }
-        }
-
-        });
+        },
+      });
       quantityWrapper.addInnerElement(basketButton.getElement());
 
       const button = new ElementCreator({

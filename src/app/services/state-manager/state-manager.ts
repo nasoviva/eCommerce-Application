@@ -39,14 +39,13 @@ export default class StateManager {
   public activeCart = false;
 
   private state: ValidJSON | undefined;
+  private readonly cartListeners: (() => void)[] = [];
 
   constructor() {
     this.isLoggedIn = false;
     this.state = undefined;
     this.configureStateStorage();
   }
-
-  private cartListeners: (() => void)[] = [];
 
   public onCartChange(callback: () => void): void {
     this.cartListeners.push(callback);

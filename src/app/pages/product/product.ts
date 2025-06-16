@@ -58,7 +58,7 @@ export default class ProductView {
         globalThis.location.hash = Routes.CATALOG;
       },
     });
- const currentCartResp = await this.apiRequestService.getCart();
+    const currentCartResp = await this.apiRequestService.getCart();
     const cartItems = currentCartResp?.body?.lineItems || [];
     try {
       this.apiRequestService.getProductById(
@@ -102,40 +102,41 @@ export default class ProductView {
             tag: "div",
             className: [cssClasses.CONTROLS_CONTAINER],
           });
-const itemInCart = cartItems.find(item => item.productId === product.id);
+          const itemInCart = cartItems.find(
+            (item) => item.productId === product.id,
+          );
           const basketButton = new ElementCreator({
-                  tag: "button",
-                  className: [cssClasses.BASKET],
-                  textContent: itemInCart ? "X" : Buttons.BASKET,
-                  callback: async (): Promise<void> => {
+            tag: "button",
+            className: [cssClasses.BASKET],
+            textContent: itemInCart ? "X" : Buttons.BASKET,
+            callback: async (): Promise<void> => {
+              const currentCartResp = await this.apiRequestService.getCart();
+              if (!currentCartResp?.body) return;
 
-                    const currentCartResp = await this.apiRequestService.getCart();
-                    if (!currentCartResp?.body) return;
+              const itemInCart = currentCartResp.body.lineItems.find(
+                (item) => item.productId === product.id,
+              );
 
-                    const itemInCart = currentCartResp.body.lineItems.find(
-                      (item) => item.productId === product.id
-                    );
+              if (itemInCart) {
+                await this.apiRequestService.removeProduct(itemInCart.id);
+              } else {
+                await this.apiRequestService.addProduct(product.id);
+              }
 
-                    if (itemInCart) {
-                      await this.apiRequestService.removeProduct(itemInCart.id);
-                    } else {
-                      await this.apiRequestService.addProduct(product.id);
-                    }
+              const updatedCartResp = await this.apiRequestService.getCart();
 
-                    const updatedCartResp = await this.apiRequestService.getCart();
+              if (updatedCartResp && updatedCartResp.body) {
+                const updatedItem = updatedCartResp.body.lineItems.find(
+                  (item: { productId: string }) =>
+                    item.productId === product.id,
+                );
 
-                    if (updatedCartResp && updatedCartResp.body) {
-                      const updatedItem = updatedCartResp.body.lineItems.find(
-                        (item: { productId: string }) => item.productId === product.id
-                      );
-
-                      basketButton.setTextContent(updatedItem ? "X" : Buttons.BASKET);
-                      this.headerView.updateHeader();
-                    }
-                  }
-
-                  });
-                quantityWrapper.addInnerElement(basketButton.getElement());
+                basketButton.setTextContent(updatedItem ? "X" : Buttons.BASKET);
+                this.headerView.updateHeader();
+              }
+            },
+          });
+          quantityWrapper.addInnerElement(basketButton.getElement());
 
           const sliderWrapper = new ElementCreator({
             tag: "div",
