@@ -47,8 +47,13 @@ export default class MainView extends View {
     this.catalogView = new CatalogView(
       this.stateManager,
       this.apiRequestService,
+      this.headerView,
     );
-    this.productView = new ProductView("", this.apiRequestService);
+    this.productView = new ProductView(
+      "",
+      this.apiRequestService,
+      this.headerView,
+    );
     this.profileView = new ProfileView(
       this.stateManager,
       this.apiRequestService,
@@ -58,7 +63,11 @@ export default class MainView extends View {
       this.apiRequestService,
     );
     this.homeView = new HomeView(this.stateManager, this.apiRequestService);
-    this.basketView = new BasketView(this.stateManager, this.apiRequestService);
+    this.basketView = new BasketView(
+      this.stateManager,
+      this.apiRequestService,
+      this.headerView,
+    );
     this.aboutView = new AboutView();
     this.notFoundView = new NotFoundView();
 
@@ -107,7 +116,11 @@ export default class MainView extends View {
     } else if (path.startsWith(`${Routes.PRODUCT}=`)) {
       const id = path.split("=")[1];
       if (id) {
-        const productView = new ProductView(id, this.apiRequestService);
+        const productView = new ProductView(
+          id,
+          this.apiRequestService,
+          this.headerView,
+        );
         this.setContent(productView.getElement());
       } else {
         globalThis.location.hash = Routes.NOT_FOUND;

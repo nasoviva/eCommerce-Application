@@ -39,11 +39,25 @@ export default class StateManager {
   public activeCart = false;
 
   private state: ValidJSON | undefined;
+  private readonly cartListeners: (() => void)[] = [];
 
   constructor() {
     this.isLoggedIn = false;
     this.state = undefined;
     this.configureStateStorage();
+  }
+
+  public onCartChange(callback: () => void): void {
+    this.cartListeners.push(callback);
+  }
+
+  public notifyCartChanged(): void {
+    for (const cb of this.cartListeners) cb();
+  }
+
+  public setActiveCart(isActive: boolean): void {
+    this.activeCart = isActive;
+    this.notifyCartChanged();
   }
 
   public setState(loginStatus?: boolean): void {

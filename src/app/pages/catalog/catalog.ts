@@ -6,15 +6,17 @@ import {
 } from "../../global-types/constants";
 import ElementCreator from "../../shared/element-creator";
 import type StateManager from "../../services/state-manager/state-manager";
-import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type { Localization, UseSearchQuery } from "../../global-types/types";
 import type { ClientResponse } from "@commercetools/ts-client";
 import "./style/style.css";
 import type { CatalogData } from "../../services/api-request-service/data-parser";
 import DataParser from "../../services/api-request-service/data-parser";
 import InputCreator from "../../shared/input-creator";
+import type HeaderView from "../../layout/header/header";
+import type ApiRequestService from "../../services/api-request-service/api-request-service";
 
 export default class CatalogView {
+  private readonly headerView: HeaderView;
   private readonly catalogContainer: ElementCreator;
   private readonly stateManager: StateManager;
   private readonly apiRequestService: ApiRequestService;
@@ -29,7 +31,9 @@ export default class CatalogView {
   constructor(
     stateManager: StateManager,
     apiRequestService: ApiRequestService,
+    headerView: HeaderView,
   ) {
+    this.headerView = headerView;
     this.stateManager = stateManager;
     this.apiRequestService = apiRequestService;
 
@@ -75,6 +79,11 @@ export default class CatalogView {
     this.clearInputs();
     this.cardsContainer.getElement().innerHTML = "";
     this.paginationContainer.getElement().innerHTML = "";
+
+    this.stateManager.onCartChange(() => {
+      const currentCategoryId = this.currentCategoryPath.at(-1)?.id;
+      this.loadProducts(this.locale, currentCategoryId, 1);
+    });
 
     const categoriesContainer = new ElementCreator({
       tag: "div",
@@ -390,7 +399,7 @@ export default class CatalogView {
     );
   }
 
-  private renderProducts(products: CatalogData[]): void {
+  private async renderProducts(products: CatalogData[]): Promise<void> {
     this.clearInputs();
     if (products.length === 0) {
       const emptyMsg = new ElementCreator({
@@ -401,7 +410,8 @@ export default class CatalogView {
       this.cardsContainer.addInnerElement(emptyMsg.getElement());
       return;
     }
-
+    const currentCartResp = await this.apiRequestService.getCart();
+    const cartItems = currentCartResp?.body?.lineItems || [];
     products.forEach((product) => {
       const cardLink = new ElementCreator({
         tag: "a",
@@ -460,70 +470,41 @@ export default class CatalogView {
         tag: "div",
         className: [cssClasses.CONTROLS_CONTAINER],
       });
-
-      let count = 1;
-
-      const quantityText = new ElementCreator({
-        tag: "span",
-        className: [cssClasses.NUMBER],
-        textContent: String(count),
-      });
-
-      const plusBtn = new ElementCreator({
-        tag: "button",
-        className: [cssClasses.BASKET],
-        textContent: "+",
-        callback: (): void => {
-          count++;
-          quantityText.getElement().textContent = String(count);
-          console.log(`add to basket ${product.id} +1`);
-        },
-      });
-
-      const minusBtn = new ElementCreator({
-        tag: "button",
-        className: [cssClasses.BASKET],
-        textContent: "-",
-        callback: (): void => {
-          count--;
-          if (count <= 0) {
-            quantityWrapper.getElement().innerHTML = "";
-            quantityWrapper.addInnerElement(basketButton.getElement());
-            count = 1;
-          } else {
-            quantityText.getElement().textContent = String(count);
-          }
-          console.log(`add to basket ${product.id} -1`);
-        },
-      });
-
-      const quantityControls = (): ElementCreator => {
-        const wrapper = new ElementCreator({
-          tag: "div",
-          className: [cssClasses.CONTROLS],
-          textContent: "",
-        });
-        wrapper.getElement().appendChild(minusBtn.getElement());
-        wrapper.getElement().appendChild(quantityText.getElement());
-        wrapper.getElement().appendChild(plusBtn.getElement());
-        return wrapper;
-      };
+      const itemInCart = cartItems.find(
+        (item) => item.productId === product.id,
+      );
 
       const basketButton = new ElementCreator({
         tag: "button",
         className: [cssClasses.BASKET],
-        textContent: Buttons.BASKET,
-        callback: (): void => {
-          count = 1;
-          quantityText.getElement().textContent = String(count);
-          quantityWrapper.getElement().innerHTML = "";
-          quantityWrapper
-            .getElement()
-            .appendChild(quantityControls().getElement());
-          console.log(`add to basket ${product.id}`);
+        textContent: itemInCart ? "X" : Buttons.BASKET,
+        callback: async (): Promise<void> => {
+          const currentCartResp = await this.apiRequestService.getCart();
+          if (!currentCartResp?.body) return;
+
+          const itemInCart = currentCartResp.body.lineItems.find(
+            (item) => item.productId === product.id,
+          );
+
+          if (itemInCart) {
+            await this.apiRequestService.removeProduct(itemInCart.id);
+          } else {
+            await this.apiRequestService.addProduct(product.id);
+          }
+
+          const updatedCartResp = await this.apiRequestService.getCart();
+
+          if (updatedCartResp && updatedCartResp.body) {
+            const updatedItem = updatedCartResp.body.lineItems.find(
+              (item: { productId: string }) => item.productId === product.id,
+            );
+
+            basketButton.setTextContent(updatedItem ? "X" : Buttons.BASKET);
+            this.headerView.updateHeader();
+            await this.renderProducts(products);
+          }
         },
       });
-
       quantityWrapper.addInnerElement(basketButton.getElement());
 
       const button = new ElementCreator({

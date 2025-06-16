@@ -1,11 +1,12 @@
 import type { ClientResponse } from "@commercetools/ts-client";
 import { Routes } from "../../global-types/constants";
-import type ApiRequestService from "../../services/api-request-service/api-request-service";
 import type StateManager from "../../services/state-manager/state-manager";
 import ElementCreator from "../../shared/element-creator";
 import css from "./basket.module.css";
 import type { Cart, ProductProjection } from "@commercetools/platform-sdk";
 import CustomElementCreator from "../../shared/custom-element-creator";
+import type ApiRequestService from "../../services/api-request-service/api-request-service";
+import type HeaderView from "../../layout/header/header";
 
 const ELEM_PARAM = {
   mainContainer: {
@@ -101,6 +102,7 @@ export default class BasketView {
   private readonly stateManager: StateManager;
   private readonly apiRequestService: ApiRequestService;
   private readonly mainContainer = new ElementCreator(ELEM_PARAM.mainContainer);
+  private readonly headerView: HeaderView;
   private readonly productArea = new ElementCreator(ELEM_PARAM.productArea);
   private readonly emptyMessage = new ElementCreator(ELEM_PARAM.productArea);
   private readonly sideBar = new ElementCreator(ELEM_PARAM.sidebar);
@@ -112,7 +114,9 @@ export default class BasketView {
   constructor(
     stateManager: StateManager,
     apiRequestService: ApiRequestService,
+    headerView: HeaderView,
   ) {
+    this.headerView = headerView;
     this.stateManager = stateManager;
     this.apiRequestService = apiRequestService;
 
@@ -121,6 +125,7 @@ export default class BasketView {
 
   public getElement(): HTMLElement {
     this.updateBasket();
+    this.headerView.updateHeader();
     return this.mainContainer.getElement();
   }
 
@@ -140,17 +145,22 @@ export default class BasketView {
   public async updateBasket(): Promise<void> {
     if (!this.stateManager.activeCart) {
       this.switchBasketTypeTo("empty");
+      this.headerView.updateHeader();
       return;
     }
 
     const result = await this.apiRequestService.getCart();
     if (!result || result.body?.lineItems.length == 0) {
       this.switchBasketTypeTo("empty");
+      this.headerView.updateHeader();
       return;
-    } else this.switchBasketTypeTo("hasItems");
+    } else {
+      this.switchBasketTypeTo("hasItems");
+      this.headerView.updateHeader();
+    }
 
     this.updateTotalPrice(result);
-
+    this.headerView.updateHeader();
     const items =
       result?.body?.lineItems.map((x) => {
         return {
@@ -203,7 +213,10 @@ export default class BasketView {
           item.id,
           count,
         );
-        if (result) this.updateTotalPrice(result);
+        if (result) {
+          this.updateTotalPrice(result);
+          this.headerView.updateHeader();
+        }
       });
 
       subBtn.setCallBack(async () => {
@@ -216,19 +229,35 @@ export default class BasketView {
             item.id,
             count,
           );
-          if (result) this.updateTotalPrice(result);
+
+          if (result) {
+            this.updateTotalPrice(result);
+            this.headerView.updateHeader();
+          }
         } else {
           const result = await this.apiRequestService.removeProduct(item.id);
           if (result && result.body?.lineItems.length === 0)
             this.switchBasketTypeTo("empty");
           container.getElement().remove();
+
         }
       });
 
       removeBtn.setCallBack(async () => {
         const result = await this.apiRequestService.removeProduct(item.id);
-        if (result) this.updateTotalPrice(result);
-        container.getElement().remove();
+        if (result) {
+          const hasItems = result.body?.lineItems?.length ?? 0;
+
+          this.updateTotalPrice(result);
+          this.headerView.updateHeader();
+          this.stateManager.setActiveCart(hasItems > 0);
+
+          if (hasItems === 0) {
+            this.switchBasketTypeTo("empty");
+          }
+
+          container.getElement().remove();
+        }
       });
 
       this.apiRequestService.getProductById(
@@ -259,7 +288,6 @@ export default class BasketView {
   }
 
   private async configureView(): Promise<void> {
-    /* await this.configureBasket(); */
     this.configureEmptyMessage();
     this.configureSideBar();
     this.mainContainer.addInnerElement(
@@ -294,6 +322,7 @@ export default class BasketView {
 
     clearBtn.setCallBack(async () => {
       await this.apiRequestService.clearCart();
+      this.stateManager.setActiveCart(false);
       this.updateBasket();
     });
 
