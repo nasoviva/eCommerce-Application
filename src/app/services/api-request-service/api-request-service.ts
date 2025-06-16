@@ -212,6 +212,7 @@ export default class ApiRequestService {
       .execute()
       .then((result) => {
         if (onSuccess) onSuccess(result);
+        this.configureBasket();
       })
       .catch((reason) => {
         if (onReject) onReject(reason);
@@ -282,11 +283,11 @@ export default class ApiRequestService {
     }
   }
 
-  public getUserInfo(
+  public async getUserInfo(
     onSuccess?: CallableFunction,
     onReject?: CallableFunction,
-  ): void {
-    this.apiRoot
+  ): Promise<void> {
+    await this.apiRoot
       .me()
       .get()
       .execute()
@@ -401,6 +402,7 @@ export default class ApiRequestService {
         .execute();
       this.cartVersion = result.body.version;
       if (onSuccess) onSuccess(result);
+      return result;
     } catch (reason) {
       if (onReject) onReject(reason);
     }
@@ -542,6 +544,16 @@ export default class ApiRequestService {
     } catch (reason) {
       if (onReject) onReject(reason);
     }
+  }
+
+  public async configureBasket(): Promise<void> {
+    if (!this.stateManager.activeCart) {
+      await this.createCart(
+        this.stateManager.currency,
+        this.stateManager.locale,
+      );
+      this.stateManager.activeCart = true;
+    } else await this.getCart();
   }
 
   private switchRequestBuilder(

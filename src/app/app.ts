@@ -1,14 +1,9 @@
-import type {
-  ClientResponse,
-  ProductProjectionPagedSearchResponse,
-} from "@commercetools/platform-sdk";
 import "../style.css";
 import FooterView from "./layout/footer/footer";
 import HeaderView from "./layout/header/header";
 import MainView from "./layout/main/main";
 import ApiRequestService from "./services/api-request-service/api-request-service";
 import StateManager from "./services/state-manager/state-manager";
-import DataParser from "./services/api-request-service/data-parser";
 
 export default class App {
   private readonly mainView: MainView;
@@ -32,9 +27,6 @@ export default class App {
 
     App.setFavicon("./favicon.ico");
     this.createView();
-
-
-    this.configureAPI();
 
     this.testMethod();
   }
@@ -81,7 +73,6 @@ export default class App {
     document.body.append(myButton, myButton2);
     // Cчётчик товара
     let count = 0;
-    let count2 = 0;
     let id: string = "";
     myButton.addEventListener("click", async () => {
       count += 1;
@@ -107,5 +98,4 @@ export default class App {
       else this.apiRequestService.removeProduct(id);
     });
   }
-
 }
