@@ -236,19 +236,10 @@ export default class BasketView {
           }
         } else {
           const result = await this.apiRequestService.removeProduct(item.id);
-          if (result) {
-            const hasItems = result.body?.lineItems?.length ?? 0;
+          if (result && result.body?.lineItems.length === 0)
+            this.switchBasketTypeTo("empty");
+          container.getElement().remove();
 
-            this.updateTotalPrice(result);
-            this.headerView.updateHeader();
-            this.stateManager.setActiveCart(hasItems > 0);
-
-            if (hasItems === 0) {
-              this.switchBasketTypeTo("empty");
-            }
-
-            container.getElement().remove();
-          }
         }
       });
 
