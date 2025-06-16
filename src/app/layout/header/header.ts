@@ -242,7 +242,23 @@ export default class HeaderView extends View {
         }
       },
     });
+    if (text === Buttons.BASKET) {
+      this.apiRequestService.getCart().then((result) => {
+        if (result?.body?.lineItems) {
+          const total = result.body.lineItems.reduce(
+            (sum, item) => sum + item.quantity,
+            0,
+          );
 
+          if (total > 0) {
+            const counter = document.createElement("span");
+            counter.className = "cart-counter";
+            counter.textContent = String(total);
+            btn.getElement().appendChild(counter);
+          }
+        }
+      });
+    }
     return btn;
   }
 

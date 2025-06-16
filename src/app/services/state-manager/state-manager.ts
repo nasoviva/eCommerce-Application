@@ -46,6 +46,21 @@ export default class StateManager {
     this.configureStateStorage();
   }
 
+  private cartListeners: (() => void)[] = [];
+
+  public onCartChange(callback: () => void): void {
+    this.cartListeners.push(callback);
+  }
+
+  public notifyCartChanged(): void {
+    for (const cb of this.cartListeners) cb();
+  }
+
+  public setActiveCart(isActive: boolean): void {
+    this.activeCart = isActive;
+    this.notifyCartChanged();
+  }
+
   public setState(loginStatus?: boolean): void {
     if (loginStatus) this.isLoggedIn = loginStatus;
     if (this.isLoggedIn) {
