@@ -239,7 +239,6 @@ export default class BasketView {
           if (result && result.body?.lineItems.length === 0)
             this.switchBasketTypeTo("empty");
           container.getElement().remove();
-
         }
       });
 
@@ -250,7 +249,6 @@ export default class BasketView {
 
           this.updateTotalPrice(result);
           this.headerView.updateHeader();
-          this.stateManager.setActiveCart(hasItems > 0);
 
           if (hasItems === 0) {
             this.switchBasketTypeTo("empty");
@@ -322,7 +320,6 @@ export default class BasketView {
 
     clearBtn.setCallBack(async () => {
       await this.apiRequestService.clearCart();
-      this.stateManager.setActiveCart(false);
       this.updateBasket();
     });
 
