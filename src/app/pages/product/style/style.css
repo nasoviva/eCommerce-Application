@@ -1,0 +1,98 @@
+.container-product {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 5%;
+}
+
+.container-description {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 55%;
+}
+
+.slider-container {
+  position: relative;
+  width: 40%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-list {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.slider-img {
+  flex: 0 0 100%;
+  max-width: 100%;
+  min-width: 100%;
+  object-fit: cover;
+}
+
+.slider-btn {
+  background-color: transparent;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  user-select: none;
+  padding: 0 10px;
+}
+
+.prev-btn {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+}
+
+.next-btn {
+  position: absolute;
+  right: 0;
+  z-index: 1;
+}
+
+.container-product .button {
+  align-self: flex-start;
+  margin-left: 20px;
+}
+
+@media (width <=768px) {
+  .container-product {
+    justify-content: center;
+    flex-direction: column;
+    width: 60%;
+    padding: 20px;
+  }
+
+  .container-description {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .slider-container {
+    width: 100%;
+  }
+
+  .container-product .button {
+    align-self: center;
+    margin-left: 0;
+  }
+}
+
+@media (width <=580px) {
+  .container-product {
+    justify-content: center;
+    flex-direction: column;
+    width: 90%;
+    padding: 20px;
+  }
+}
